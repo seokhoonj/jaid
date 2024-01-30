@@ -14,14 +14,14 @@ static const R_CallMethodDef callEntries[] = {
   CALLDEF(Traverse, 2),
 
   // Matrix
-  CALLDEF(SetDimNm, 2),
-  CALLDEF(SetRowNm, 2),
-  CALLDEF(SetColNm, 2),
+  CALLDEF(SetDimNames, 2),
+  CALLDEF(SetRowNames, 2),
+  CALLDEF(SetColNames, 2),
 
-  CALLDEF(MaxByColNm, 5),
-  CALLDEF(MaxByRowNm, 5),
-  CALLDEF(MinByColNm, 5),
-  CALLDEF(MinByRowNm, 5),
+  CALLDEF(MaxByColNames, 5),
+  CALLDEF(MaxByRowNames, 5),
+  CALLDEF(MinByColNames, 5),
+  CALLDEF(MinByRowNames, 5),
 
   CALLDEF(RowMax, 1),
   CALLDEF(RowMin, 1),
@@ -31,8 +31,8 @@ static const R_CallMethodDef callEntries[] = {
   CALLDEF(ColMin, 1),
   CALLDEF(ColSum, 1),
 
-  CALLDEF(SumByColNm, 4),
-  CALLDEF(SumByRowNm, 4),
+  CALLDEF(SumByColNames, 4),
+  CALLDEF(SumByRowNames, 4),
   {NULL, NULL, 0}
 };
 

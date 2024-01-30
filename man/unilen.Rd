@@ -18,6 +18,6 @@ Calculate length of a unique vector.
 \examples{
 # length of unique vector
 \donttest{x <- c(1, 1, 2, 3, 4, 5, 5)
-reverse(x)}
+unilen(x)}
 
 }

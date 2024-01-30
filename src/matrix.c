@@ -218,7 +218,7 @@ SEXP lookup(SEXP g, SEXP uniqueg) {
   return matches;
 }
 
-SEXP MaxByColNm(SEXP x, SEXP g, SEXP uniqueg, SEXP snarm, SEXP minval) {
+SEXP MaxByColNames(SEXP x, SEXP g, SEXP uniqueg, SEXP snarm, SEXP minval) {
   SEXP matches, z;
   int n, p, ng, narm;
   HashData data = { 0 };
@@ -279,7 +279,7 @@ SEXP MaxByColNm(SEXP x, SEXP g, SEXP uniqueg, SEXP snarm, SEXP minval) {
   return z;
 }
 
-SEXP MaxByRowNm(SEXP x, SEXP g, SEXP uniqueg, SEXP snarm, SEXP minval) {
+SEXP MaxByRowNames(SEXP x, SEXP g, SEXP uniqueg, SEXP snarm, SEXP minval) {
   SEXP matches, ans;
   int n, p, ng, narm;
   R_xlen_t offset = 0, offsetg = 0;
@@ -344,7 +344,7 @@ SEXP MaxByRowNm(SEXP x, SEXP g, SEXP uniqueg, SEXP snarm, SEXP minval) {
   return ans;
 }
 
-SEXP MinByColNm(SEXP x, SEXP g, SEXP uniqueg, SEXP snarm, SEXP maxval) {
+SEXP MinByColNames(SEXP x, SEXP g, SEXP uniqueg, SEXP snarm, SEXP maxval) {
   SEXP matches, z;
   int n, p, ng, narm;
   HashData data = { 0 };
@@ -405,7 +405,7 @@ SEXP MinByColNm(SEXP x, SEXP g, SEXP uniqueg, SEXP snarm, SEXP maxval) {
   return z;
 }
 
-SEXP MinByRowNm(SEXP x, SEXP g, SEXP uniqueg, SEXP snarm, SEXP maxval) {
+SEXP MinByRowNames(SEXP x, SEXP g, SEXP uniqueg, SEXP snarm, SEXP maxval) {
   SEXP matches, ans;
   int n, p, ng, narm;
   R_xlen_t offset = 0, offsetg = 0;
@@ -470,7 +470,7 @@ SEXP MinByRowNm(SEXP x, SEXP g, SEXP uniqueg, SEXP snarm, SEXP maxval) {
   return ans;
 }
 
-SEXP SumByColNm(SEXP x, SEXP g, SEXP uniqueg, SEXP snarm) {
+SEXP SumByColNames(SEXP x, SEXP g, SEXP uniqueg, SEXP snarm) {
   SEXP matches, z;
   int n, p, ng, narm;
   HashData data = { 0 };
@@ -529,7 +529,7 @@ SEXP SumByColNm(SEXP x, SEXP g, SEXP uniqueg, SEXP snarm) {
   return z;
 }
 
-SEXP SumByRowNm(SEXP x, SEXP g, SEXP uniqueg, SEXP snarm) {
+SEXP SumByRowNames(SEXP x, SEXP g, SEXP uniqueg, SEXP snarm) {
   SEXP matches,ans;
   int n, p, ng, narm;
   R_xlen_t offset = 0, offsetg = 0;

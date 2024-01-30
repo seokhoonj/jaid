@@ -57,20 +57,20 @@ extern "C" {
 SEXP FillValue(SEXP x, double value);
 
 // Names
-SEXP SetDimNm(SEXP x, SEXP dimnames);
-SEXP SetColNm(SEXP x, SEXP colnames);
-SEXP SetRowNm(SEXP x, SEXP rownames);
+SEXP SetDimNames(SEXP x, SEXP dimnames);
+SEXP SetColNames(SEXP x, SEXP colnames);
+SEXP SetRowNames(SEXP x, SEXP rownames);
 
 // Mode
 SEXP _jaid_fastMode(SEXP, SEXP);
 SEXP _jaid_fastModeX(SEXP, SEXP);
 
 // Matrix statistics
-SEXP MaxByColNm(SEXP x, SEXP g, SEXP uniqueg, SEXP snarm, SEXP minval);
-SEXP MaxByRowNm(SEXP x, SEXP g, SEXP uniqueg, SEXP snarm, SEXP minval);
+SEXP MaxByColNames(SEXP x, SEXP g, SEXP uniqueg, SEXP snarm, SEXP minval);
+SEXP MaxByRowNames(SEXP x, SEXP g, SEXP uniqueg, SEXP snarm, SEXP minval);
 
-SEXP MinByColNm(SEXP x, SEXP g, SEXP uniqueg, SEXP snarm, SEXP maxval);
-SEXP MinByRowNm(SEXP x, SEXP g, SEXP uniqueg, SEXP snarm, SEXP maxval);
+SEXP MinByColNames(SEXP x, SEXP g, SEXP uniqueg, SEXP snarm, SEXP maxval);
+SEXP MinByRowNames(SEXP x, SEXP g, SEXP uniqueg, SEXP snarm, SEXP maxval);
 
 SEXP RowMax(SEXP x);
 SEXP RowMin(SEXP x);
@@ -80,8 +80,8 @@ SEXP ColMax(SEXP x);
 SEXP ColMin(SEXP x);
 SEXP ColSum(SEXP x);
 
-SEXP SumByColNm(SEXP x, SEXP g, SEXP uniqueg, SEXP snarm);
-SEXP SumByRowNm(SEXP x, SEXP g, SEXP uniqueg, SEXP snarm);
+SEXP SumByColNames(SEXP x, SEXP g, SEXP uniqueg, SEXP snarm);
+SEXP SumByRowNames(SEXP x, SEXP g, SEXP uniqueg, SEXP snarm);
 
 // Vector
 SEXP Unilen(SEXP x);

@@ -46,15 +46,15 @@ library(jaid)
 x <- matrix(c(1:9), nrow = 3)
 
 # set row names
-set_row_nm(x, c("a", "a", "b"))
-set_row_nm(x, NULL)
+set_rownames(x, c("a", "a", "b"))
+set_rownames(x, NULL)
 
 # set column names
-set_row_nm(x, c("a", "b", "b"))
-set_row_nm(x, NULL)
+set_colnames(x, c("a", "b", "b"))
+set_colnames(x, NULL)
 
 # set dimension names
-set_dim_nm(x, list(c("a", "a", "b"), c("a", "b", "b")))
+set_dimnames(x, list(c("a", "a", "b"), c("a", "b", "b")))
 #>   a b b
 #> a 1 4 7
 #> a 2 5 8
@@ -69,46 +69,46 @@ row_sum(x)
 #> [1] 12 15 18
 
 # stats by row names
-max_by_row_nm(x)
+max_by_rownames(x)
 #>   a b b
 #> a 2 5 8
 #> b 3 6 9
-min_by_row_nm(x)
+min_by_rownames(x)
 #>   a b b
 #> a 1 4 7
 #> b 3 6 9
-sum_by_row_nm(x)
+sum_by_rownames(x)
 #>   a b  b
 #> a 3 9 15
 #> b 3 6  9
 
 # stats by column names
-max_by_col_nm(x)
+max_by_colnames(x)
 #>   a b
 #> a 1 7
 #> a 2 8
 #> b 3 9
-min_by_col_nm(x)
+min_by_colnames(x)
 #>   a b
 #> a 1 4
 #> a 2 5
 #> b 3 6
-sum_by_col_nm(x)
+sum_by_colnames(x)
 #>   a  b
 #> a 1 11
 #> a 2 13
 #> b 3 15
 
 # stats by dimension (row and column) names
-max_by_dim_nm(x)
+max_by_dimnames(x)
 #>   a b
 #> a 2 8
 #> b 3 9
-min_by_dim_nm(x)
+min_by_dimnames(x)
 #>   a b
 #> a 1 4
 #> b 3 6
-sum_by_dim_nm(x)
+sum_by_dimnames(x)
 #>   a  b
 #> a 3 24
 #> b 3 15

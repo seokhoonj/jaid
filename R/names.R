@@ -12,23 +12,23 @@
 #' @examples
 #' # set dimension names
 #' \donttest{x <- matrix(c(1:9), ncol = 3)
-#' set_dim_nm(x, list(c("a", "a", "b"), c("a", "b", "b")))}
+#' set_dimnames(x, list(c("a", "a", "b"), c("a", "b", "b")))}
 #'
 #' # set row names
 #' \donttest{x <- matrix(c(1:9), ncol = 3)
-#' set_row_nm(x, c("a", "a", "b"))}
+#' set_rownames(x, c("a", "a", "b"))}
 #'
 #' # set column names
 #' \donttest{x <- matrix(c(1:9), ncol = 3)
-#' set_col_nm(x, c("a", "b", "b"))}
+#' set_colnames(x, c("a", "b", "b"))}
 #'
 #' @export
-set_dim_nm <- function(x, dimnames) invisible(.Call(SetDimNm, x, dimnames))
+set_dimnames <- function(x, dimnames) invisible(.Call(SetDimNames, x, dimnames))
 
-#' @rdname set_dim_nm
+#' @rdname set_dimnames
 #' @export
-set_row_nm <- function(x, rownames) .Call(SetRowNm, x, rownames)
+set_rownames <- function(x, rownames) .Call(SetRowNames, x, rownames)
 
-#' @rdname set_dim_nm
+#' @rdname set_dimnames
 #' @export
-set_col_nm <- function(x, colnames) invisible(.Call(SetColNm, x, colnames))
+set_colnames <- function(x, colnames) invisible(.Call(SetColNames, x, colnames))

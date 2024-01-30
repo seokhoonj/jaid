@@ -74,37 +74,37 @@ col_sum <- function(x) .Call(ColSum, x)
 #' @examples
 #' # max by row nm
 #' \donttest{x <- matrix(c(1:9), nrow = 3)
-#' set_dim_nm(x, list(c("a", "a", "b"), c("a", "b", "b")))
-#' max_by_row_nm(x)}
+#' set_dimnames(x, list(c("a", "a", "b"), c("a", "b", "b")))
+#' max_by_rownames(x)}
 #'
 #' # min by row nm
 #' \donttest{x <- matrix(c(1:9), nrow = 3)
-#' set_dim_nm(x, list(c("a", "a", "b"), c("a", "b", "b")))
-#' min_by_row_nm(x)}
+#' set_dimnames(x, list(c("a", "a", "b"), c("a", "b", "b")))
+#' min_by_rownames(x)}
 #'
 #' # sum by row nm
 #' \donttest{x <- matrix(c(1:9), nrow = 3)
-#' set_dim_nm(x, list(c("a", "a", "b"), c("a", "b", "b")))
-#' sum_by_row_nm(x)}
+#' set_dimnames(x, list(c("a", "a", "b"), c("a", "b", "b")))
+#' sum_by_rownames(x)}
 #'
 #' @export
-max_by_row_nm <- function(x, na.rm = TRUE) {
+max_by_rownames <- function(x, na.rm = TRUE) {
   g <- rownames(x); uniqueg <- unique(g); minval <- min(x)
-  .Call(MaxByRowNm, x, g, uniqueg, na.rm, minval)
+  .Call(MaxByRowNames, x, g, uniqueg, na.rm, minval)
 }
 
-#' @rdname max_by_row_nm
+#' @rdname max_by_rownames
 #' @export
-min_by_row_nm <- function(x, na.rm = TRUE) {
+min_by_rownames <- function(x, na.rm = TRUE) {
   g <- rownames(x); uniqueg <- unique(g); maxval <- max(x)
-  .Call(MinByRowNm, x, g, uniqueg, na.rm, maxval)
+  .Call(MinByRowNames, x, g, uniqueg, na.rm, maxval)
 }
 
-#' @rdname max_by_row_nm
+#' @rdname max_by_rownames
 #' @export
-sum_by_row_nm <- function(x, na.rm = TRUE) {
+sum_by_rownames <- function(x, na.rm = TRUE) {
   g <- rownames(x); uniqueg <- unique(g)
-  .Call(SumByRowNm, x, g, uniqueg, na.rm)
+  .Call(SumByRowNames, x, g, uniqueg, na.rm)
 }
 
 
@@ -120,37 +120,37 @@ sum_by_row_nm <- function(x, na.rm = TRUE) {
 #' @examples
 #' # max by col nm
 #' \donttest{x <- matrix(c(1:9), ncol = 3)
-#' set_dim_nm(x, list(c("a", "a", "b"), c("a", "b", "b")))
-#' max_by_col_nm(x)}
+#' set_dimnames(x, list(c("a", "a", "b"), c("a", "b", "b")))
+#' max_by_colnames(x)}
 #'
 #' # min by col nm
 #' \donttest{x <- matrix(c(1:9), ncol = 3)
-#' set_dim_nm(x, list(c("a", "a", "b"), c("a", "b", "b")))
-#' min_by_col_nm(x)}
+#' set_dimnames(x, list(c("a", "a", "b"), c("a", "b", "b")))
+#' min_by_colnames(x)}
 #'
 #' # sum by col nm
 #' \donttest{x <- matrix(c(1:9), ncol = 3)
-#' set_dim_nm(x, list(c("a", "a", "b"), c("a", "b", "b")))
-#' sum_by_col_nm(x)}
+#' set_dimnames(x, list(c("a", "a", "b"), c("a", "b", "b")))
+#' sum_by_colnames(x)}
 #'
 #' @export
-max_by_col_nm <- function(x, na.rm = TRUE) {
+max_by_colnames <- function(x, na.rm = TRUE) {
   g <- colnames(x); uniqueg <- unique(g); minval <- min(x)
-  .Call(MaxByColNm, x, g, uniqueg, na.rm, minval)
+  .Call(MaxByColNames, x, g, uniqueg, na.rm, minval)
 }
 
-#' @rdname max_by_col_nm
+#' @rdname max_by_colnames
 #' @export
-min_by_col_nm <- function(x, na.rm = TRUE) {
+min_by_colnames <- function(x, na.rm = TRUE) {
   g <- colnames(x); uniqueg <- unique(g); maxval <- max(x)
-  .Call(MinByColNm, x, g, uniqueg, na.rm, maxval)
+  .Call(MinByColNames, x, g, uniqueg, na.rm, maxval)
 }
 
-#' @rdname max_by_col_nm
+#' @rdname max_by_colnames
 #' @export
-sum_by_col_nm <- function(x, na.rm = TRUE) {
+sum_by_colnames <- function(x, na.rm = TRUE) {
   g <- colnames(x); uniqueg <- unique(g)
-  .Call(SumByColNm, x, g, uniqueg, na.rm)
+  .Call(SumByColNames, x, g, uniqueg, na.rm)
 }
 
 
@@ -164,34 +164,34 @@ sum_by_col_nm <- function(x, na.rm = TRUE) {
 #' @return A matrix of minimum values shrinked by dim (row and column) names
 #'
 #' @examples
-#' # max by dim nm
+#' # max by dim names
 #' \donttest{x <- matrix(c(1:9), ncol = 3)
-#' set_dim_nm(x, list(c("a", "a", "b"), c("a", "b", "b")))
-#' max_by_dim_nm(x)}
+#' set_dimnames(x, list(c("a", "a", "b"), c("a", "b", "b")))
+#' max_by_dimnames(x)}
 #'
-#' # min by dim nm
+#' # min by dim names
 #' \donttest{x <- matrix(c(1:9), ncol = 3)
-#' set_dim_nm(x, list(c("a", "a", "b"), c("a", "b", "b")))
-#' min_by_dim_nm(x)}
+#' set_dimnames(x, list(c("a", "a", "b"), c("a", "b", "b")))
+#' min_by_dimnames(x)}
 #'
-#' # sum by col nm
+#' # sum by dim names
 #' \donttest{x <- matrix(c(1:9), ncol = 3)
-#' set_dim_nm(x, list(c("a", "a", "b"), c("a", "b", "b")))
-#' sum_by_dim_nm(x)}
+#' set_dimnames(x, list(c("a", "a", "b"), c("a", "b", "b")))
+#' sum_by_dimnames(x)}
 #'
 #' @export
-max_by_dim_nm <- function(x, na.rm = TRUE) {
-  max_by_row_nm(max_by_col_nm(x, na.rm = na.rm), na.rm = na.rm)
+max_by_dimnames <- function(x, na.rm = TRUE) {
+  max_by_rownames(max_by_colnames(x, na.rm = na.rm), na.rm = na.rm)
 }
 
-#' @rdname max_by_dim_nm
+#' @rdname max_by_dimnames
 #' @export
-min_by_dim_nm <- function(x, na.rm = TRUE) {
-  min_by_row_nm(min_by_col_nm(x, na.rm = na.rm), na.rm = na.rm)
+min_by_dimnames <- function(x, na.rm = TRUE) {
+  min_by_rownames(min_by_colnames(x, na.rm = na.rm), na.rm = na.rm)
 }
 
-#' @rdname max_by_dim_nm
+#' @rdname max_by_dimnames
 #' @export
-sum_by_dim_nm <- function(x, na.rm = TRUE) {
-  sum_by_row_nm(sum_by_col_nm(x, na.rm = na.rm), na.rm = na.rm)
+sum_by_dimnames <- function(x, na.rm = TRUE) {
+  sum_by_rownames(sum_by_colnames(x, na.rm = na.rm), na.rm = na.rm)
 }
