@@ -195,3 +195,47 @@ min_by_dimnames <- function(x, na.rm = TRUE) {
 sum_by_dimnames <- function(x, na.rm = TRUE) {
   sum_by_rownames(sum_by_colnames(x, na.rm = na.rm), na.rm = na.rm)
 }
+
+
+#' rotate a matrix
+#'
+#' Rotate a matrix.
+#'
+#' @param x A matrix
+#' @param angle A numeric value specifying rotation angle (90, 180, 270)
+#'
+#' @return A rotation matrix
+#'
+#' @examples
+#' # 90 degree rotation
+#' \donttest{x <- matrix(1:9, nrow = 3)
+#' rotate(x, 90)}
+#'
+#' # 180 degree rotation
+#' \donttest{x <- matrix(1:9, nrow = 3)
+#' rotate(x, 180)}
+#'
+#' # 270 degree rotation
+#' \donttest{x <- matrix(1:9, nrow = 3)
+#' rotate(x, 270)}
+#'
+#' @export
+rotate <- function(x, angle = c(90, 180, 270)) {
+  z <- .Call(Rotate, x, angle)
+  if (angle %% 360 == 90) {
+    dn <- dimnames(x)
+    dn <- rev(dn)
+    dn[[2L]] <- rev(dn[[2L]])
+    set_dimnames(z, dn)
+  } else if (angle %% 360 == 180) {
+    dn <- dimnames(x)
+    dn <- lapply(dn, rev)
+    set_dimnames(z, dn)
+  } else if (angle %% 360 == 270) {
+    dn <- dimnames(x)
+    dn[[2L]] <- rev(dn[[2L]])
+    dn <- rev(dn)
+    set_dimnames(z, dn)
+  }
+  return(z)
+}

@@ -56,16 +56,21 @@ extern "C" {
 // Utils
 SEXP FillValue(SEXP x, double value);
 
-// Names
-SEXP SetDimNames(SEXP x, SEXP dimnames);
-SEXP SetColNames(SEXP x, SEXP colnames);
-SEXP SetRowNames(SEXP x, SEXP rownames);
-
 // Mode
 SEXP _jaid_fastMode(SEXP, SEXP);
 SEXP _jaid_fastModeX(SEXP, SEXP);
 
-// Matrix statistics
+// Vector
+SEXP Unilen(SEXP x);
+SEXP Reverse(SEXP x);
+SEXP Traverse(SEXP x, SEXP y);
+
+// Matrix
+SEXP Rotate(SEXP x, SEXP angle);
+SEXP SetDimNames(SEXP x, SEXP dimnames);
+SEXP SetColNames(SEXP x, SEXP colnames);
+SEXP SetRowNames(SEXP x, SEXP rownames);
+
 SEXP MaxByColNames(SEXP x, SEXP g, SEXP uniqueg, SEXP snarm, SEXP minval);
 SEXP MaxByRowNames(SEXP x, SEXP g, SEXP uniqueg, SEXP snarm, SEXP minval);
 
@@ -82,11 +87,6 @@ SEXP ColSum(SEXP x);
 
 SEXP SumByColNames(SEXP x, SEXP g, SEXP uniqueg, SEXP snarm);
 SEXP SumByRowNames(SEXP x, SEXP g, SEXP uniqueg, SEXP snarm);
-
-// Vector
-SEXP Unilen(SEXP x);
-SEXP Reverse(SEXP x);
-SEXP Traverse(SEXP x, SEXP y);
 
 #endif // JAID_JAID_H
 

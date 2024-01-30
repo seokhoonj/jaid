@@ -60,6 +60,13 @@ set_dimnames(x, list(c("a", "a", "b"), c("a", "b", "b")))
 #> a 2 5 8
 #> b 3 6 9
 
+# rotation
+rotate(x, 180)
+#>   b b a
+#> b 9 6 3
+#> a 8 5 2
+#> a 7 4 1
+
 # row max, min, sum
 row_max(x)
 #> [1] 7 8 9

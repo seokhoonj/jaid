@@ -14,6 +14,7 @@ static const R_CallMethodDef callEntries[] = {
   CALLDEF(Traverse, 2),
 
   // Matrix
+  CALLDEF(Rotate, 2),
   CALLDEF(SetDimNames, 2),
   CALLDEF(SetRowNames, 2),
   CALLDEF(SetColNames, 2),
