@@ -4,7 +4,7 @@
 \name{jaid-package}
 \alias{jaid}
 \alias{jaid-package}
-\title{jaid: Joo's functional aid}
+\title{jaid: Joo's functional aid toolkit}
 \description{
 Joo Aid
 }
