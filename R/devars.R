@@ -7,6 +7,7 @@
 #' @return A string vector
 #'
 #' @examples
+#' # deparse(substitute(x))
 #' \donttest{devars(expression)
 #' devars(c(expression, string))
 #' devars(list(expression, string))
