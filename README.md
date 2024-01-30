@@ -128,7 +128,7 @@ get_first_pos(x)
 #> 1 0 0 2
 #> 1 2 0 0
 #> 2 0 5 3
-set_first_pos(x) # makes x directly
+set_first_pos(x) # edit x directly
 
 ```
 
