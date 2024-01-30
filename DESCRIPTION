@@ -1,0 +1,18 @@
+Package: jaid
+Title: Joo's functional aid
+Version: 0.0.0.9000
+Authors@R: 
+    person(given = "seokhoon", family = "Joo", role = c("aut", "cre"),
+           email = "seokhoonj@gmail.com")
+Description: Joo's functional aid for R programming.
+License: GPL (>= 3)
+Encoding: UTF-8
+Depends: R (>= 3.5.0)
+Imports:
+    openssl (>= 1.4.1),
+    Rcpp (>= 0.12.10)
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.2.3
+LinkingTo: 
+    Rcpp,
+    RcppArmadillo
