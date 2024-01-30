@@ -84,6 +84,7 @@ SEXP SumByColNm(SEXP x, SEXP g, SEXP uniqueg, SEXP snarm);
 SEXP SumByRowNm(SEXP x, SEXP g, SEXP uniqueg, SEXP snarm);
 
 // Vector
+SEXP Unilen(SEXP x);
 SEXP Reverse(SEXP x);
 SEXP Traverse(SEXP x, SEXP y);
 

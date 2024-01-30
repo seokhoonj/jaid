@@ -22,6 +22,10 @@ devtools::install_github("seokhoonj/jaid")
 ```r
 library(jaid)
 
+x <- c(1, 1, 2, 3, 4, 5, 5)
+unilen(x)
+#> [1] 5
+
 x <- 1:10
 reverse(x)
 #> [1] 10  9  8  7  6  5  4  3  2  1

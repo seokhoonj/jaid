@@ -5,12 +5,18 @@
 #define CALLDEF(name, n) {#name, (DL_FUNC) &name, n} // # is a stringify operator
 
 static const R_CallMethodDef callEntries[] = {
+  CALLDEF(_jaid_fastMode, 2),
+  CALLDEF(_jaid_fastModeX, 2),
+
+  // Vector
+  CALLDEF(Unilen, 1),
+  CALLDEF(Reverse, 1),
+  CALLDEF(Traverse, 2),
+
+  // Matrix
   CALLDEF(SetDimNm, 2),
   CALLDEF(SetRowNm, 2),
   CALLDEF(SetColNm, 2),
-
-  CALLDEF(_jaid_fastMode, 2),
-  CALLDEF(_jaid_fastModeX, 2),
 
   CALLDEF(MaxByColNm, 5),
   CALLDEF(MaxByRowNm, 5),
@@ -27,9 +33,6 @@ static const R_CallMethodDef callEntries[] = {
 
   CALLDEF(SumByColNm, 4),
   CALLDEF(SumByRowNm, 4),
-
-  CALLDEF(Reverse, 1),
-  CALLDEF(Traverse, 2),
   {NULL, NULL, 0}
 };
 

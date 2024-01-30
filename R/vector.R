@@ -1,3 +1,19 @@
+#' length of a unique vector
+#'
+#' Calculate length of a unique vector.
+#'
+#' @param x A vector
+#'
+#' @return A length of a unique vector
+#'
+#' @examples
+#' # length of unique vector
+#' \donttest{x <- c(1, 1, 2, 3, 4, 5, 5)
+#' unilen(x)}
+#'
+#' @export
+unilen <- function(x) .Call(Unilen, x)
+
 #' reverse a vector
 #'
 #' Reverse a vector.
@@ -12,7 +28,7 @@
 #' reverse(x)}
 #'
 #' @export
-reverse  <- function(x) .Call(Reverse, x)
+reverse <- function(x) .Call(Reverse, x)
 
 #' traverse two vectors
 #'
