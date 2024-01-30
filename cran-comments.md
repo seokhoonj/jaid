@@ -1,0 +1,16 @@
+## Test environments
+
+-   Local (ubuntu 22.04.02): R 4.3.2
+-   GitHub Actions (ubuntu-latest) release, devel, oldrel
+-   GitHub Actions (windows-latest) release
+-   GitHub Actions (mac-latest) release
+
+## R CMD check results
+
+0 errors ✔ | 0 warnings ✔ | 0 notes ✔
+
+-   This is a new submission.
+
+## Downstream dependencies
+
+There are currently no downstream dependencies for this package.

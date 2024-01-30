@@ -3,3 +3,4 @@
 ^LICENSE\.md$
 ^Makefile$
 ^\.github$
+^cran-comments\.md$

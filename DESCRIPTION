@@ -1,10 +1,10 @@
 Package: jaid
-Title: Joo's functional aid
+Title: Joo's functional aid toolkit
 Version: 0.0.0.9000
 Authors@R: 
     person(given = "seokhoon", family = "Joo", role = c("aut", "cre"),
            email = "seokhoonj@gmail.com")
-Description: Joo's functional aid for R programming.
+Description: Joo's functional aid for efficient programming.
 License: GPL (>= 3)
 Encoding: UTF-8
 Depends: R (>= 3.5.0)
