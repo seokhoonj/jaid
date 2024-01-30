@@ -83,6 +83,8 @@ SEXP ColSum(SEXP x);
 SEXP SumByColNm(SEXP x, SEXP g, SEXP uniqueg, SEXP snarm);
 SEXP SumByRowNm(SEXP x, SEXP g, SEXP uniqueg, SEXP snarm);
 
+// Vector
+SEXP Reverse(SEXP x);
 SEXP Traverse(SEXP x, SEXP y);
 
 #endif // JAID_JAID_H

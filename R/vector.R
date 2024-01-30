@@ -1,3 +1,19 @@
+#' reverse a vector
+#'
+#' Reverse a vector.
+#'
+#' @param x A vector
+#'
+#' @return A reversed vector
+#'
+#' @examples
+#' # reverse a vector
+#' \donttest{x <- c(1:10)
+#' reverse(x)}
+#'
+#' @export
+reverse  <- function(x) .Call(Reverse, x)
+
 #' traverse two vectors
 #'
 #' Intersect the elements of two vectors.

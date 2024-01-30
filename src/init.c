@@ -28,6 +28,7 @@ static const R_CallMethodDef callEntries[] = {
   CALLDEF(SumByColNm, 4),
   CALLDEF(SumByRowNm, 4),
 
+  CALLDEF(Reverse, 1),
   CALLDEF(Traverse, 2),
   {NULL, NULL, 0}
 };
