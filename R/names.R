@@ -27,7 +27,7 @@ set_dimnames <- function(x, dimnames) invisible(.Call(SetDimNames, x, dimnames))
 
 #' @rdname set_dimnames
 #' @export
-set_rownames <- function(x, rownames) .Call(SetRowNames, x, rownames)
+set_rownames <- function(x, rownames) invisible(.Call(SetRowNames, x, rownames))
 
 #' @rdname set_dimnames
 #' @export
