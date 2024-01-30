@@ -134,17 +134,19 @@ sum_by_row_nm <- function(x, na.rm = TRUE) {
 #' sum_by_col_nm(x)}
 #'
 #' @export
-min_by_col_nm <- function(x, na.rm = TRUE) {
-  g <- colnames(x); uniqueg <- unique(g); maxval <- max(x)
-  .Call(MinByColNm, x, g, uniqueg, na.rm, maxval)
-}
-
-#' @export
 max_by_col_nm <- function(x, na.rm = TRUE) {
   g <- colnames(x); uniqueg <- unique(g); minval <- min(x)
   .Call(MaxByColNm, x, g, uniqueg, na.rm, minval)
 }
 
+#' @rdname max_by_col_nm
+#' @export
+min_by_col_nm <- function(x, na.rm = TRUE) {
+  g <- colnames(x); uniqueg <- unique(g); maxval <- max(x)
+  .Call(MinByColNm, x, g, uniqueg, na.rm, maxval)
+}
+
+#' @rdname max_by_col_nm
 #' @export
 sum_by_col_nm <- function(x, na.rm = TRUE) {
   g <- colnames(x); uniqueg <- unique(g)

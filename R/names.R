@@ -3,7 +3,9 @@
 #' Set dimension, row, column names to a matrix.
 #'
 #' @param x A matrix
-#' @param dimnames A list of dimension names\cr A vector of row names\cr A vector of column names
+#' @param dimnames,rownames,colnames A list of dimension names\cr
+#'                                   A vector of row names\cr
+#'                                   A vector of column names
 #'
 #' @return no return value
 #'
@@ -25,7 +27,7 @@ set_dim_nm <- function(x, dimnames) invisible(.Call(SetDimNm, x, dimnames))
 
 #' @rdname set_dim_nm
 #' @export
-set_row_nm <- function(x, rownames) invisible(.Call(SetRowNm, x, rownames))
+set_row_nm <- function(x, rownames) .Call(SetRowNm, x, rownames)
 
 #' @rdname set_dim_nm
 #' @export

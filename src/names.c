@@ -8,24 +8,34 @@ SEXP SetDimNm(SEXP x, SEXP dimnames) {
 
 // set row names
 SEXP SetRowNm(SEXP x, SEXP rownames) {
-  SEXP colnames, dimnames;
+  SEXP colnames, dimnames, dimsymbols;
   PROTECT(dimnames = allocVector(VECSXP, 2));
-  PROTECT(colnames = VECTOR_ELT(getAttrib(x, R_DimNamesSymbol), 1));
+  dimsymbols = getAttrib(x, R_DimNamesSymbol);
+  if (!isNull(dimsymbols)) {
+    colnames = VECTOR_ELT(dimsymbols, 1);
+    if (!isNull(colnames)) {
+      SET_VECTOR_ELT(dimnames, 1, colnames);
+    }
+  }
   SET_VECTOR_ELT(dimnames, 0, rownames);
-  SET_VECTOR_ELT(dimnames, 1, colnames);
   setAttrib(x, R_DimNamesSymbol, dimnames);
-  UNPROTECT(2);
+  UNPROTECT(1);
   return x;
 }
 
 // set col names
 SEXP SetColNm(SEXP x, SEXP colnames) {
-  SEXP rownames, dimnames;
+  SEXP dimnames, dimsymbols, rownames;
   PROTECT(dimnames = allocVector(VECSXP, 2));
-  PROTECT(rownames = VECTOR_ELT(getAttrib(x, R_DimNamesSymbol), 0));
-  SET_VECTOR_ELT(dimnames, 0, rownames);
+  dimsymbols = getAttrib(x, R_DimNamesSymbol);
+  if (!isNull(dimsymbols)) {
+    rownames = VECTOR_ELT(dimsymbols, 0);
+    if (!isNull(rownames)) {
+      SET_VECTOR_ELT(dimnames, 0, rownames);
+    }
+  }
   SET_VECTOR_ELT(dimnames, 1, colnames);
   setAttrib(x, R_DimNamesSymbol, dimnames);
-  UNPROTECT(2);
+  UNPROTECT(1);
   return x;
 }

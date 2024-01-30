@@ -15,7 +15,9 @@ set_col_nm(x, colnames)
 \arguments{
 \item{x}{A matrix}
 
-\item{dimnames}{A list of dimension names\cr A vector of row names\cr A vector of column names}
+\item{dimnames, rownames, colnames}{A list of dimension names\cr
+A vector of row names\cr
+A vector of column names}
 }
 \value{
 no return value

@@ -45,7 +45,6 @@ union uno {
 #define REQUAL(x, y) (N_ISNAN(x, y) ? (x == y) : (B_IsNA(x, y) || B_IsNaN(x, y)))
 #define HASH(key, K) (3141592653U * (unsigned int)(key) >> (32 - (K)))
 
-
 /* Error messages */
 #define R_ERR_MSG_NA	_("NaNs produced")
 
