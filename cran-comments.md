@@ -1,6 +1,6 @@
 ## Test environments
 
--   Local (ubuntu 22.04.02): R 4.3.2
+-   Local (ubuntu 22.04.03): R 4.3.2
 -   GitHub Actions (ubuntu-latest) release, devel, oldrel
 -   GitHub Actions (windows-latest) release
 -   GitHub Actions (mac-latest) release
