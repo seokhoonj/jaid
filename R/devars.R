@@ -7,8 +7,7 @@
 #' @return A string vector
 #'
 #' @examples
-#' \donttest{
-#' devars(expression)
+#' \donttest{devars(expression)
 #' devars(c(expression, string))
 #' devars(list(expression, string))
 #' devars(.(expression, string))}

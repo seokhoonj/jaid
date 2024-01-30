@@ -54,7 +54,8 @@ extern "C" {
 #endif
 
 // Utils
-SEXP FillValue(SEXP x, double value);
+void CopyDimNames(SEXP, SEXP);
+void FillValue(SEXP x, SEXP value);
 
 // Mode
 SEXP _jaid_fastMode(SEXP, SEXP);
@@ -87,6 +88,10 @@ SEXP ColSum(SEXP x);
 
 SEXP SumByColNames(SEXP x, SEXP g, SEXP uniqueg, SEXP snarm);
 SEXP SumByRowNames(SEXP x, SEXP g, SEXP uniqueg, SEXP snarm);
+
+// First Positive
+SEXP GetFirstPos(SEXP x, SEXP id, SEXP ot);
+SEXP SetFirstPos(SEXP x, SEXP id, SEXP ot);
 
 #endif // JAID_JAID_H
 

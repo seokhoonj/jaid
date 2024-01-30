@@ -240,8 +240,8 @@ SEXP MaxByColNames(SEXP x, SEXP g, SEXP uniqueg, SEXP snarm, SEXP minval) {
 
   switch(TYPEOF(x)){
   case INTSXP:{
-    int value = asInteger(minval);
-    FillValue(z, value);
+    // int value = asInteger(minval);
+    FillValue(z, minval);
     int* iz = INTEGER(z);
     int* ix = INTEGER(x);
     for (int i = 0; i < n; i++) {
@@ -253,8 +253,8 @@ SEXP MaxByColNames(SEXP x, SEXP g, SEXP uniqueg, SEXP snarm, SEXP minval) {
     }
   } break;
   case REALSXP:{
-    double value = asReal(minval);
-    FillValue(z, value);
+    // double value = asReal(minval);
+    FillValue(z, minval);
     double* iz = REAL(z);
     double* ix = REAL(x);
     for (int i = 0; i < n; i++) {
@@ -302,8 +302,8 @@ SEXP MaxByRowNames(SEXP x, SEXP g, SEXP uniqueg, SEXP snarm, SEXP minval) {
 
   switch(TYPEOF(x)){
   case INTSXP:{
-    int value = asInteger(minval);
-    FillValue(ans, value);
+    // int value = asInteger(minval);
+    FillValue(ans, minval);
     for (int i = 0; i < p; i++) {
       int *pa = INTEGER(ans);
       for(int j = 0; j < n; j++) {
@@ -316,8 +316,8 @@ SEXP MaxByRowNames(SEXP x, SEXP g, SEXP uniqueg, SEXP snarm, SEXP minval) {
     }
   } break;
   case REALSXP:{
-    double value = asReal(minval);
-    FillValue(ans, value);
+    // double value = asReal(minval);
+    FillValue(ans, minval);
     for (int i = 0; i < p; i++) {
       double *pa = REAL(ans);
       for(int j = 0; j < n; j++) {
@@ -366,8 +366,8 @@ SEXP MinByColNames(SEXP x, SEXP g, SEXP uniqueg, SEXP snarm, SEXP maxval) {
 
   switch(TYPEOF(x)){
   case INTSXP:{
-    int value = asInteger(maxval);
-    FillValue(z, value);
+    // int value = asInteger(maxval);
+    FillValue(z, maxval);
     int* iz = INTEGER(z);
     int* ix = INTEGER(x);
     for (int i = 0; i < n; i++) {
@@ -379,8 +379,8 @@ SEXP MinByColNames(SEXP x, SEXP g, SEXP uniqueg, SEXP snarm, SEXP maxval) {
     }
   } break;
   case REALSXP:{
-    double value = asReal(maxval);
-    FillValue(z, value);
+    // double value = asReal(maxval);
+    FillValue(z, maxval);
     double* iz = REAL(z);
     double* ix = REAL(x);
     for (int i = 0; i < n; i++) {
@@ -428,8 +428,8 @@ SEXP MinByRowNames(SEXP x, SEXP g, SEXP uniqueg, SEXP snarm, SEXP maxval) {
 
   switch(TYPEOF(x)){
   case INTSXP:{
-    int value = asInteger(maxval);
-    FillValue(ans, value);
+    // int value = asInteger(maxval);
+    FillValue(ans, maxval);
     for (int i = 0; i < p; i++) {
       int *pa = INTEGER(ans);
       for(int j = 0; j < n; j++) {
@@ -442,8 +442,8 @@ SEXP MinByRowNames(SEXP x, SEXP g, SEXP uniqueg, SEXP snarm, SEXP maxval) {
     }
   } break;
   case REALSXP:{
-    double value = asReal(maxval);
-    FillValue(ans, value);
+    // double value = asReal(maxval);
+    FillValue(ans, maxval);
     for (int i = 0; i < p; i++) {
       double *pa = REAL(ans);
       for(int j = 0; j < n; j++) {

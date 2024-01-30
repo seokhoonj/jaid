@@ -120,4 +120,15 @@ sum_by_dimnames(x)
 #> a 3 24
 #> b 3 15
 
+# get or set first positive value of a numerical matrix by row names
+x <- matrix(c(-1, 2, 0, -2, -1, 5, 2, -2, 3), nrow = 3)
+set_dimnames(x, list(c(1, 1, 2), c("a", "b", "c")))
+get_first_pos(x)
+#>   a b c
+#> 1 0 0 2
+#> 1 2 0 0
+#> 2 0 5 3
+set_first_pos(x) # makes x directly
+
 ```
+

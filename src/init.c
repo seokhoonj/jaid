@@ -5,6 +5,7 @@
 #define CALLDEF(name, n) {#name, (DL_FUNC) &name, n} // # is a stringify operator
 
 static const R_CallMethodDef callEntries[] = {
+  // Mode
   CALLDEF(_jaid_fastMode, 2),
   CALLDEF(_jaid_fastModeX, 2),
 
@@ -34,6 +35,10 @@ static const R_CallMethodDef callEntries[] = {
 
   CALLDEF(SumByColNames, 4),
   CALLDEF(SumByRowNames, 4),
+
+  // First Pos
+  CALLDEF(GetFirstPos, 3),
+  CALLDEF(SetFirstPos, 3),
   {NULL, NULL, 0}
 };
 

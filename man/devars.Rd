@@ -16,8 +16,7 @@ A string vector
 This function operates like \code{deparse(substitute(x))} inside the functions.
 }
 \examples{
-\donttest{
-devars(expression)
+\donttest{devars(expression)
 devars(c(expression, string))
 devars(list(expression, string))
 devars(.(expression, string))}
