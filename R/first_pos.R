@@ -24,7 +24,7 @@ get_first_pos <- function(x, cols) {
   if (is.null(rownames(x)))
     stop(devars(x), " doesn't have row names", call. = FALSE)
   if (missing(cols)) cols <- rep(1, ncol(x))
-  .Call(GetFirstPos, x = x, id = rownames, ot = cols)
+  .Call(GetFirstPos, x = x, id = rownames(x), ot = cols)
 }
 
 #' @rdname get_first_pos
@@ -33,5 +33,5 @@ set_first_pos <- function(x, cols) {
   if (is.null(rownames(x)))
     stop(devars(x), " doesn't have row names", call. = FALSE)
   if (missing(cols)) cols <- rep(1, ncol(x))
-  invisible(.Call(SetFirstPos, x, id = rownames, ot = cols))
+  invisible(.Call(SetFirstPos, x, id = rownames(x), ot = cols))
 }
