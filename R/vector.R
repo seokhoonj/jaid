@@ -16,7 +16,7 @@ unilen <- function(x) .Call(Unilen, x)
 
 #' reverse a vector
 #'
-#' Reverse a vector.
+#' Reverse a vector directly.
 #'
 #' @param x A vector
 #'
@@ -28,7 +28,7 @@ unilen <- function(x) .Call(Unilen, x)
 #' reverse(x)}
 #'
 #' @export
-reverse <- function(x) .Call(Reverse, x)
+reverse <- function(x) invisible(.Call(Reverse, x))
 
 #' traverse two vectors
 #'

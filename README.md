@@ -27,7 +27,8 @@ unilen(x)
 #> [1] 5
 
 x <- 1:9
-reverse(x)
+reverse(x) # edit x directly
+x
 #> [1] 9 8 7 6 5 4 3 2 1
 
 x <- c(1, 3, 5, 7)

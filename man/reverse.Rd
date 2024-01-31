@@ -13,7 +13,7 @@ reverse(x)
 A reversed vector
 }
 \description{
-Reverse a vector.
+Reverse a vector directly.
 }
 \examples{
 # reverse a vector
