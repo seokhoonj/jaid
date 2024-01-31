@@ -89,9 +89,11 @@ SEXP ColSum(SEXP x);
 SEXP SumByColNames(SEXP x, SEXP g, SEXP uniqueg, SEXP snarm);
 SEXP SumByRowNames(SEXP x, SEXP g, SEXP uniqueg, SEXP snarm);
 
-// First Positive
-SEXP GetFirstPos(SEXP x, SEXP id, SEXP ot);
-SEXP SetFirstPos(SEXP x, SEXP id, SEXP ot);
+// First
+SEXP FillZeroNotFirstPos(SEXP x, SEXP id, SEXP ot);
+SEXP SetZeroNotFirstPos(SEXP x, SEXP id, SEXP ot);
+SEXP FillOneBeforeFirstOne(SEXP x, SEXP id);
+SEXP SetOneBeforeFirstOne(SEXP x, SEXP id);
 
 #endif // JAID_JAID_H
 

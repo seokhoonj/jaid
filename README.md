@@ -120,15 +120,19 @@ sum_by_dimnames(x)
 #> a 3 24
 #> b 3 15
 
-# get or set first positive value of a numerical matrix by row names
+# fill zero except for the first positive values of a numerical matrix by rownames
 x <- matrix(c(-1, 2, 0, -2, -1, 5, 2, -2, 3), nrow = 3)
 set_dimnames(x, list(c(1, 1, 2), c("a", "b", "c")))
-get_first_pos(x)
+fill_zero_not_first_pos(x)
 #>   a b c
 #> 1 0 0 2
 #> 1 2 0 0
 #> 2 0 5 3
-set_first_pos(x) # edit x directly
+set_zero_not_first_pos(x) # edit x directly
+
+x <- matrix(c(0, 1, 0, 0, 0, 1, 1, 0, 1), nrow = 3)
+set_dimnames(x, list(c(1, 1, 2), c("a", "b", "c")))
+fill_one_before_first_one(x)
 
 ```
 
