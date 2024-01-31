@@ -16,16 +16,16 @@ set_one_before_first_one(x)
 A binary matrix
 }
 \description{
-Fill with one before the first one appears in each column and by rownames of
-the binary matrix.
+Fill with one before the first one appears in each column in a binary matrix
+by rownames
 }
 \examples{
-# fill with one before the first one appears
+# fill with one before the first one appears by rownames
 \donttest{x <- matrix(c(0, 1, 0, 0, 0, 1, 1, 0, 1), nrow = 3)
 set_rownames(x, c(1, 1, 2))
 fill_one_before_first_one(x)}
 
-# Set one before the first one appears
+# Set to one before the first one appears by rownames
 \donttest{x <- matrix(c(0, 1, 0, 0, 0, 1, 1, 0, 1), nrow = 3)
 set_rownames(x, c(1, 1, 2))
 fill_one_before_first_one(x)}

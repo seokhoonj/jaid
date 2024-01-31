@@ -6,7 +6,7 @@
 \alias{jaid-package}
 \title{jaid: Joo's functional aid toolkit}
 \description{
-Joo Aid
+Joo's functional aid toolkit for efficient programming.
 }
 \author{
 \strong{Maintainer}: seokhoon Joo \email{seokhoonj@gmail.com}

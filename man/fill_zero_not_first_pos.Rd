@@ -3,7 +3,7 @@
 \name{fill_zero_not_first_pos}
 \alias{fill_zero_not_first_pos}
 \alias{set_zero_not_first_pos}
-\title{fill or set zero except for the first positive values}
+\title{fill with or set to zero except for the first positive values}
 \usage{
 fill_zero_not_first_pos(x, cols)
 
@@ -20,16 +20,18 @@ A matrix with only first positive value for each row names, and the
 other values become 0.
 }
 \description{
-Fill or set zero except for the first positive values of a numerical matrix
-by rownames
+Fill with or set to zero except for the first positive values of a numerical
+matrix by rownames
 }
 \examples{
-# fill zero except for the first positive values of a numerical matrix by rownames
+# fill with zero except for the first positive values of a numerical matrix
+# by rownames
 \donttest{x <- matrix(c(-1, 2, 0, -2, -1, 5, 2, -2, 3), nrow = 3)
 set_rownames(x, c(1, 1, 2))
 fill_zero_not_first_pos(x)}
 
-# set zero except for the first positive values of a numerical matrix by rownames
+# set to zero except for the first positive values of a numerical matrix by
+# rownames
 \donttest{x <- matrix(c(-1, 2, 0, -2, -1, 5, 2, -2, 3), nrow = 3)
 set_rownames(x, c(1, 1, 2))
 set_zero_not_first_pos(x)}
