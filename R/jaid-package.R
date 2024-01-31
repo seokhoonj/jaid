@@ -1,5 +1,5 @@
 #' @description
-#' Joo Aid
+#' Joo's functional aid toolkit for efficient programming.
 #' @keywords internal
 #' @useDynLib jaid, .registration = TRUE
 #' @importFrom openssl aes_cbc_decrypt aes_cbc_encrypt sha256
