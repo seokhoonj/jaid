@@ -19,7 +19,8 @@ Intersect the elements of two vectors.
 }
 \examples{
 # traverse two vectors
-\donttest{x <- y <- c(1:10)
+\donttest{x <- c(1, 3, 5, 7)
+y <- c(2, 4, 6, 8)
 traverse(x, y)}
 
 }

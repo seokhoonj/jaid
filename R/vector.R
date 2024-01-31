@@ -41,8 +41,26 @@ reverse <- function(x) invisible(.Call(Reverse, x))
 #'
 #' @examples
 #' # traverse two vectors
-#' \donttest{x <- y <- c(1:10)
+#' \donttest{x <- c(1, 3, 5, 7)
+#' y <- c(2, 4, 6, 8)
 #' traverse(x, y)}
 #'
 #' @export
 traverse <- function(x, y) .Call(Traverse, x, y)
+
+#' Most frequent value (mode, modal value)
+#'
+#' Get the most frequent value.
+#'
+#' @param x A vector
+#' @param na.rm A boolean value removing na or not
+#'
+#' @return the most frequent value vector and its frequency
+#'
+#' @examples
+#' # get the most frequent values
+#' \donttest{x <- c(1, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 5)
+#' mostfreq(x)}
+#'
+#' @export
+mostfreq <- function(x, na.rm = FALSE) fastModeX(x, na.rm)

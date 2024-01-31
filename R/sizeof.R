@@ -1,6 +1,6 @@
 #' Object size
 #'
-#' This function calculates the object size
+#' Calculates the object size
 #'
 #' @param x object vector, data.frame, environment and etc
 #' @param unit size unit `B`, `KB`, `MB`, `GB` default `KB`

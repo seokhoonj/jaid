@@ -22,19 +22,29 @@ devtools::install_github("seokhoonj/jaid")
 ```r
 library(jaid)
 
+# unique length 
 x <- c(1, 1, 2, 3, 4, 5, 5)
 unilen(x)
 #> [1] 5
 
+# reverse vector directly
 x <- 1:9
 reverse(x) # edit x directly
 x
 #> [1] 9 8 7 6 5 4 3 2 1
 
+# intersect the elements of two vectors
 x <- c(1, 3, 5, 7)
 y <- c(2, 4, 6, 8)
 traverse(x, y)
 #> [1] 1 2 3 4 5 6 7 8
+
+# most frequent value
+x <- c(1, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 5)
+mostfreq(x)
+#> [1] 1 5
+#> attr(,"freq")
+#> [1] 3
 
 ```
 

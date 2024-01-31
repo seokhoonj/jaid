@@ -2,18 +2,23 @@
 % Please edit documentation in R/assert.R
 \name{assert_type}
 \alias{assert_type}
-\title{assert type}
+\title{Assert type}
 \usage{
 assert_type(obj, type)
 }
 \arguments{
 \item{obj}{object}
 
-\item{type}{A type string}
+\item{type}{object type}
 }
 \value{
 no return
 }
 \description{
-Check the type of object.
+Assert object type.
+}
+\examples{
+# assert object type
+\donttest{assert_type("x", "character")}
+
 }

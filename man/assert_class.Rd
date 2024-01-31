@@ -2,18 +2,23 @@
 % Please edit documentation in R/assert.R
 \name{assert_class}
 \alias{assert_class}
-\title{assert class}
+\title{Assert class}
 \usage{
 assert_class(obj, class)
 }
 \arguments{
 \item{obj}{object}
 
-\item{class}{A class string}
+\item{class}{object class}
 }
 \value{
 no return
 }
 \description{
-Check the class of object.
+Assert object class.
+}
+\examples{
+# assert object class
+\donttest{assert_class(cars, "data.frame")}
+
 }

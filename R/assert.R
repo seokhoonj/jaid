@@ -1,35 +1,42 @@
-#' @title assert type
-#' @description
-#' Check the type of object.
+#' Assert type
+#'
+#' Assert object type.
 #'
 #' @param obj object
-#' @param type A type string
+#' @param type object type
 #' @return no return
+#'
+#' @examples
+#' # assert object type
+#' \donttest{assert_type("x", "character")}
 #'
 #' @export
 assert_type <- function(obj, type) {
-  obj_name <- devars(obj)
+  obj_name <- deparse(substitute(obj))
   if (typeof(obj) != type) {
     stop(obj_name, " is not an object of type: '",
-         paste(type, collapse = ", "), "'",
+         paste0(type, collapse = ", "), "'",
          call. = FALSE)
   }
 }
-
-#' @title assert class
-#' @description
-#' Check the class of object.
+#' Assert class
+#'
+#' Assert object class.
 #'
 #' @param obj object
-#' @param class A class string
+#' @param class object class
 #' @return no return
+#'
+#' @examples
+#' # assert object class
+#' \donttest{assert_class(cars, "data.frame")}
 #'
 #' @export
 assert_class <- function(obj, class) {
-  obj_name <- devars(obj)
+  obj_name <- deparse(substitute(obj))
   if (!inherits(obj, class)) {
     stop(obj_name, " is not an object of class: '",
-         paste(class, collapse = ", "), "'",
+         paste0(class, collapse = ", "), "'",
          call. = FALSE)
   }
 }

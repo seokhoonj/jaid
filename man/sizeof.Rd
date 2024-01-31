@@ -12,7 +12,7 @@ sizeof(x, unit)
 \item{unit}{size unit \code{B}, \code{KB}, \code{MB}, \code{GB} default \code{KB}}
 }
 \description{
-This function calculates the object size
+Calculates the object size
 }
 \examples{
 \dontrun{
