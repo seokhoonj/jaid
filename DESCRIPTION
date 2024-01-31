@@ -9,8 +9,9 @@ License: GPL (>= 3)
 Encoding: UTF-8
 Depends: R (>= 3.5.0)
 Imports:
+    Rcpp (>= 0.12.10),
     openssl (>= 1.4.1),
-    Rcpp (>= 0.12.10)
+    openxlsx (>= 4.2.3)
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.3
 LinkingTo: 

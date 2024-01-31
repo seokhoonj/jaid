@@ -7,13 +7,13 @@
 #'
 #' @examples
 #' \donttest{meta(cars)}
+#'
 #' @export
 meta <- function(x) UseMethod("meta")
 
 #' @method meta data.frame
 #' @export
 meta.data.frame <- function(x) {
-  assert_class(x, "data.frame")
   column <- names(x)
   class <- sapply(x, class)
   type <- sapply(x, typeof)
@@ -25,4 +25,26 @@ meta.data.frame <- function(x) {
   mode <- sapply(x, function(x) fastModeX(x)[1L])
   data.frame(column, class, type, n, missing, zero, distinct,
              prop = 1 - missing/nrows, nzprop = 1 - zero/nrows, mode)
+}
+
+#' Class and type information
+#'
+#' Show class and type information.
+#'
+#' @param x object vector, data.frame, environment and etc
+#' @return class and type information data frame
+#'
+#' @examples
+#' \donttest{type(cars)}
+#'
+#' @export
+type <- function(x) UseMethod("type")
+
+#' @method type data.frame
+#' @export
+type.data.frame <- function(x) {
+  column <- names(x)
+  class <- sapply(x, class)
+  type <- sapply(x, typeof)
+  data.frame(column, class, type)
 }
