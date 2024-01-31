@@ -222,16 +222,16 @@ sum_by_dimnames <- function(x, na.rm = TRUE) {
 #' @export
 rotate <- function(x, angle = c(90, 180, 270)) {
   z <- .Call(Rotate, x, angle)
-  if (angle %% 360 == 90) {
+  if (angle[1L] %% 360 == 90) {
     dn <- dimnames(x)
     dn <- rev(dn)
     dn[[2L]] <- rev(dn[[2L]])
     set_dimnames(z, dn)
-  } else if (angle %% 360 == 180) {
+  } else if (angle[1L] %% 360 == 180) {
     dn <- dimnames(x)
     dn <- lapply(dn, rev)
     set_dimnames(z, dn)
-  } else if (angle %% 360 == 270) {
+  } else if (angle[1L] %% 360 == 270) {
     dn <- dimnames(x)
     dn[[2L]] <- rev(dn[[2L]])
     dn <- rev(dn)
@@ -239,3 +239,4 @@ rotate <- function(x, angle = c(90, 180, 270)) {
   }
   return(z)
 }
+
