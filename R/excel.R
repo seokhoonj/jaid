@@ -96,6 +96,7 @@ write_data <- function(wb, sheet, data, rc = c(1L, 1L), rowNames = TRUE,
 #' @param data A data frame
 #' @param file A file path
 #' @param rc A vector of starting point row and column, default c(1L, 1L)
+#' @param rowNames A boolean value contains row names or not
 #' @param overwrite A boolean value that overwrite or not
 #'
 #' @return no return
@@ -106,7 +107,7 @@ write_data <- function(wb, sheet, data, rc = c(1L, 1L), rowNames = TRUE,
 #' write_xlsx(list(data1, data2), "data.xlsx")}
 #'
 #' @export
-write_xlsx <- function(data, file, rc = c(1L, 1L), overwrite = FALSE) {
+write_xlsx <- function(data, file, rc = c(1L, 1L), rowNames = FALSE, overwrite = FALSE) {
   wb <- createWorkbook()
   if (is.data.frame(data))
     data <- list(data)
@@ -117,7 +118,7 @@ write_xlsx <- function(data, file, rc = c(1L, 1L), overwrite = FALSE) {
     addWorksheet(wb = wb, sheetName = sheetName[[x]], gridLines = FALSE))
   lapply(seq_along(data), function(x)
     write_data(wb, sheet = sheetName[[x]], data = data[[x]], rc = rc,
-               rowNames = FALSE))
+               rowNames = rowNames))
   saveWorkbook(wb = wb, file = file, overwrite = overwrite)
 }
 

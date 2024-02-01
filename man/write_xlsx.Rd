@@ -4,7 +4,7 @@
 \alias{write_xlsx}
 \title{Write data in an excel file}
 \usage{
-write_xlsx(data, file, rc = c(1L, 1L), overwrite = FALSE)
+write_xlsx(data, file, rc = c(1L, 1L), rowNames = FALSE, overwrite = FALSE)
 }
 \arguments{
 \item{data}{A data frame}
@@ -12,6 +12,8 @@ write_xlsx(data, file, rc = c(1L, 1L), overwrite = FALSE)
 \item{file}{A file path}
 
 \item{rc}{A vector of starting point row and column, default c(1L, 1L)}
+
+\item{rowNames}{A boolean value contains row names or not}
 
 \item{overwrite}{A boolean value that overwrite or not}
 }
