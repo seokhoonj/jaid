@@ -19,6 +19,7 @@ assert_type <- function(obj, type) {
          call. = FALSE)
   }
 }
+
 #' Assert class
 #'
 #' Assert object class.

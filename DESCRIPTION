@@ -5,7 +5,7 @@ Authors@R:
     person(given = "seokhoon", family = "Joo", role = c("aut", "cre"),
            email = "seokhoonj@gmail.com")
 Description: Joo's functional aid toolkit for efficient programming.
-License: GPL (>= 3)
+License: MIT + file LICENSE
 Encoding: UTF-8
 Depends: R (>= 3.5.0)
 Imports:
