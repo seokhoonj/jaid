@@ -1,12 +1,12 @@
 #include "jaid.h"
 
-// set dim names
+/* set dim names */
 SEXP SetDimNames(SEXP x, SEXP dimnames) {
   setAttrib(x, R_DimNamesSymbol, dimnames);
   return x;
 }
 
-// set row names
+/* set row names */
 SEXP SetRowNames(SEXP x, SEXP rownames) {
   SEXP colnames, dimnames, dimsymbols;
   PROTECT(dimnames = allocVector(VECSXP, 2));
@@ -23,7 +23,7 @@ SEXP SetRowNames(SEXP x, SEXP rownames) {
   return x;
 }
 
-// set col names
+/* set col names */
 SEXP SetColNames(SEXP x, SEXP colnames) {
   SEXP dimnames, dimsymbols, rownames;
   PROTECT(dimnames = allocVector(VECSXP, 2));

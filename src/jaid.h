@@ -3,29 +3,29 @@
 
 #include <R.h>
 #include <Rinternals.h>
-#include <stdlib.h>
+#include <stdlib.h> /* qsort in group.c */
 #include <stdint.h>
 #include <stdbool.h>
 
 #define USE_RINTERNALS 1
 
 #ifdef WIN32
-#include <windows.h>
+# include <windows.h>
 #else
-#include <sys/mman.h>
-#include <sys/stat.h>
-#include <sys/types.h>
-#include <fcntl.h>
-#include <unistd.h>
-#include <errno.h>
+# include <sys/mman.h>
+# include <sys/stat.h>
+# include <sys/types.h>
+# include <fcntl.h>
+# include <unistd.h>
+# include <errno.h>
 #endif
 
 /* for a message translation */
 #ifdef ENABLE_NLS
-#include <libintl.h>
-#define _(String) dgettext ("jaid", String)
+# include <libintl.h>
+# define _(String) dgettext ("jaid", String)
 #else
-#define _(String) (String)
+# define _(String) (String)
 #endif
 
 /* structure */
@@ -53,9 +53,25 @@ union uno {
 extern "C" {
 #endif
 
+// as
+SEXP AsLogical(SEXP x);
+SEXP AsInteger(SEXP x);
+SEXP AsDouble(SEXP x);
+SEXP AsNumeric(SEXP x);
+SEXP AsCharacter(SEXP x);
+
 // Utils
-void CopyDimNames(SEXP, SEXP);
+SEXP BeforeChangeIndex(SEXP x);
+void CopyDimNames(SEXP from, SEXP to);
+void FillCBool(SEXP x, bool value);
+void FillCInt(SEXP x, int value);
+void FillCDouble(SEXP x, double value);
+void FillCString(SEXP x, const char *value);
 void FillValue(SEXP x, SEXP value);
+
+/* Group */
+SEXP IndexDateRangeOverlap(SEXP id, SEXP from, SEXP to, SEXP interval);
+SEXP SortGroupBy(SEXP id);
 
 // Mode
 SEXP _jaid_fastMode(SEXP, SEXP);
@@ -95,11 +111,12 @@ SEXP SetZeroNotFirstPos(SEXP x, SEXP id, SEXP ot);
 SEXP FillOneBeforeFirstOne(SEXP x, SEXP id);
 SEXP SetOneBeforeFirstOne(SEXP x, SEXP id);
 
-#endif // JAID_JAID_H
-
 #ifdef __cplusplus
 }
 #endif
+
+#endif // JAID_JAID_H
+
 
 // no	SEXPTYPE   Description
 //  0	NILSXP     NULL

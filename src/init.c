@@ -5,6 +5,20 @@
 #define CALLDEF(name, n) {#name, (DL_FUNC) &name, n} // # is a stringify operator
 
 static const R_CallMethodDef callEntries[] = {
+  // as
+  CALLDEF(AsLogical, 1),
+  CALLDEF(AsInteger, 1),
+  CALLDEF(AsDouble, 1),
+  CALLDEF(AsNumeric, 1),
+  CALLDEF(AsCharacter, 1),
+
+  // Group
+  CALLDEF(IndexDateRangeOverlap, 4),
+  CALLDEF(SortGroupBy, 1),
+
+  // Utils
+  CALLDEF(BeforeChangeIndex, 1),
+
   // Mode
   CALLDEF(_jaid_fastMode, 2),
   CALLDEF(_jaid_fastModeX, 2),

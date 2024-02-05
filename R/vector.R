@@ -64,3 +64,6 @@ traverse <- function(x, y) .Call(Traverse, x, y)
 #'
 #' @export
 mostfreq <- function(x, na.rm = FALSE) fastModeX(x, na.rm)
+
+
+before_change_index <- function(x) .Call(BeforeChangeIndex, x)
