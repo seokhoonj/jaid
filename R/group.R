@@ -1,6 +1,6 @@
 
-# Combine overlapping dates
-# unique_date_range_overlap <- function(df, id_var, merge_var, from_var, to_var, interval = 0) {
+# Calculate unique days in multiple overlapping date ranges
+# merge_date_range_overlap <- function(df, id_var, merge_var, from_var, to_var, interval = 0) {
 #   id_var    <- match_cols(df, vapply(substitute(id_var)   , deparse, "character"))
 #   merge_var <- match_cols(df, vapply(substitute(merge_var), deparse, "character"))
 #   from_var  <- match_cols(df, deparse(substitute(from_var)))
