@@ -68,9 +68,11 @@ void FillCInt(SEXP x, int value);
 void FillCDouble(SEXP x, double value);
 void FillCString(SEXP x, const char *value);
 void FillValue(SEXP x, SEXP value);
+void PrintArray(int arr[], int len);
+SEXP PrintVector(SEXP x);
 
 /* Group */
-SEXP IndexDateRangeOverlap(SEXP id, SEXP from, SEXP to, SEXP interval);
+SEXP IndexOverlappingDateRange(SEXP id, SEXP from, SEXP to, SEXP interval);
 SEXP SortGroupBy(SEXP id);
 
 // Mode

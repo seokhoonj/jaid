@@ -96,14 +96,25 @@ SEXP SortGroupBy(SEXP id) {
   return pos;
 }
 
-SEXP IndexDateRangeOverlap(SEXP id, SEXP from, SEXP to, SEXP interval) {
+/* "loc" means numbers to be grouped. if the loc vector is like
+ * c(1, 1, 1, 2, 2, 2, 2), we got two groups first 3 rows and second 4 rows.
+ * "sub" means subtracting number of days when the interval argument is longer
+ * than 0. if the two date ranges are like "2014-02-03 ~ 2014-02-04" and
+ * "2014-02-12 ~ 2014-02-13" and the interval is 7, it is combined as 2014-02-03 ~ 2014-02-13 */
+SEXP IndexOverlappingDateRange(SEXP id, SEXP from, SEXP to, SEXP interval) {
   R_xlen_t m, n, i, j;
   SEXP loc, sub, v, z;
-  m = XLENGTH(VECTOR_ELT(id, 0)), n = XLENGTH(id);
+  if (isVectorList(id)) {
+    m = XLENGTH(VECTOR_ELT(id, 0)), n = XLENGTH(id);
+  } else {
+    m = XLENGTH(id), n = 1;
+  }
 
-  int *ifr = INTEGER(from);
-  int *ito = INTEGER(to);
-  int vinterval = asInteger(interval);
+  // type of date is double
+  double *ifr = REAL(from);
+  double *ito = REAL(to);
+  // interval is integer
+  double vinterval = asReal(interval);
 
   PROTECT(loc = allocVector(INTSXP, m));
   PROTECT(sub = allocVector(INTSXP, m));
@@ -117,7 +128,11 @@ SEXP IndexDateRangeOverlap(SEXP id, SEXP from, SEXP to, SEXP interval) {
   for (i = 1; i < m; ++i) {
     j = 0, c1 = true;
     while (j < n) {
-      v = VECTOR_ELT(id, j);
+      if (isVectorList(id)) {
+        v = VECTOR_ELT(id, j);
+      } else {
+        v = id;
+      }
       switch(TYPEOF(v)){
       case LGLSXP:{
         int *iv = LOGICAL(v);

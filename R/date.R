@@ -38,12 +38,12 @@ add_mon <- function (date, mon) {
 #' emonth(Sys.Date())}
 #'
 #' @export
-bmonth <- function(x) {
-  as.Date(format(as.Date(x), format = "%Y-%m-01"))
+bmonth <- function(date) {
+  as.Date(format(as.Date(date), format = "%Y-%m-01"))
 }
 
 #' @rdname bmonth
 #' @export
-emonth <- function(x) {
-  add_mon(x, 1L) - 1L
+emonth <- function(date) {
+  add_mon(date, 1L) - 1L
 }

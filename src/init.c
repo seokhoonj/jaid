@@ -13,7 +13,7 @@ static const R_CallMethodDef callEntries[] = {
   CALLDEF(AsCharacter, 1),
 
   // Group
-  CALLDEF(IndexDateRangeOverlap, 4),
+  CALLDEF(IndexOverlappingDateRange, 4),
   CALLDEF(SortGroupBy, 1),
 
   // Utils

@@ -1,17 +1,13 @@
 
-.onAttach <- function(libname, pkgname) {
-  packageStartupMessage("Written by Seokhoon Joo. (Note, kcd terms arguments are monthly-basis)")
-}
-
 .onLoad <- function(libname, pkgname) {
   op <- options()
-  op.vuw <- list(
-    vuw.eps = 1e-8,
-    vuw.scipen = 14,
-    vuw.guess_max = 21474836
+  op.jaid <- list(
+    jaid.eps = 1e-8,
+    jaid.scipen = 14,
+    jaid.guess_max = 21474836
   )
-  toset <- !(names(op.vuw) %in% names(op))
-  if (any(toset)) options(op.vuw[toset])
+  toset <- !(names(op.jaid) %in% names(op))
+  if (any(toset)) options(op.jaid[toset])
   invisible()
 }
 

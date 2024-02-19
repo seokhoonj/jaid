@@ -4,14 +4,16 @@ Version: 0.0.0.9000
 Authors@R: 
     person(given = "seokhoon", family = "Joo", role = c("aut", "cre"),
            email = "seokhoonj@gmail.com")
-Description: Joo's functional aid toolkit for efficient programming.
+Description: Joo's functional aid toolkit for efficient and productive programming.
 License: MIT + file LICENSE
 Encoding: UTF-8
 Depends: R (>= 3.5.0)
 Imports:
     Rcpp (>= 0.12.10),
+    data.table (>= 1.13.0),
     openssl (>= 1.4.1),
-    openxlsx (>= 4.2.3)
+    openxlsx (>= 4.2.3),
+    tibble (>= 3.2.1)
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.3
 LinkingTo: 
