@@ -61,15 +61,15 @@ write_data <- function(wb, sheet, data, rc = c(1L, 1L), rowNames = TRUE,
 
   headerCols  <- scol:ecol
   headerRows1 <- srow
-  headerCols1 <- scol:(ecol-1)
+  headerCols1 <- scol:max(ecol-1, 1)
   headerRows2 <- srow
   headerCols2 <- ecol
-  bodyRows1   <- (srow+1):(erow-1)
-  bodyCols1   <- scol:(ecol-1)
-  bodyRows2   <- (srow+1):(erow-1)
+  bodyRows1   <- (srow+1):max(erow-1, 2)
+  bodyCols1   <- scol:max(ecol-1, 1)
+  bodyRows2   <- (srow+1):max(erow-1, 2)
   bodyCols2   <- ecol
   footerRows1 <- erow
-  footerCols1 <- scol:(ecol-1)
+  footerCols1 <- scol:max(ecol-1, 1)
   footerRows2 <- erow
   footerCols2 <- ecol
 
@@ -104,7 +104,7 @@ write_data <- function(wb, sheet, data, rc = c(1L, 1L), rowNames = TRUE,
 #' @examples
 #' # write xlsx file
 #' \dontrun{
-#' write_xlsx(list(data1, data2), "data.xlsx")}
+#' write_xlsx(list(cars = cars, matcars = mtcars), "data.xlsx")}
 #'
 #' @export
 write_xlsx <- function(data, file, rc = c(1L, 1L), rowNames = FALSE, overwrite = FALSE) {

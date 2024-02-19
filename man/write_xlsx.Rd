@@ -26,6 +26,6 @@ Write data in an excel file.
 \examples{
 # write xlsx file
 \dontrun{
-write_xlsx(list(data1, data2), "data.xlsx")}
+write_xlsx(list(cars = cars, matcars = mtcars), "data.xlsx")}
 
 }
