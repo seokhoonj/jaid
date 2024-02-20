@@ -63,7 +63,18 @@ traverse <- function(x, y) .Call(Traverse, x, y)
 #' mostfreq(x)}
 #'
 #' @export
-mostfreq <- function(x, na.rm = FALSE) fastModeX(x, na.rm)
+mostfreq <- function(x, na.rm = FALSE) {
+  # fastModeX(x, na.rm) is so slow for 10 million vector.
+  # need to find a different way
+  if (na.rm)
+    x <- x[!is.na(x)]
+  if (inherits(x, "character"))
+    x <- x[x != ""]
+  if (inherits(x, "Date"))
+    x <- as.character(x)
+  uniqx <- unique(x)
+  uniqx[which.max(tabulate(match(x, uniqx)))]
+}
 
 
 before_change_index <- function(x) .Call(BeforeChangeIndex, x)

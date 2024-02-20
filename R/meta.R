@@ -21,8 +21,8 @@ meta.data.frame <- function(x) {
   n <- sapply(x, function(x) sum(!is.na(x)))
   missing <- sapply(x, function(x) sum(is.na(x)))
   zero <- sapply(x, function(x) sum(x == 0, na.rm = TRUE))
-  distinct <- sapply(x, function(s) length(unique(s)))
-  mode <- sapply(x, function(x) fastModeX(x)[1L])
+  distinct <- sapply(x, unilen)
+  mode <- sapply(x, mostfreq)
   data.frame(column, class, type, n, missing, zero, distinct,
              prop = 1 - missing/nrows, nzprop = 1 - zero/nrows, mode)
 }
