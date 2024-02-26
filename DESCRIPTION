@@ -20,5 +20,6 @@ LinkingTo:
     Rcpp,
     RcppArmadillo
 Suggests: 
-    testthat (>= 3.0.0)
+    testthat (>= 3.0.0),
+    pryr (>= 0.1.6) 
 Config/testthat/edition: 3
