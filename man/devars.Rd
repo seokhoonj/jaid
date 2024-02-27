@@ -17,9 +17,8 @@ This function operates like \code{deparse(substitute(x))} inside the functions.
 }
 \examples{
 # deparse(substitute(x))
-\donttest{devars(expression)
+\dontrun{devars(expression)
 devars(c(expression, string))
 devars(list(expression, string))
 devars(.(expression, string))}
-
 }

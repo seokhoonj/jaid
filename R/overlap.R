@@ -25,11 +25,11 @@ combine_overlapping_date_range <- function(df, id_var, merge_var, from_var, to_v
                                            interval = 0, collapse = "|") {
   old_class <- class(df)
   set_dt(df)
-  id_var    <- match_cols(df, vapply(substitute(id_var), deparse, "character"))
-  merge_var <- match_cols(df, vapply(substitute(merge_var), deparse, "character"))
-  from_var  <- deparse(substitute(from_var))
-  to_var  <- deparse(substitute(to_var))
-  all_var <- c(id_var, merge_var, from_var, to_var)
+  id_var    <- match_cols(df, sapply(rlang::enexpr(id_var), rlang::as_name))
+  merge_var <- match_cols(df, sapply(rlang::enexpr(merge_var), rlang::as_name))
+  from_var  <- rlang::as_name(rlang::enquo(from_var))
+  to_var    <- rlang::as_name(rlang::enquo(to_var))
+  all_var   <- c(id_var, merge_var, from_var, to_var)
   dt <- df[, .SD, .SDcols = all_var]
   setnames(dt, c(id_var, merge_var, "from", "to"))
   setorderv(dt, c(id_var, "from", "to"))
@@ -49,7 +49,7 @@ combine_overlapping_date_range <- function(df, id_var, merge_var, from_var, to_v
   set(z, j = "stay", value = as.numeric(z$to - z$from + 1 - z$sub_stay))
   set(z, j = "sub_stay", value = NULL)
   setnames(z, c(all_var, "stay"))
-  setattr(z, "class", old_class)
-  setattr(df, "class", old_class)
+  data.table::setattr(z, "class", old_class)
+  data.table::setattr(df, "class", old_class)
   return(z)
 }

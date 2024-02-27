@@ -8,12 +8,10 @@
 #'
 #' @examples
 #' # deparse(substitute(x))
-#' \donttest{devars(expression)
+#' \dontrun{devars(expression)
 #' devars(c(expression, string))
 #' devars(list(expression, string))
 #' devars(.(expression, string))}
-#'
-#' @export
 devars <- function(x) {
   if (identical(parent.frame(), globalenv()))
     n <- sys.nframe()
@@ -24,7 +22,7 @@ devars <- function(x) {
   return(vapply(x, deparse, "character")[-1L])
 }
 
-match_cols <- function(df, cols) names(df)[match(cols, names(df), 0L)]
+match_cols <- function(df, cols) colnames(df)[match(cols, colnames(df), 0L)]
 
 has_rows <- function(df) {
   df_name <- deparse(substitute(df))
