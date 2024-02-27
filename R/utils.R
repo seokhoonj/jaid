@@ -32,11 +32,32 @@ has_rows <- function(df) {
   }
 }
 
-has_cols <- function(df, cols) {
+#' Has columns
+#'
+#' Whether the data has specific columns
+#'
+#' @param df a data frame
+#' @param cols column names
+#' @param error_raise a boolean whether to raise an error or not
+#' @return a boolean value
+#'
+#' @examples
+#' # has columns
+#' \donttest{has_cols(mtcars, c("cyl", "disp"))}
+#'
+#' # raise an error
+#' \dontrun{
+#' has_cols(mtcars, c("cyl", "iris"), error_raise = TRUE)}
+#'
+#' @export
+has_cols <- function(df, cols, error_raise = FALSE) {
   df_name <- deparse(substitute(df))
   df_cols <- colnames(df)
   diff_cols <- setdiff(cols, df_cols)
-  if (length(diff_cols) > 0) {
+  rt <- length(diff_cols) == 0
+  if (!error_raise)
+    return(rt)
+  if (!rt) {
     stop("'", df_name, "' doesn't have column(s): ",
          paste0(diff_cols, collapse = ", "), ".",
          call. = FALSE)
