@@ -8,6 +8,7 @@
 #' @importFrom openssl aes_cbc_decrypt aes_cbc_encrypt sha256
 #' @importFrom openxlsx addStyle addWorksheet createStyle createWorkbook
 #' insertPlot saveWorkbook setColWidths writeData
+#' @importFrom rlang enexpr
 #' @importFrom tibble as_tibble
 #' @importFrom utils head object.size tail
 "_PACKAGE"
