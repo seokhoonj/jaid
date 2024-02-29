@@ -21,7 +21,7 @@ replace_na_with_zero <- function(df) {
   df[, `:=`((cols), lapply(.SD, function(x) ifelse(is.na(x), 0, x))),
      .SDcols = cols]
   setattr(df, "class", old_class)
-  invisible(df)
+  invisible(df[])
 }
 
 #' Replace empty with NA
@@ -47,5 +47,5 @@ replace_empty_with_na <- function(df) {
   df[, `:=`((cols), lapply(.SD, function(x) ifelse(x == "", NA, x))),
      .SDcols = cols]
   setattr(df, "class", old_class)
-  invisible(df)
+  invisible(df[])
 }

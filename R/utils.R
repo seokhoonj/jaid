@@ -99,25 +99,6 @@ paste_list <- function(x, sep = "|") {
   }
 }
 
-#' Set data frame to tibble
-#'
-#' Set data frame to tibble class.
-#'
-#' @param x data.frame
-#' @return No return value.
-#'
-#' @examples
-#' # set data.frame to tibble
-#' \donttest{set_tibble(iris)}
-#'
-#' @export
-set_tibble <- function(x) {
-  assert_class(x, "data.frame")
-  if (!inherits(x, "tbl_df"))
-    data.table::setattr(x, "class", c("tbl_df", "tbl", "data.frame"))
-  invisible(x)
-}
-
 #' Set data.frame to data.table
 #'
 #' Set data.frame to data.table class.
@@ -134,5 +115,24 @@ set_dt <- function(x) {
   assert_class(x, "data.frame")
   if (!inherits(x, "data.table"))
     data.table::setattr(x, "class", c("data.table", "data.frame"))
+  invisible(x)
+}
+
+#' Set data frame to tibble
+#'
+#' Set data frame to tibble class.
+#'
+#' @param x data.frame
+#' @return No return value.
+#'
+#' @examples
+#' # set data.frame to tibble
+#' \donttest{set_tibble(iris)}
+#'
+#' @export
+set_tibble <- function(x) {
+  assert_class(x, "data.frame")
+  if (!inherits(x, "tbl_df"))
+    data.table::setattr(x, "class", c("tbl_df", "tbl", "data.frame"))
   invisible(x)
 }

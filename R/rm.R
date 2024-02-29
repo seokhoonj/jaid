@@ -20,5 +20,5 @@ rm_cols <- function(df, cols) {
   cols <- match_cols(df, sapply(rlang::enexpr(cols), rlang::as_name))
   df[, `:=`((cols), NULL)]
   data.table::setattr(df, "class", old_class)
-  invisible(df)
+  invisible(df[])
 }
