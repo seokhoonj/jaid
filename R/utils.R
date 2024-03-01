@@ -22,7 +22,8 @@ devars <- function(x) {
   return(vapply(x, deparse, "character")[-1L])
 }
 
-match_cols <- function(df, cols) colnames(df)[match(cols, colnames(df), 0L)]
+match_cols <- function(df, cols)
+  colnames(df)[match(cols, colnames(df), 0L)]
 
 has_rows <- function(df) {
   df_name <- deparse(substitute(df))
@@ -135,4 +136,39 @@ set_tibble <- function(x) {
   if (!inherits(x, "tbl_df"))
     data.table::setattr(x, "class", c("tbl_df", "tbl", "data.frame"))
   invisible(x)
+}
+
+#' Equal columns of two data frames.
+#'
+#' Whether the columns of two data frames are equal.
+#'
+#' @param x,y two data frames
+#' @return a boolean vector
+#'
+#' @examples
+#' # Are the columns of two data frames equal?
+#' \donttest{equal(mtcars, mtcars)}
+#'
+#' @export
+equal <- function(x, y) {
+  assert_class(x, "data.frame")
+  assert_class(y, "data.frame")
+  x_name <- deparse(substitute(x))
+  y_name <- deparse(substitute(y))
+  x_cols <- colnames(x); x_nrow <- nrow(x); x_ncol <- ncol(x)
+  y_cols <- colnames(y); y_nrow <- nrow(y); y_ncol <- ncol(y)
+  if (length(x_cols) != length(y_cols)) {
+    stop(sprintf("different number of cols. (%s: %s, %s: %s)",
+                 x_name, x_ncol, y_name, y_ncol))
+  } else {
+    if (any(sort(x_cols) != sort(y_cols))) {
+      stop(sprintf("different column names.\n%s: %s\n%s: %s",
+                   x_name, paste(x_cols, collapse = ", "),
+                   y_name, paste(y_cols, collapse = ", ")))
+    }
+  }
+  if (x_nrow != y_nrow)
+    stop(sprintf("different number of rows. (%s: %s, %s: %s).",
+                 x_name, x_nrow, y_name, y_nrow))
+  return(sapply(x_cols, function(s) all(x[[s]] == y[[s]])))
 }
