@@ -15,7 +15,7 @@ assert_type <- function(obj, type) {
   obj_name <- deparse(substitute(obj))
   if (typeof(obj) != type) {
     stop(obj_name, " is not an object of type: '",
-         paste0(type, collapse = ", "), "'",
+         paste(type, collapse = ", "), "'",
          call. = FALSE)
   }
 }
@@ -37,7 +37,7 @@ assert_class <- function(obj, class) {
   obj_name <- deparse(substitute(obj))
   if (!inherits(obj, class)) {
     stop(obj_name, " is not an object of class: '",
-         paste0(class, collapse = ", "), "'",
+         paste(class, collapse = ", "), "'",
          call. = FALSE)
   }
 }
