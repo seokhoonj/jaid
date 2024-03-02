@@ -1,17 +1,20 @@
 #' @title devars
 #'
 #' @description
+#' `r lifecycle::badge("deprecated")`
+#'
 #' This function operates like `deparse(substitute(x))` inside the functions.
 #'
 #' @param x A string, vector or list expression that can be a string vector
 #' @return A string vector
 #'
+#' @keywords internal
 #' @examples
 #' # deparse(substitute(x))
 #' \dontrun{devars(expression)
 #' devars(c(expression, string))
-#' devars(list(expression, string))
-#' devars(.(expression, string))}
+#' devars(.(expression, string))
+#' devars(list(expression, string))}
 devars <- function(x) {
   if (identical(parent.frame(), globalenv()))
     n <- sys.nframe()

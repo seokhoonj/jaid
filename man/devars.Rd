@@ -13,12 +13,15 @@ devars(x)
 A string vector
 }
 \description{
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}
+
 This function operates like \code{deparse(substitute(x))} inside the functions.
 }
 \examples{
 # deparse(substitute(x))
 \dontrun{devars(expression)
 devars(c(expression, string))
-devars(list(expression, string))
-devars(.(expression, string))}
+devars(.(expression, string))
+devars(list(expression, string))}
 }
+\keyword{internal}
