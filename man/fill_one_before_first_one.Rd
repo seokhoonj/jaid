@@ -3,7 +3,7 @@
 \name{fill_one_before_first_one}
 \alias{fill_one_before_first_one}
 \alias{set_one_before_first_one}
-\title{fill with one before the first one}
+\title{Fill with one before the first one}
 \usage{
 fill_one_before_first_one(x)
 

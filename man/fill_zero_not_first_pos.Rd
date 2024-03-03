@@ -3,7 +3,7 @@
 \name{fill_zero_not_first_pos}
 \alias{fill_zero_not_first_pos}
 \alias{set_zero_not_first_pos}
-\title{fill with or set to zero except for the first positive values}
+\title{Fill with or set to zero except for the first positive values}
 \usage{
 fill_zero_not_first_pos(x, cols)
 

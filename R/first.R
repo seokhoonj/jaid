@@ -1,4 +1,4 @@
-#' fill with or set to zero except for the first positive values
+#' Fill with or set to zero except for the first positive values
 #'
 #' Fill with or set to zero except for the first positive values of a numerical
 #' matrix by rownames
@@ -39,7 +39,7 @@ set_zero_not_first_pos <- function(x, cols) {
   invisible(.Call(SetZeroNotFirstPos, x, id = rownames(x), ot = cols))
 }
 
-#' fill with one before the first one
+#' Fill with one before the first one
 #'
 #' Fill with one before the first one appears in each column in a binary matrix
 #' by rownames

@@ -103,6 +103,25 @@ paste_list <- function(x, sep = "|") {
   }
 }
 
+#' Set attributes
+#'
+#' Set attributes functions re-exported in this package from `data.table`.
+#'
+#' @param x any objects; e.g, list, columns of a data.frame or data.table
+#' @param name the character attribute name.
+#' @param value the value to assign to the attribute or `NULL` removes teh attribute, if present.
+#' @return the changed object (invisibly) for use in compound statements.
+#'
+#' @examples
+#' # set attributes
+#' \donttest{df <- data.frame(a = 1:3, b = 4:6)
+#' setattr(df, "flag", TRUE)
+#' attr(df, "flag")}
+#'
+#' @export
+setattr <- function(x, name, value)
+  data.table::setattr(x, name, value)
+
 #' Set data.frame to data.table
 #'
 #' Set data.frame to data.table class.
