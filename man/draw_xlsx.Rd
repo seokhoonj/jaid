@@ -5,7 +5,7 @@
 \title{Draw images in an excel file}
 \usage{
 draw_xlsx(
-  image,
+  images,
   file,
   rc = c(1L, 1L),
   width = 12,
@@ -14,7 +14,7 @@ draw_xlsx(
 )
 }
 \arguments{
-\item{image}{image file}
+\item{images}{image files}
 
 \item{file}{A file path}
 

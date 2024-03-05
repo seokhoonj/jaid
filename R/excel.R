@@ -2,7 +2,7 @@
 write_data <- function(wb, sheet, data, rc = c(1L, 1L), rowNames = TRUE,
                        fontName = "Comic Sans MS", borderColour = "#000000",
                        widths = 8.43) {
-  headerStyle1 <- createStyle(
+  headerStyle1 <- openxlsx::createStyle(
     fontName = fontName,
     fontSize = 14,
     fontColour = "#000000",
@@ -13,7 +13,7 @@ write_data <- function(wb, sheet, data, rc = c(1L, 1L), rowNames = TRUE,
     borderColour = borderColour,
     borderStyle = c("thick", "thin", "double")
   )
-  headerStyle2 <- createStyle(
+  headerStyle2 <- openxlsx::createStyle(
     fontName = fontName,
     fontSize = 14,
     fontColour = "#000000",
@@ -24,30 +24,31 @@ write_data <- function(wb, sheet, data, rc = c(1L, 1L), rowNames = TRUE,
     borderColour = borderColour,
     borderStyle = c("thick", "double")
   )
-  bodyStyle1  <- createStyle(
+  bodyStyle1 <- openxlsx::createStyle(
     fontName = fontName,
     border = "TopRightBottom",
     borderColour = borderColour
   )
-  bodyStyle2 <- createStyle(
+  bodyStyle2 <- openxlsx::createStyle(
     fontName = fontName,
     border = "TopBottom",
     borderColour = borderColour
   )
-  footerStyle1 <- createStyle(
+  footerStyle1 <- openxlsx::createStyle(
     fontName = fontName,
     border = "TopRightBottom",
     borderColour = borderColour,
     borderStyle = c("thin", "thin", "thick")
   )
-  footerStyle2 <- createStyle(
+  footerStyle2 <- openxlsx::createStyle(
     fontName = fontName,
     border = "TopBottom",
     borderColour = borderColour,
     borderStyle = c("thin", "thick")
   )
 
-  writeData(wb = wb, sheet = sheet, x = data, xy = rev(rc), rowNames = rowNames)
+  openxlsx::writeData(wb = wb, sheet = sheet, x = data, xy = rev(rc),
+                      rowNames = rowNames)
 
   startCell <- rc
   endCell   <- startCell + dim(data)
@@ -73,20 +74,20 @@ write_data <- function(wb, sheet, data, rc = c(1L, 1L), rowNames = TRUE,
   footerRows2 <- erow
   footerCols2 <- ecol
 
-  addStyle(wb, sheet = sheet, headerStyle1, rows = headerRows1,
-           cols = headerCols1, gridExpand = TRUE)
-  addStyle(wb, sheet = sheet, headerStyle2, rows = headerRows2,
-           cols = headerCols2, gridExpand = TRUE)
-  addStyle(wb, sheet = sheet, bodyStyle1  , rows = bodyRows1,
-           cols = bodyCols1  , gridExpand = TRUE)
-  addStyle(wb, sheet = sheet, bodyStyle2  , rows = bodyRows2,
-           cols = bodyCols2  , gridExpand = TRUE)
-  addStyle(wb, sheet = sheet, footerStyle1, rows = footerRows1,
-           cols = footerCols1, gridExpand = TRUE)
-  addStyle(wb, sheet = sheet, footerStyle2, rows = footerRows2,
-           cols = footerCols2, gridExpand = TRUE)
+  openxlsx::addStyle(wb, sheet = sheet, headerStyle1, rows = headerRows1,
+                     cols = headerCols1, gridExpand = TRUE)
+  openxlsx::addStyle(wb, sheet = sheet, headerStyle2, rows = headerRows2,
+                     cols = headerCols2, gridExpand = TRUE)
+  openxlsx::addStyle(wb, sheet = sheet, bodyStyle1  , rows = bodyRows1,
+                     cols = bodyCols1  , gridExpand = TRUE)
+  openxlsx::addStyle(wb, sheet = sheet, bodyStyle2  , rows = bodyRows2,
+                     cols = bodyCols2  , gridExpand = TRUE)
+  openxlsx::addStyle(wb, sheet = sheet, footerStyle1, rows = footerRows1,
+                     cols = footerCols1, gridExpand = TRUE)
+  openxlsx::addStyle(wb, sheet = sheet, footerStyle2, rows = footerRows2,
+                     cols = footerCols2, gridExpand = TRUE)
 
-  setColWidths(wb, sheet, cols = headerCols, widths = widths)
+  openxlsx::setColWidths(wb, sheet, cols = headerCols, widths = widths)
 }
 
 #' Write data in an excel file
@@ -107,31 +108,45 @@ write_data <- function(wb, sheet, data, rc = c(1L, 1L), rowNames = TRUE,
 #' write_xlsx(list(cars = cars, matcars = mtcars), "data.xlsx")}
 #'
 #' @export
-write_xlsx <- function(data, file, rc = c(1L, 1L), rowNames = FALSE, overwrite = FALSE) {
-  wb <- createWorkbook()
+write_xlsx <- function(data, file, rc = c(1L, 1L), rowNames = FALSE,
+                       overwrite = FALSE) {
   if (is.data.frame(data))
     data <- list(data)
-  sheetName <- names(data)
-  if (is.null(sheetName))
-    sheetName <- sprintf("Sheet %s", seq_along(data))
+  if (!file.exists(file)) {
+    wb <- openxlsx::createWorkbook()
+    sheetNames <- NULL
+  } else {
+    wb <- openxlsx::loadWorkbook(file)
+    sheetNames <- openxlsx::getSheetNames(file)
+  }
+  dataNames <- names(data)
+  if (is.null(dataNames)) {
+    dataNames <- sprintf("Sheet %s", seq_along(data))
+  } else {
+    dataLen <- length(dataNames[which(dataNames == "")])
+    dataNames[which(dataNames == "")] <- sprintf("Sheet %s", seq_along(dataLen))
+  }
+  names(data) <- dataNames
+  newNames <- setdiff(dataNames, sheetNames)
+  lapply(seq_along(newNames), function(x)
+    openxlsx::addWorksheet(wb = wb, sheetName = newNames[[x]], gridLines = FALSE))
   lapply(seq_along(data), function(x)
-    addWorksheet(wb = wb, sheetName = sheetName[[x]], gridLines = FALSE))
-  lapply(seq_along(data), function(x)
-    write_data(wb, sheet = sheetName[[x]], data = data[[x]], rc = rc,
-               rowNames = rowNames))
-  saveWorkbook(wb = wb, file = file, overwrite = overwrite)
+    write_data(wb, sheet = names(data)[[x]], data = data[[x]], rc = rc,
+                      rowNames = rowNames))
+  openxlsx::saveWorkbook(wb = wb, file = file, overwrite = overwrite)
 }
 
 draw_image <- function(wb, sheet, image, rc = c(1L, 1L), width = 12, height = 6) {
   print(image)
-  insertPlot(wb, sheet = sheet, width = width, height = height, xy = rev(rc))
+  openxlsx::insertPlot(wb, sheet = sheet, width = width, height = height,
+                       xy = rev(rc))
 }
 
 #' Draw images in an excel file
 #'
 #' Draw images in an excel file.
 #'
-#' @param image image file
+#' @param images image files
 #' @param file A file path
 #' @param rc A vector of starting point row and column, default c(1L, 1L)
 #' @param width image width
@@ -146,21 +161,31 @@ draw_image <- function(wb, sheet, image, rc = c(1L, 1L), width = 12, height = 6)
 #' draw_xlsx(list(image1, image2), "image.xlsx")}
 #'
 #' @export
-draw_xlsx <- function(image, file, rc = c(1L, 1L), width = 12, height = 6, overwrite = FALSE) {
-  wb <- createWorkbook()
-  if (class(image)[[1L]] == "gg")
-    image <- list(image)
-  sheetName <- names(image)
-  if (is.null(sheetName))
-    sheetName <- sprintf("Sheet %s", seq_along(image))
-  lapply(seq_along(image), function(x) {
-    addWorksheet(wb = wb, sheetName = sheetName[[x]], gridLines = FALSE)
-  })
-  lapply(seq_along(image), function(x) {
-    draw_image(wb = wb, sheet = sheetName[[x]], image = image[[x]], rc = rc, width = width, height = height)
-  })
-  saveWorkbook(wb = wb, file = file, overwrite = overwrite)
+draw_xlsx <- function(images, file, rc = c(1L, 1L), width = 12, height = 6,
+                      overwrite = FALSE) {
+  if (!file.exists(file)) {
+    wb <- openxlsx::createWorkbook()
+    sheetNames <- NULL
+  } else {
+    wb <- openxlsx::loadWorkbook(file)
+    sheetNames <- openxlsx::getSheetNames(file)
+  }
+  imageNames <- names(images)
+  if (is.null(imageNames)) {
+    imageNames <- sprintf("Sheet %s", seq_along(images))
+  } else {
+    imageLen <- length(imageNames[which(imageNames == "")])
+    imageNames[which(imageNames == "")] <- sprintf("Sheet %s", seq_along(imageLen))
+  }
+  names(images) <- imageNames
+  newNames <- setdiff(imageNames, sheetNames)
+  lapply(seq_along(newNames), function(x)
+    openxlsx::addWorksheet(wb = wb, sheetName = newNames[[x]], gridLines = FALSE))
+  lapply(seq_along(images), function(x)
+    draw_image(wb, sheet = names(images)[[x]], image = images[[x]], rc = rc))
+  openxlsx::saveWorkbook(wb = wb, file = file, overwrite = TRUE)
 }
+
 
 # save_xlsx <- function(..., file, width = 12, height = 6, overwrite = FALSE) {
 #   data_list <- list(...)
