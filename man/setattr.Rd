@@ -21,8 +21,7 @@ Set attributes functions re-exported in this package from \code{data.table}.
 }
 \examples{
 # set attributes
-\donttest{df <- data.frame(a = 1:3, b = 4:6)
+\dontrun{df <- data.frame(a = 1:3, b = 4:6)
 setattr(df, "flag", TRUE)
 attr(df, "flag")}
-
 }

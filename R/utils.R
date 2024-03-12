@@ -114,13 +114,36 @@ paste_list <- function(x, sep = "|") {
 #'
 #' @examples
 #' # set attributes
-#' \donttest{df <- data.frame(a = 1:3, b = 4:6)
+#' \dontrun{df <- data.frame(a = 1:3, b = 4:6)
 #' setattr(df, "flag", TRUE)
 #' attr(df, "flag")}
-#'
-#' @export
 setattr <- function(x, name, value)
   data.table::setattr(x, name, value)
+
+#' Set labels
+#'
+#' Set column labels for a data frame.
+#'
+#' @param df a data.frame
+#' @param labels a string vector specifying labels to describe columns
+#' @param cols a string vector specifying columns
+#'
+#' @examples
+#' # set labels
+#' \dontrun{df <- data.frame(Q1 = c(0, 1, 1), Q2 = c(1, 0, 1))
+#' set_label(df, labels = c("Rainy?", "Umbrella?"))
+#' View(df)}
+#'
+#' @export
+set_label <- function(df, labels, cols) {
+  if (missing(cols))
+    cols <- names(df)
+  if (length(cols) != length(labels))
+    stop("the length of columns and the length of labels are different.")
+  lapply(seq_along(cols),
+         function(x) data.table::setattr(df[[cols[[x]]]], "label", labels[[x]]))
+  invisible(df)
+}
 
 #' Set data.frame to data.table
 #'
