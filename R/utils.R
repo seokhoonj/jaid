@@ -120,6 +120,30 @@ paste_list <- function(x, sep = "|") {
 setattr <- function(x, name, value)
   data.table::setattr(x, name, value)
 
+#' Change columns from uppercase to lowercase or from lowercase to uppercase
+#'
+#' Change columns from uppercase to lowercase or from lowercase to uppercase
+#'
+#' @param x a data.frame
+#' @return no return values
+#'
+#' @examples
+#' # Change columns case
+#' \donttest{df <- mtcars
+#' set_col_upper(df)
+#' set_col_lower(df)}
+#'
+#' @export
+set_col_lower <- function(x) {
+  data.table::setnames(x, colnames(x), tolower(colnames(x)))
+}
+
+#' @rdname set_col_lower
+#' @export
+set_col_upper <- function(x) {
+  data.table::setnames(x, colnames(x), toupper(colnames(x)))
+}
+
 #' Set labels
 #'
 #' Set column labels for a data frame.
