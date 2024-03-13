@@ -131,11 +131,11 @@ setattr <- function(x, name, value)
 #' @examples
 #' # set labels
 #' \dontrun{df <- data.frame(Q1 = c(0, 1, 1), Q2 = c(1, 0, 1))
-#' set_label(df, labels = c("Rainy?", "Umbrella?"))
+#' set_labels(df, labels = c("Rainy?", "Umbrella?"))
 #' View(df)}
 #'
 #' @export
-set_label <- function(df, labels, cols) {
+set_labels <- function(df, labels, cols) {
   if (missing(cols))
     cols <- names(df)
   if (length(cols) != length(labels))
