@@ -57,29 +57,30 @@ split_str <- function(x, split = "|") {
   z[!z %in% c(NA, "NA", "")]
 }
 
-#' Pull a first string having a specific pattern.
+#' Get a first pattern
 #'
-#' Pull a first string having a specific pattern.
+#' Get a first pattern from a string vector.
 #'
 #' @param pattern a string containing a [regular expression]
 #' @param x a string vector
 #' @param ignore.case if `FALSE`, the pattern matching is case sensitive and if `TRUE`, case is ignored during matching.
 #' @return a string vector
+#'
 #' @examples
-#' # pull a first string having a specific pattern
-#' \donttest{pull_str(pattern = "c", c("a|b|c", "a|c|c"))}
+#' # get a first pattern from a string vector
+#' \donttest{get_pattern(pattern = "c", c("a|b|c", "a|c|c"))}
 #'
 #' @export
-pull_str <- function(pattern, x, ignore.case = TRUE) {
+get_pattern <- function(pattern, x, ignore.case = TRUE) {
   r <- regexpr(pattern, x, ignore.case = ignore.case, perl = TRUE)
   z <- rep("", length(x))
   z[r != -1] <- regmatches(x, r)
   return(z)
 }
 
-#' Pull all the strings having a specific pattern.
+#' Get all patterns
 #'
-#' Pull all the strings having a specific pattern.
+#' Get all patterns from a string vector.
 #'
 #' @param pattern a string containing a [regular expression]
 #' @param x a string vector
@@ -88,16 +89,30 @@ pull_str <- function(pattern, x, ignore.case = TRUE) {
 #' ([`character`] of length 1). default "|"
 #' @param ignore.case if `FALSE`, the pattern matching is case sensitive and if `TRUE`, case is ignored during matching.
 #' @return a string vector
+#'
 #' @examples
-#' # pull all the strings having a specific pattern
-#' \donttest{pull_str_all(pattern = "c", c("a|b|c", "a|c|c"))}
+#' # get all patterns from a string vector
+#' \donttest{get_pattern_all(pattern = "c", c("a|b|c", "a|c|c"))}
 #'
 #' @export
-pull_str_all <- function(pattern, x, collapse = "|", ignore.case = TRUE) {
+get_pattern_all <- function(pattern, x, collapse = "|", ignore.case = TRUE) {
   r <- gregexpr(pattern, x, ignore.case = ignore.case, perl = TRUE)
   z <- regmatches(x, r)
   sapply(z, function(s) paste(s, collapse = collapse))
 }
 
-remove_str <- function(pattern, x)
+#' Delete patterns
+#'
+#' Delete patterns from a string vector.
+#'
+#' @param pattern a string containing a [regular expression]
+#' @param x a string vector
+#' @return a string vector
+#'
+#' @examples
+#' # delete patterns from a string vector
+#' \donttest{del_pattern(pattern = "c", c("abc", "acc"))}
+#'
+#' @export
+del_pattern <- function(pattern, x)
   gsub(pattern, "", x)
