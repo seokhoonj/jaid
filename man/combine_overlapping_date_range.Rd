@@ -30,7 +30,7 @@ combine_overlapping_date_range(
 \item{collapse}{an optional character string to seperate the result of \code{merge_var}}
 }
 \value{
-\code{data.frame} with no overlapping date ranges.
+a \code{data.frame} with no overlapping date ranges.
 }
 \description{
 Combine multiple overlapping date ranges.

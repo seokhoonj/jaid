@@ -9,7 +9,7 @@
 #' @param to_var a column name of end date
 #' @param interval an interval of previous end date to next start date to be combined
 #' @param collapse an optional character string to seperate the result of `merge_var`
-#' @return `data.frame` with no overlapping date ranges.
+#' @return a `data.frame` with no overlapping date ranges.
 #'
 #' @examples
 #' # combine overlapping date ranges

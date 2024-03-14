@@ -5,8 +5,8 @@
 #'
 #' This function operates like `deparse(substitute(x))` inside the functions.
 #'
-#' @param x A string, vector or list expression that can be a string vector
-#' @return A string vector
+#' @param x a string, vector or list expression that can be a string vector
+#' @return a string vector
 #'
 #' @keywords internal
 #' @examples

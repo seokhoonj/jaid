@@ -24,7 +24,8 @@ meta.data.frame <- function(x) {
   distinct <- sapply(x, unilen)
   mode <- sapply(x, mostfreq)
   data.frame(column, class, type, n, missing, zero, distinct,
-             prop = 1 - missing/nrows, nzprop = 1 - zero/nrows, mode)
+             prop = 1 - missing/nrows, nzprop = 1 - zero/nrows, mode,
+             row.names = NULL)
 }
 
 #' Class and type information

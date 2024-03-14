@@ -7,10 +7,10 @@
 devars(x)
 }
 \arguments{
-\item{x}{A string, vector or list expression that can be a string vector}
+\item{x}{a string, vector or list expression that can be a string vector}
 }
 \value{
-A string vector
+a string vector
 }
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}
