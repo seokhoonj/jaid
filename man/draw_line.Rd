@@ -7,15 +7,15 @@
 draw_line(width, mark = "=")
 }
 \arguments{
-\item{width}{a numeric specifying width (default: \code{options()$width})}
+\item{width}{a numeric vector specifying width (default: \code{getOption("width")})}
 
 \item{mark}{a string specifying mark (default: "=")}
 }
 \value{
-repeated mark string
+a string vector with repeated mark
 }
 \description{
-Draw a line in console
+Draw a line in console.
 }
 \examples{
 \donttest{cat(draw_line())}

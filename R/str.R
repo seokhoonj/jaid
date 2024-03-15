@@ -52,10 +52,21 @@ paste_uni_str <- function(x, collapse = "|")
 paste_sort_uni_str <- function(x, collapse = "|")
   paste(sort(unique(x[!is.na(x)])), collapse = collapse)
 
-split_str <- function(x, split = "|") {
-  z <- strsplit(x, split = split, fixed = TRUE)[[1L]]
-  z[!z %in% c(NA, "NA", "")]
-}
+#' Split strings
+#'
+#' Split strings
+#'
+#' @param x a string vector
+#' @param split a string to use for splitting
+#' @return a string vector
+#'
+#' @examples
+#' # split strings
+#' \donttest{split_str(c("a|b", "c|d"), split = "|")}
+#'
+#' @export
+split_str <- function(x, split = "|")
+  strsplit(x, split = split, fixed = TRUE)
 
 #' Get a first pattern
 #'
