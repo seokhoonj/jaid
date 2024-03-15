@@ -4,7 +4,7 @@
 #'
 #' @param x a string vector
 #' @param collapse an optional character string to separate the results. Not
-#' [`NA_character_`]. When collapse is a string, the result is always a string
+#' [`NA_character_`]. When `collapse` is a string, the result is always a string
 #' ([`character`] of length 1). default "|"
 #' @return a string vector
 #'
@@ -22,7 +22,7 @@ paste_str <- function(x, collapse = "|")
 #'
 #' @param x a string vector
 #' @param collapse an optional character string to separate the results. Not
-#' [`NA_character_`]. When collapse is a string, the result is always a string
+#' [`NA_character_`]. When `collapse` is a string, the result is always a string
 #' ([`character`] of length 1). default "|"
 #' @return a string vector
 #'
@@ -40,7 +40,7 @@ paste_uni_str <- function(x, collapse = "|")
 #'
 #' @param x a string vector
 #' @param collapse an optional character string to separate the results. Not
-#' [`NA_character_`]. When collapse is a string, the result is always a string
+#' [`NA_character_`]. When `collapse` is a string, the result is always a string
 #' ([`character`] of length 1). default "|"
 #' @return a string vector
 #'
@@ -96,7 +96,7 @@ get_pattern <- function(pattern, x, ignore.case = TRUE) {
 #' @param pattern a string containing a [regular expression]
 #' @param x a string vector
 #' @param collapse an optional character string to separate the results. Not
-#' [`NA_character_`]. When collapse is a string, the result is always a string
+#' [`NA_character_`]. When `collapse` is a string, the result is always a string
 #' ([`character`] of length 1). default "|"
 #' @param ignore.case if `FALSE`, the pattern matching is case sensitive and if `TRUE`, case is ignored during matching.
 #' @return a string vector
