@@ -25,12 +25,69 @@ devars <- function(x) {
   return(vapply(x, deparse, "character")[-1L])
 }
 
-match_cols <- function(df, cols)
+#' Match columns
+#'
+#' Get matched columns from a data frame.
+#'
+#' @param df a data frame
+#' @param cols a string vector specifying columns
+#' @return a string vector
+#'
+#' @examples
+#' # match columns
+#' \donttest{df <- data.frame(x = c(1, 2, 3), y = c("A", "B", "C"), z = c(4, 5, 6))
+#' match_cols(df, c("x", "z"))}
+#'
+#' @export
+match_cols <- function(df, cols) {
+  assert_class(df, "data.frame")
   colnames(df)[match(cols, colnames(df), 0L)]
+}
 
-has_rows <- function(df) {
+#' Find columns using regular expression pattern
+#'
+#' Find columns using regular expression pattern
+#'
+#' @param df a data frame
+#' @param pattern a string vector specifying columns
+#' @return a string vector
+#'
+#' @examples
+#' # find columns using regular expression pattern
+#' \donttest{df <- data.frame(col_a = c(1, 2, 3), col_b = c("A", "B", "C"), col_c = c(4, 5, 6))
+#' regex_cols(df, pattern = c("a|c"))}
+#'
+#' @export
+regex_cols <- function(df, pattern) {
+  assert_class(df, "data.frame")
+  colnames(df)[grepl(pattern, names(df), perl = TRUE)]
+}
+
+#' Has columns
+#'
+#' Whether the data has rows
+#'
+#' @param df a data frame
+#' @param error_raise a boolean whether to raise an error or not
+#' @return a boolean value
+#'
+#' @examples
+#' # has rows
+#' \dontrun{df <- data.frame()
+#' has_rows(df)}
+#'
+#' # raise an error
+#' \dontrun{df <- data.frame()
+#' has_rows(df, error_raise = TRUE)}
+#'
+#' @export
+has_rows <- function(df, error_raise = FALSE) {
   df_name <- deparse(substitute(df))
-  if (!nrow(df)) {
+  nrows <- nrow(df)
+  rt <- nrows != 0
+  if (!error_raise)
+    return(rt)
+  if (!rt) {
     stop("'", df_name, "' doesn't have row(s): ",
          call. = FALSE)
   }
@@ -115,9 +172,11 @@ paste_list <- function(x, sep = "|") {
 #' @examples
 #' # set attributes
 #' \dontrun{df <- data.frame(a = 1:3, b = 4:6)
-#' setattr(df, "flag", TRUE)
+#' set_attr(df, "flag", TRUE)
 #' attr(df, "flag")}
-setattr <- function(x, name, value)
+#'
+#' @export
+set_attr <- function(x, name, value)
   data.table::setattr(x, name, value)
 
 #' Change columns from uppercase to lowercase or from lowercase to uppercase
