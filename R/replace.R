@@ -101,3 +101,31 @@ replace_na_with_empty <- function(df) {
   setattr(df, "class", old_class)
   invisible(df[])
 }
+
+#' Trim white space
+#'
+#' Trim white space
+#'
+#' @param df a data frame
+#' @param ws a white space [regular expression]
+#' @return no return value
+#'
+#' @examples
+#' \donttest{df <- data.frame(x = c(" A", "B ", " C "), y = c(1, 2, 3))
+#' pryr::address(df)
+#' trim_ws(df)
+#' pryr::address(df)
+#' df}
+#'
+#' @export
+trim_ws <- function(df, ws = "[ \t\r\n]") {
+  old_class <- class(df)
+  set_dt(df)
+  class <- sapply(df, class)
+  cols <- names(class)[which(class == "character")]
+  re <- sprintf("^%s+|%s+$", ws, ws)
+  df[, `:=`((cols), lapply(.SD, function(x)
+    gsub(re, "", x, perl = TRUE))), .SDcols = cols]
+  data.table::setattr(df, "class", old_class)
+  invisible(df[])
+}
