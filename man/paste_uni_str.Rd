@@ -10,7 +10,7 @@ paste_uni_str(x, collapse = "|")
 \item{x}{a string vector}
 
 \item{collapse}{an optional character string to separate the results. Not
-\code{\link{NA_character_}}. When collapse is a string, the result is always a string
+\code{\link{NA_character_}}. When \code{collapse} is a string, the result is always a string
 (\code{\link{character}} of length 1). default "|"}
 }
 \value{

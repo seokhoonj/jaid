@@ -125,6 +125,38 @@ has_cols <- function(df, cols, error_raise = FALSE) {
   }
 }
 
+#' Has attributes
+#'
+#' Whether the data has specific attributes
+#'
+#' @param df a data frame
+#' @param attr attribute names
+#' @param error_raise a boolean whether to raise an error or not
+#' @return a boolean value
+#'
+#' @examples
+#' # has attributes
+#' \donttest{has_attr(mtcars, c("names", "class"))}
+#'
+#' # raise an error
+#' \dontrun{
+#' has_cols(has_attr(mtcars, c("names", "types")), error_raise = TRUE)}
+#'
+#' @export
+has_attr <- function(df, attr, error_raise = FALSE) {
+  df_name <- deparse(substitute(df))
+  df_attr <- names(attributes(df))
+  diff_attr <- setdiff(attr, df_attr)
+  rt <- length(diff_attr) == 0
+  if (!error_raise)
+    return(rt)
+  if (!rt) {
+    stop("'", df_name, "' doesn't have attributes(s): ",
+         paste0(diff_attr, collapse = ", "), ".",
+         call. = FALSE)
+  }
+}
+
 has_missing <- function(x) {
   column_name <- deparse(substitute(x))
   if (any(is.na(x))) {
