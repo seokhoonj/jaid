@@ -3,7 +3,7 @@
 #' @keywords internal
 #' @useDynLib jaid, .registration = TRUE
 #' @importFrom Rcpp sourceCpp
-#' @importFrom data.table `:=` `.SD` `%chin%` address alloc.col copy set
+#' @importFrom data.table `:=` `.SD` `%chin%` address copy set setalloccol
 #' setattr setDF setDT setnames setorder setorderv
 #' @importFrom openssl aes_cbc_decrypt aes_cbc_encrypt sha256
 #' @importFrom openxlsx addStyle addWorksheet createStyle createWorkbook

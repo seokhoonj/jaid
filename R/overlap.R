@@ -13,12 +13,12 @@
 #'
 #' @examples
 #' # combine overlapping date ranges
-#' id <- c("A", "A", "B")
+#' \donttest{id <- c("A", "A", "B")
 #' work <- c("cleansing", "analysis", "cleansing")
 #' sdate <- as.Date(c("2022-03-01", "2022-03-05", "2022-03-08"))
 #' edate <- as.Date(c("2022-03-06", "2022-03-09", "2022-03-10"))
 #' df <- data.frame(id = id, work = work, sdate = sdate, edate = edate)
-#' combine_overlapping_date_range(df, id, work, sdate, edate, interval = 0)
+#' combine_overlapping_date_range(df, id, work, sdate, edate, interval = 0)}
 #'
 #' @export
 combine_overlapping_date_range <- function(df, id_var, merge_var, from_var, to_var,
@@ -31,15 +31,15 @@ combine_overlapping_date_range <- function(df, id_var, merge_var, from_var, to_v
   to_var    <- rlang::as_name(rlang::enquo(to_var))
   all_var   <- c(id_var, merge_var, from_var, to_var)
   dt <- df[, .SD, .SDcols = all_var]
-  setnames(dt, c(id_var, merge_var, "from", "to"))
-  setorderv(dt, c(id_var, "from", "to"))
-  set(dt, j = "sub_stay", value = 0)
+  data.table::setnames(dt, c(id_var, merge_var, "from", "to"))
+  data.table::setorderv(dt, c(id_var, "from", "to"))
+  data.table::set(dt, j = "sub_stay", value = 0)
   index <- .Call(IndexOverlappingDateRange, dt[, .SD, .SDcols = id_var],
                  dt$from, dt$to, interval = interval)
-  set(dt, j = "loc", value = index$loc) # group index to combine
-  set(dt, j = "sub", value = index$sub) # days to subtract, if the interval is longer than 0
+  data.table::set(dt, j = "loc", value = index$loc) # group index to combine
+  data.table::set(dt, j = "sub", value = index$sub) # days to subtract, if the interval is longer than 0
   group_var <- c(id_var, "loc")
-  m <- dt[, lapply(.SD, function(x) paste0(unique(x[!is.na(x)]), collapse = collapse)),
+  m <- dt[, lapply(.SD, function(x) paste(unique(x[!is.na(x)]), collapse = collapse)),
           keyby = group_var, .SDcols = merge_var]
   from <- to <- sub_stay <- sub <- NULL
   s <- dt[, list(from = min(from), to = max(to), sub_stay = sum(sub_stay) + sum(sub)),

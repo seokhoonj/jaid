@@ -4,10 +4,12 @@
 \alias{set_tibble}
 \title{Set data frame to tibble}
 \usage{
-set_tibble(x)
+set_tibble(x, envir = globalenv())
 }
 \arguments{
 \item{x}{data.frame}
+
+\item{envir}{the \link{environment} to use. See ‘Details’.}
 }
 \value{
 No return value.

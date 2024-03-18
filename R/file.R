@@ -21,7 +21,5 @@
 #' @export
 loadRDS <- function(file, refhook = NULL) {
   df <- readRDS(file, refhook)
-  if (inherits(df, "data.table"))
-    return(alloc.col(df))
-  return(df)
+  return(data.table::setalloccol(df))
 }

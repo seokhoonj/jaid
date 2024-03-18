@@ -265,6 +265,7 @@ set_labels <- function(df, labels, cols) {
 #' Set data.frame to data.table class.
 #'
 #' @param x data.frame
+#' @param envir the [environment] to use. See ‘Details’.
 #' @return No return value.
 #'
 #' @examples
@@ -272,11 +273,15 @@ set_labels <- function(df, labels, cols) {
 #' \donttest{set_dt(iris)}
 #'
 #' @export
-set_dt <- function(x) {
+set_dt <- function(x, envir = globalenv()) {
   assert_class(x, "data.frame")
+  x_name <- deparse(substitute(x))
   if (!inherits(x, "data.table"))
     data.table::setattr(x, "class", c("data.table", "data.frame"))
-  invisible(x)
+  if (!has_attr(x, ".internal.selfref")) {
+    data.table::setalloccol(x)
+    assign(x_name, x, envir = envir)
+  }
 }
 
 #' Set data frame to tibble
@@ -284,6 +289,7 @@ set_dt <- function(x) {
 #' Set data frame to tibble class.
 #'
 #' @param x data.frame
+#' @param envir the [environment] to use. See ‘Details’.
 #' @return No return value.
 #'
 #' @examples
@@ -291,11 +297,15 @@ set_dt <- function(x) {
 #' \donttest{set_tibble(iris)}
 #'
 #' @export
-set_tibble <- function(x) {
+set_tibble <- function(x, envir = globalenv()) {
   assert_class(x, "data.frame")
+  x_name <- deparse(substitute(x))
   if (!inherits(x, "tbl_df"))
     data.table::setattr(x, "class", c("tbl_df", "tbl", "data.frame"))
-  invisible(x)
+  if (!has_attr(x, ".internal.selfref")) {
+    data.table::setalloccol(x)
+    assign(x_name, x, envir = envir)
+  }
 }
 
 #' Equal columns of two data frames.

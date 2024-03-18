@@ -2,8 +2,15 @@
 .Rhistory
 .RData
 .Ruserdata
+*.rds
+*.zip
+*.csv
 *.xls
 *.xlsb
 *.xlsm
 *.xlsx
+*.ppt
+*.pptx
+*.doc
+*.docx
 tests/

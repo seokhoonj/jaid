@@ -4,10 +4,12 @@
 \alias{set_dt}
 \title{Set data.frame to data.table}
 \usage{
-set_dt(x)
+set_dt(x, envir = globalenv())
 }
 \arguments{
 \item{x}{data.frame}
+
+\item{envir}{the \link{environment} to use. See ‘Details’.}
 }
 \value{
 No return value.
