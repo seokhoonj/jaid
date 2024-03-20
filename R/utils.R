@@ -90,7 +90,7 @@ regex_cols <- function(df, pattern) {
   colnames(df)[grepl(pattern, names(df), perl = TRUE)]
 }
 
-#' Has columns
+#' Has rows
 #'
 #' Whether the data has rows
 #'
@@ -100,16 +100,19 @@ regex_cols <- function(df, pattern) {
 #'
 #' @examples
 #' # has rows
-#' \dontrun{df <- data.frame()
+#' \dontrun{
+#' df <- data.frame()
 #' has_rows(df)}
 #'
 #' # raise an error
-#' \dontrun{df <- data.frame()
+#' \dontrun{
+#' df <- data.frame()
 #' has_rows(df, error_raise = TRUE)}
 #'
 #' @export
 has_rows <- function(df, error_raise = TRUE) {
-  df_name <- deparse(eval(substitute(substitute(df)), envir = parent.frame()))
+  assert_class(df, "data.frame")
+  df_name <- desub(df)
   nrows <- nrow(df)
   rt <- nrows != 0
   if (!error_raise)
@@ -139,6 +142,7 @@ has_rows <- function(df, error_raise = TRUE) {
 #'
 #' @export
 has_cols <- function(df, cols, error_raise = TRUE) {
+  assert_class(df, "data.frame")
   df_name <- desub(df)
   df_cols <- colnames(df)
   diff_cols <- setdiff(cols, df_cols)
@@ -327,7 +331,8 @@ set_dt <- function(x) {
       old_class <- class(x)
       data.table::setDT(x)
       assign(x_name, x, envir = parent.frame(n))
-      assign(x_name, x, envir = parent.frame(n-1))
+      if (n > 1)
+        assign(x_name, x, envir = parent.frame(n-1))
     }
     else {
       set_attr(x, "class", c("data.table", "data.frame"))
@@ -354,7 +359,8 @@ set_tibble <- function(x) {
       old_class <- class(x)
       x <- tibble::as_tibble(x)
       assign(x_name, x, envir = parent.frame(n))
-      assign(x_name, x, envir = parent.frame(n-1))
+      if (n > 1)
+        assign(x_name, x, envir = parent.frame(n-1))
     }
     else {
       set_attr(x, "class", c("tbl_df", "tbl", "data.frame"))

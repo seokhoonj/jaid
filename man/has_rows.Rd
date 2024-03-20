@@ -2,7 +2,7 @@
 % Please edit documentation in R/utils.R
 \name{has_rows}
 \alias{has_rows}
-\title{Has columns}
+\title{Has rows}
 \usage{
 has_rows(df, error_raise = TRUE)
 }
@@ -19,11 +19,13 @@ Whether the data has rows
 }
 \examples{
 # has rows
-\dontrun{df <- data.frame()
+\dontrun{
+df <- data.frame()
 has_rows(df)}
 
 # raise an error
-\dontrun{df <- data.frame()
+\dontrun{
+df <- data.frame()
 has_rows(df, error_raise = TRUE)}
 
 }
