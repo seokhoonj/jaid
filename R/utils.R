@@ -76,7 +76,7 @@ desub <- function(x) {
     eval(envir = parent.frame(n = 11)) |>
     eval(envir = parent.frame(n = 12)) |>
     eval(envir = parent.frame(n = 13)) |>
-    deparse()
+    vapply(FUN = deparse, FUN.VALUE = "character")
 }
 
 #' Match columns
@@ -122,7 +122,7 @@ regex_cols <- function(df, pattern) {
 #' Whether the data has rows
 #'
 #' @param df a data frame
-#' @param error_raise a boolean whether to raise an error or not
+#' @param error_raise a logcial whether to raise an error or not
 #' @return a boolean value
 #'
 #' @examples
@@ -431,11 +431,12 @@ is.null.externalptr <- function(pointer) {
 #' Has not a null external pointer?
 #'
 #' @param x a data.frame
+#' @param error_raise a logcial whether to raise an error or not
 #' @return a logical value whether to have not a null external pointer or not
 #'
 #' @examples
 #' # Has not null external pointer?
-#' \donttest{has_ptr(iris)}
+#' \donttest{has_ptr(iris, error_raise = FALSE)}
 #'
 #' @export
 has_ptr <- function(x, error_raise = TRUE) {

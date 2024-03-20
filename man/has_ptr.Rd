@@ -8,6 +8,8 @@ has_ptr(x, error_raise = TRUE)
 }
 \arguments{
 \item{x}{a data.frame}
+
+\item{error_raise}{a logcial whether to raise an error or not}
 }
 \value{
 a logical value whether to have not a null external pointer or not
@@ -17,6 +19,6 @@ Has not a null external pointer?
 }
 \examples{
 # Has not null external pointer?
-\donttest{has_ptr(iris)}
+\donttest{has_ptr(iris, error_raise = FALSE)}
 
 }

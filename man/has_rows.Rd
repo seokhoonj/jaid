@@ -9,7 +9,7 @@ has_rows(df, error_raise = TRUE)
 \arguments{
 \item{df}{a data frame}
 
-\item{error_raise}{a boolean whether to raise an error or not}
+\item{error_raise}{a logcial whether to raise an error or not}
 }
 \value{
 a boolean value
