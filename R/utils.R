@@ -354,6 +354,7 @@ set_dt <- function(x) {
       old_class <- class(x)
       data.table::setDT(x)
       assign(x_name, x, envir = parent.frame(n))
+      assign(x_name, x, envir = parent.frame(n-1))
     }
     else {
       set_attr(x, "class", c("data.table", "data.frame"))
@@ -380,6 +381,7 @@ set_tibble <- function(x) {
       old_class <- class(x)
       x <- tibble::as_tibble(x)
       assign(x_name, x, envir = parent.frame(n))
+      assign(x_name, x, envir = parent.frame(n-1))
     }
     else {
       set_attr(x, "class", c("tbl_df", "tbl", "data.frame"))

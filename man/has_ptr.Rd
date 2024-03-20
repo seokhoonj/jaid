@@ -2,7 +2,7 @@
 % Please edit documentation in R/utils.R
 \name{has_ptr}
 \alias{has_ptr}
-\title{Has not null pointer?}
+\title{Has not a null pointer?}
 \usage{
 has_ptr(x, error_raise = TRUE)
 }
@@ -10,10 +10,10 @@ has_ptr(x, error_raise = TRUE)
 \item{x}{a data.frame}
 }
 \value{
-a logical value whether to have not null external pointer or not
+a logical value whether to have not a null external pointer or not
 }
 \description{
-Has not null external pointer?
+Has not a null external pointer?
 }
 \examples{
 # Has not null external pointer?
