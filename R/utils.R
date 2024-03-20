@@ -356,7 +356,33 @@ set_dt <- function(x) {
       assign(x_name, x, envir = parent.frame(n))
     }
     else {
-      set_attr(df, "class", c("data.table", "data.frame"))
+      set_attr(x, "class", c("data.table", "data.frame"))
+    }
+  }
+}
+
+#' Set tibble function
+#'
+#' as_tibble function re-exported from `tibble`.
+#'
+#' @param x a data.frame
+#' @return no return values.
+#'
+#' @seealso [as_tibble()]
+#'
+#' @export
+set_tibble <- function(x) {
+  assert_class(x, "data.frame")
+  if (!inherits(x, "tbl_df")) {
+    if (!has_ptr(x, error_raise = FALSE)) {
+      n <- sys.nframe()
+      x_name <- desub(x)
+      old_class <- class(x)
+      x <- tibble::as_tibble(x)
+      assign(x_name, x, envir = parent.frame(n))
+    }
+    else {
+      set_attr(x, "class", c("tbl_df", "tbl", "data.frame"))
     }
   }
 }
