@@ -279,15 +279,13 @@ set_attr <- function(x, name, value)
 #' set_col_lower(df)}
 #'
 #' @export
-set_col_lower <- function(x) {
+set_col_lower <- function(x)
   data.table::setnames(x, colnames(x), tolower(colnames(x)))
-}
 
 #' @rdname set_col_lower
 #' @export
-set_col_upper <- function(x) {
+set_col_upper <- function(x)
   data.table::setnames(x, colnames(x), toupper(colnames(x)))
-}
 
 #' Set labels
 #'
@@ -327,7 +325,7 @@ set_labels <- function(df, labels, cols) {
 #'
 #' @export
 set_ptr <- function(x) {
-  if (!has_ptr(x)) {
+  if (!has_ptr(x, error_raise = FALSE)) {
     n <- sys.nframe()
     x_name <- desub(x)
     old_class <- class(x)
