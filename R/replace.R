@@ -14,7 +14,6 @@
 #'
 #' @export
 replace_na_with_zero <- function(df) {
-  assert_class(df, "data.frame")
   old_class <- class(df)
   set_dt(df)
   class <- sapply(df, class)
@@ -41,7 +40,6 @@ replace_na_with_zero <- function(df) {
 #'
 #' @export
 replace_zero_with_na <- function(df) {
-  assert_class(df, "data.frame")
   old_class <- class(df)
   set_dt(df)
   class <- sapply(df, class)
@@ -68,7 +66,6 @@ replace_zero_with_na <- function(df) {
 #'
 #' @export
 replace_empty_with_na <- function(df) {
-  assert_class(df, "data.frame")
   old_class <- class(df)
   set_dt(df)
   class <- sapply(df, class)
@@ -95,7 +92,6 @@ replace_empty_with_na <- function(df) {
 #'
 #' @export
 replace_na_with_empty <- function(df) {
-  assert_class(df, "data.frame")
   old_class <- class(df)
   set_dt(df)
   class <- sapply(df, class)
@@ -123,7 +119,6 @@ replace_na_with_empty <- function(df) {
 #'
 #' @export
 trim_ws <- function(df, ws = "[ \t\r\n]") {
-  assert_class(df, "data.frame")
   old_class <- class(df)
   set_dt(df)
   class <- sapply(df, class)
