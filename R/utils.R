@@ -424,6 +424,18 @@ is.null.externalptr <- function(pointer) {
   .Call(IsNullExternalPtr, pointer)
 }
 
+#' Has not a null pointer?
+#'
+#' Has not a null external pointer?
+#'
+#' @param x a data.frame
+#' @return a logical value whether to have not a null external pointer or not
+#'
+#' @examples
+#' # Has not null external pointer?
+#' \donttest{has_ptr(iris)}
+#'
+#' @export
 has_ptr <- function(x, error_raise = TRUE) {
   assert_class(x, "data.frame")
   x_name <- desub(x)
