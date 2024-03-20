@@ -4,7 +4,7 @@
 \alias{has_attr}
 \title{Has attributes}
 \usage{
-has_attr(df, attr, error_raise = FALSE)
+has_attr(df, attr, error_raise = TRUE)
 }
 \arguments{
 \item{df}{a data frame}

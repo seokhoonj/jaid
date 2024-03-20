@@ -135,7 +135,7 @@ regex_cols <- function(df, pattern) {
 #' has_rows(df, error_raise = TRUE)}
 #'
 #' @export
-has_rows <- function(df, error_raise = FALSE) {
+has_rows <- function(df, error_raise = TRUE) {
   df_name <- deparse(eval(substitute(substitute(df)), envir = parent.frame()))
   nrows <- nrow(df)
   rt <- nrows != 0
@@ -165,7 +165,7 @@ has_rows <- function(df, error_raise = FALSE) {
 #' has_cols(mtcars, c("cyl", "iris"), error_raise = TRUE)}
 #'
 #' @export
-has_cols <- function(df, cols, error_raise = FALSE) {
+has_cols <- function(df, cols, error_raise = TRUE) {
   df_name <- desub(df)
   df_cols <- colnames(df)
   diff_cols <- setdiff(cols, df_cols)
@@ -197,7 +197,7 @@ has_cols <- function(df, cols, error_raise = FALSE) {
 #' has_attr(mtcars, c("names", "types"), error_raise = TRUE)}
 #'
 #' @export
-has_attr <- function(df, attr, error_raise = FALSE) {
+has_attr <- function(df, attr, error_raise = TRUE) {
   df_name <- desub(df)
   df_attr <- names(attributes(df))
   diff_attr <- setdiff(attr, df_attr)
@@ -350,11 +350,16 @@ set_ptr <- function(x) {
 set_dt <- function(x) {
   assert_class(x, "data.frame")
   if (!inherits(x, "data.table")) {
-    n <- sys.nframe()
-    x_name <- desub(x)
-    old_class <- class(x)
-    data.table::setDT(x)
-    assign(x_name, x, envir = parent.frame(n))
+    if (!has_ptr(x, error_raise = FALSE)) {
+      n <- sys.nframe()
+      x_name <- desub(x)
+      old_class <- class(x)
+      data.table::setDT(x)
+      assign(x_name, x, envir = parent.frame(n))
+    }
+    else {
+      set_attr(df, "class", c("data.table", "data.frame"))
+    }
   }
 }
 
@@ -395,7 +400,7 @@ is.null.externalptr <- function(pointer) {
   .Call(IsNullExternalPtr, pointer)
 }
 
-has_ptr <- function(x, error_raise = FALSE) {
+has_ptr <- function(x, error_raise = TRUE) {
   assert_class(x, "data.frame")
   x_name <- desub(x)
   p <- get_ptr(x)
