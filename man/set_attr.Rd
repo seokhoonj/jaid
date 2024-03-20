@@ -17,7 +17,7 @@ set_attr(x, name, value)
 the changed object (invisibly) for use in compound statements.
 }
 \description{
-Set attributes functions re-exported in this package from \code{data.table}.
+setattr functions re-exported from \code{data.table}.
 }
 \examples{
 # set attributes

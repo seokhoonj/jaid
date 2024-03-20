@@ -2,23 +2,19 @@
 % Please edit documentation in R/utils.R
 \name{set_dt}
 \alias{set_dt}
-\title{Set data.frame to data.table}
+\title{Set data.table function}
 \usage{
-set_dt(x, envir = globalenv())
+set_dt(x)
 }
 \arguments{
-\item{x}{data.frame}
-
-\item{envir}{the \link{environment} to use. See ‘Details’.}
+\item{x}{a data.frame}
 }
 \value{
-No return value.
+no return values.
 }
 \description{
-Set data.frame to data.table class.
+setDT function re-exported from \code{data.table}.
 }
-\examples{
-# set data.frame to data.table
-\donttest{set_dt(iris)}
-
+\seealso{
+\code{\link[=setDT]{setDT()}}
 }

@@ -71,6 +71,9 @@ void FillValue(SEXP x, SEXP value);
 void PrintArray(int arr[], int len);
 SEXP PrintVector(SEXP x);
 
+// ExternalPtr
+SEXP IsNullExternalPtr(SEXP pointer);
+
 /* Group */
 SEXP IndexOverlappingDateRange(SEXP id, SEXP from, SEXP to, SEXP interval);
 SEXP SortGroupBy(SEXP id);

@@ -7,9 +7,9 @@
 assert_class(obj, class)
 }
 \arguments{
-\item{obj}{object}
+\item{obj}{an object}
 
-\item{class}{object class}
+\item{class}{an object class}
 }
 \value{
 no return

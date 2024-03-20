@@ -12,12 +12,15 @@ static const R_CallMethodDef callEntries[] = {
   CALLDEF(AsNumeric, 1),
   CALLDEF(AsCharacter, 1),
 
+  // Utils
+  CALLDEF(BeforeChangeIndex, 1),
+
+  // ExternalPtr
+  CALLDEF(IsNullExternalPtr, 1),
+
   // Group
   CALLDEF(IndexOverlappingDateRange, 4),
   CALLDEF(SortGroupBy, 1),
-
-  // Utils
-  CALLDEF(BeforeChangeIndex, 1),
 
   // Mode
   CALLDEF(_jaid_fastMode, 2),

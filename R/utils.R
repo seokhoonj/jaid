@@ -25,6 +25,60 @@ devars <- function(x) {
   return(vapply(x, deparse, "character")[-1L])
 }
 
+#' @title Desub
+#'
+#' @description
+#' This function operates like `deparse(substitute(x))` inside the functions.
+#'
+#' @param x an expression that can be a string vector
+#' @return a string vector
+#'
+#' @examples
+#' # desub
+#' \donttest{f1 <- function(a) desub(a)
+#' f2 <- function(b) f1(b)
+#' f3 <- function(c) f2(c)
+#' f4 <- function(d) f3(d)
+#' f5 <- function(e) f4(e)
+#' desub(iris) # iris
+#' f1(iris) # iris
+#' f2(iris) # iris
+#' f3(iris) # iris
+#' f4(iris) # iris
+#' f5(iris) # iris}
+#'
+#' @export
+desub <- function(x) {
+  substitute(x) |>
+    substitute() |>
+    substitute() |>
+    substitute() |>
+    substitute() |>
+    substitute() |>
+    substitute() |>
+    substitute() |>
+    substitute() |>
+    substitute() |>
+    substitute() |>
+    substitute() |>
+    substitute() |>
+    substitute() |>
+    eval(envir = parent.frame(n =  1)) |>
+    eval(envir = parent.frame(n =  2)) |>
+    eval(envir = parent.frame(n =  3)) |>
+    eval(envir = parent.frame(n =  4)) |>
+    eval(envir = parent.frame(n =  5)) |>
+    eval(envir = parent.frame(n =  6)) |>
+    eval(envir = parent.frame(n =  7)) |>
+    eval(envir = parent.frame(n =  8)) |>
+    eval(envir = parent.frame(n =  9)) |>
+    eval(envir = parent.frame(n = 10)) |>
+    eval(envir = parent.frame(n = 11)) |>
+    eval(envir = parent.frame(n = 12)) |>
+    eval(envir = parent.frame(n = 13)) |>
+    deparse()
+}
+
 #' Match columns
 #'
 #' Get matched columns from a data frame.
@@ -82,7 +136,7 @@ regex_cols <- function(df, pattern) {
 #'
 #' @export
 has_rows <- function(df, error_raise = FALSE) {
-  df_name <- deparse(substitute(df))
+  df_name <- deparse(eval(substitute(substitute(df)), envir = parent.frame()))
   nrows <- nrow(df)
   rt <- nrows != 0
   if (!error_raise)
@@ -112,7 +166,7 @@ has_rows <- function(df, error_raise = FALSE) {
 #'
 #' @export
 has_cols <- function(df, cols, error_raise = FALSE) {
-  df_name <- deparse(substitute(df))
+  df_name <- desub(df)
   df_cols <- colnames(df)
   diff_cols <- setdiff(cols, df_cols)
   rt <- length(diff_cols) == 0
@@ -140,11 +194,11 @@ has_cols <- function(df, cols, error_raise = FALSE) {
 #'
 #' # raise an error
 #' \dontrun{
-#' has_cols(has_attr(mtcars, c("names", "types")), error_raise = TRUE)}
+#' has_attr(mtcars, c("names", "types"), error_raise = TRUE)}
 #'
 #' @export
 has_attr <- function(df, attr, error_raise = FALSE) {
-  df_name <- deparse(substitute(df))
+  df_name <- desub(df)
   df_attr <- names(attributes(df))
   diff_attr <- setdiff(attr, df_attr)
   rt <- length(diff_attr) == 0
@@ -158,9 +212,9 @@ has_attr <- function(df, attr, error_raise = FALSE) {
 }
 
 has_missing <- function(x) {
-  column_name <- deparse(substitute(x))
+  col_nm <- desub(x)
   if (any(is.na(x))) {
-    stop("'", column_name, "' has missing value(s): ",
+    stop("'", col_nm, "' has missing value(s): ",
          call. = FALSE)
   }
 }
@@ -194,7 +248,7 @@ paste_list <- function(x, sep = "|") {
 
 #' Set attributes
 #'
-#' Set attributes functions re-exported in this package from `data.table`.
+#' setattr functions re-exported from `data.table`.
 #'
 #' @param x any objects; e.g, list, columns of a data.frame or data.table
 #' @param name the character attribute name.
@@ -260,52 +314,103 @@ set_labels <- function(df, labels, cols) {
   invisible(df)
 }
 
-#' Set data.frame to data.table
+#' Set external pointer
 #'
-#' Set data.frame to data.table class.
+#' Set external pointer
 #'
-#' @param x data.frame
-#' @param envir the [environment] to use. See ‘Details’.
+#' @param x a data.frame
 #' @return No return value.
 #'
 #' @examples
-#' # set data.frame to data.table
-#' \donttest{set_dt(iris)}
+#' # set pointer
+#' \donttest{set_ptr(iris)}
 #'
 #' @export
-set_dt <- function(x, envir = globalenv()) {
-  assert_class(x, "data.frame")
-  x_name <- deparse(substitute(x))
-  if (!inherits(x, "data.table"))
-    data.table::setattr(x, "class", c("data.table", "data.frame"))
-  if (!has_attr(x, ".internal.selfref")) {
+set_ptr <- function(x) {
+  if (!has_ptr(x)) {
+    n <- sys.nframe()
+    x_name <- desub(x)
+    old_class <- class(x)
     data.table::setalloccol(x)
-    assign(x_name, x, envir = envir)
+    set_attr(x, "class", old_class)
+    assign(x_name, x, envir = parent.frame(n))
   }
 }
 
-#' Set data frame to tibble
+#' Set data.table function
 #'
-#' Set data frame to tibble class.
+#' setDT function re-exported from `data.table`.
 #'
-#' @param x data.frame
-#' @param envir the [environment] to use. See ‘Details’.
+#' @param x a data.frame
+#' @return no return values.
+#'
+#' @seealso [setDT()]
+#'
+#' @export
+set_dt <- function(x) {
+  assert_class(x, "data.frame")
+  if (!inherits(x, "data.table")) {
+    n <- sys.nframe()
+    x_name <- desub(x)
+    old_class <- class(x)
+    data.table::setDT(x)
+    assign(x_name, x, envir = parent.frame(n))
+  }
+}
+
+#' Get external pointer
+#'
+#' Get external pointer
+#'
+#' @param x a data.frame
 #' @return No return value.
 #'
 #' @examples
-#' # set data.frame to tibble
-#' \donttest{set_tibble(iris)}
+#' # get pointer
+#' \dontrun{
+#' df <- data.frame(x = c(1:3), y = c("a", "b", "c"))
+#' get_ptr(df)
+#' df <- setalloccol(df)
+#' get_ptr(df)}
 #'
 #' @export
-set_tibble <- function(x, envir = globalenv()) {
+get_ptr <- function(x)
+  attr(x, ".internal.selfref")
+
+#' Is a null external pointer?
+#'
+#' Is a null external pointer?
+#'
+#' @param pointer an externalptr object
+#' @return a logical value whether it is null external pointer or not.
+#'
+#' @examples
+#' # is null external pointer?
+#' \donttest{p <- new("externalptr")
+#' is.null.externalptr(p)}
+#'
+#' @export
+is.null.externalptr <- function(pointer) {
+  stopifnot(methods::is(pointer, "externalptr"))
+  .Call(IsNullExternalPtr, pointer)
+}
+
+has_ptr <- function(x, error_raise = FALSE) {
   assert_class(x, "data.frame")
-  x_name <- deparse(substitute(x))
-  if (!inherits(x, "tbl_df"))
-    data.table::setattr(x, "class", c("tbl_df", "tbl", "data.frame"))
-  if (!has_attr(x, ".internal.selfref")) {
-    data.table::setalloccol(x)
-    assign(x_name, x, envir = envir)
+  x_name <- desub(x)
+  p <- get_ptr(x)
+  rt <- TRUE
+  if (is.null(p)) {
+    rt <- !rt
   }
+  else {
+    if (is.null.externalptr(p))
+      rt <- !rt
+  }
+  if (!error_raise)
+    return(rt)
+  if (!rt)
+    stop("'", x_name, "'", " doesn't have a pointer.", call. = FALSE)
 }
 
 #' Equal columns of two data frames.
@@ -342,3 +447,4 @@ equal <- function(x, y) {
                  x_name, x_nrow, y_name, y_nrow))
   return(sapply(x_cols, function(s) all(x[[s]] == y[[s]])))
 }
+

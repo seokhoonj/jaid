@@ -5,6 +5,7 @@
 #' @importFrom Rcpp sourceCpp
 #' @importFrom data.table `:=` `.SD` `%chin%` address copy set setalloccol
 #' setattr setDF setDT setnames setorder setorderv
+#' @importFrom methods is
 #' @importFrom openssl aes_cbc_decrypt aes_cbc_encrypt sha256
 #' @importFrom openxlsx addStyle addWorksheet createStyle createWorkbook
 #' insertPlot saveWorkbook setColWidths writeData

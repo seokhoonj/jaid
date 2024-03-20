@@ -25,6 +25,6 @@ Whether the data has specific attributes
 
 # raise an error
 \dontrun{
-has_cols(has_attr(mtcars, c("names", "types")), error_raise = TRUE)}
+has_attr(mtcars, c("names", "types"), error_raise = TRUE)}
 
 }

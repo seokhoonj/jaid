@@ -15,5 +15,6 @@ draw_line <- function(width, mark = "=") {
     width <- getOption("width")
   sapply(width, function(x)
     paste(rep(mark, times = ifelse(!is.na(x), min(x, getOption("width")), 0)),
-          collapse = ""))
+          collapse = "")
+  )
 }

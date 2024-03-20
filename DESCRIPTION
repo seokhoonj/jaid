@@ -11,6 +11,7 @@ Depends: R (>= 3.5.0)
 Imports:
     Rcpp (>= 0.12.10),
     data.table (>= 1.13.0),
+    methods (>= 4.2.3),
     openssl (>= 1.4.1),
     openxlsx (>= 4.2.3),
     rlang (>= 1.1.1),
