@@ -4,10 +4,10 @@
 \alias{set_tibble}
 \title{Set tibble function}
 \usage{
-set_tibble(x)
+set_tibble(df)
 }
 \arguments{
-\item{x}{a data.frame}
+\item{df}{a data.frame}
 }
 \value{
 no return values.

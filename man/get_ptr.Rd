@@ -4,10 +4,10 @@
 \alias{get_ptr}
 \title{Get external pointer}
 \usage{
-get_ptr(x)
+get_ptr(df)
 }
 \arguments{
-\item{x}{a data.frame}
+\item{df}{a data.frame}
 }
 \value{
 No return value.

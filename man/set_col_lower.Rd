@@ -5,12 +5,12 @@
 \alias{set_col_upper}
 \title{Change columns from uppercase to lowercase or from lowercase to uppercase}
 \usage{
-set_col_lower(x)
+set_col_lower(df)
 
-set_col_upper(x)
+set_col_upper(df)
 }
 \arguments{
-\item{x}{a data.frame}
+\item{df}{a data.frame}
 }
 \value{
 no return values

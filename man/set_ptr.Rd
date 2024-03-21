@@ -4,10 +4,10 @@
 \alias{set_ptr}
 \title{Set external pointer}
 \usage{
-set_ptr(x)
+set_ptr(df)
 }
 \arguments{
-\item{x}{a data.frame}
+\item{df}{a data.frame}
 }
 \value{
 No return value.

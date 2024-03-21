@@ -4,10 +4,10 @@
 \alias{set_dt}
 \title{Set data.table function}
 \usage{
-set_dt(x)
+set_dt(df)
 }
 \arguments{
-\item{x}{a data.frame}
+\item{df}{a data.frame}
 }
 \value{
 no return values.

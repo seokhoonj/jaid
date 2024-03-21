@@ -4,10 +4,10 @@
 \alias{has_ptr}
 \title{Has not a null pointer?}
 \usage{
-has_ptr(x, error_raise = TRUE)
+has_ptr(df, error_raise = TRUE)
 }
 \arguments{
-\item{x}{a data.frame}
+\item{df}{a data.frame}
 
 \item{error_raise}{a logcial whether to raise an error or not}
 }

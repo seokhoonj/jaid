@@ -188,9 +188,9 @@ has_attr <- function(df, attr, error_raise = TRUE) {
   }
 }
 
-has_missing <- function(x) {
-  col_nm <- desub(x)
-  if (any(is.na(x))) {
+has_missing <- function(df) {
+  col_nm <- desub(df)
+  if (any(is.na(df))) {
     stop("'", col_nm, "' has missing value(s): ",
          call. = FALSE)
   }
@@ -246,7 +246,7 @@ set_attr <- function(x, name, value)
 #'
 #' Change columns from uppercase to lowercase or from lowercase to uppercase
 #'
-#' @param x a data.frame
+#' @param df a data.frame
 #' @return no return values
 #'
 #' @examples
@@ -256,13 +256,13 @@ set_attr <- function(x, name, value)
 #' set_col_lower(df)}
 #'
 #' @export
-set_col_lower <- function(x)
-  data.table::setnames(x, colnames(x), tolower(colnames(x)))
+set_col_lower <- function(df)
+  data.table::setnames(df, colnames(df), tolower(colnames(df)))
 
 #' @rdname set_col_lower
 #' @export
-set_col_upper <- function(x)
-  data.table::setnames(x, colnames(x), toupper(colnames(x)))
+set_col_upper <- function(df)
+  data.table::setnames(df, colnames(df), toupper(colnames(df)))
 
 #' Set labels
 #'
@@ -293,7 +293,7 @@ set_labels <- function(df, labels, cols) {
 #'
 #' Set external pointer
 #'
-#' @param x a data.frame
+#' @param df a data.frame
 #' @return No return value.
 #'
 #' @examples
@@ -301,41 +301,57 @@ set_labels <- function(df, labels, cols) {
 #' \donttest{set_ptr(iris)}
 #'
 #' @export
-set_ptr <- function(x) {
-  if (!has_ptr(x, error_raise = FALSE)) {
+set_ptr <- function(df) {
+  if (!has_ptr(df, error_raise = FALSE)) {
     n <- sys.nframe()
-    x_name <- desub(x)
-    old_class <- class(x)
-    data.table::setalloccol(x)
-    set_attr(x, "class", old_class)
-    assign(x_name, x, envir = parent.frame(n))
+    df_name <- desub(df)
+    old_class <- class(df)
+    data.table::setalloccol(df)
+    set_attr(df, "class", old_class)
+    assign(df_name, df, envir = parent.frame(n))
   }
 }
+
+#' Get a copied data.table
+#'
+#' Get a copied data.table.
+#'
+#' @param df a data.frame
+#' @return a copied data.table
+#'
+#' @examples
+#' # get copied data.table
+#' \donttest{df <- data.frame(x = 1:3, y = c("a", "b", "c"))
+#' get_copied_dt(df)}
+#'
+#' @export
+get_copied_dt <- function(df)
+  return(data.table::setDT(data.table::copy(df))[])
 
 #' Set data.table function
 #'
 #' setDT function re-exported from `data.table`.
 #'
-#' @param x a data.frame
+#' @param df a data.frame
 #' @return no return values.
 #'
 #' @seealso [setDT()]
 #'
 #' @export
-set_dt <- function(x) {
-  assert_class(x, "data.frame")
-  if (!inherits(x, "data.table")) {
-    if (!has_ptr(x, error_raise = FALSE)) {
+set_dt <- function(df) {
+  assert_class(df, "data.frame")
+  if (!inherits(df, "data.table")) {
+    if (!has_ptr(df, error_raise = FALSE)) {
       n <- sys.nframe()
-      x_name <- desub(x)
-      old_class <- class(x)
-      data.table::setDT(x)
-      assign(x_name, x, envir = parent.frame(n))
+      df_name <- desub(df)
+      old_class <- class(df)
+      data.table::setDT(df)
+      assign(df_name, df, envir = parent.frame(n))
       if (n > 1)
-        assign(x_name, x, envir = parent.frame(n-1))
+        assign(df_name, df, envir = parent.frame(n-1))
     }
     else {
-      set_attr(x, "class", c("data.table", "data.frame"))
+      set_attr(df, "class", c("data.table", "data.frame"))
     }
   }
 }
@@ -344,26 +360,26 @@ set_dt <- function(x) {
 #'
 #' as_tibble function re-exported from `tibble`.
 #'
-#' @param x a data.frame
+#' @param df a data.frame
 #' @return no return values.
 #'
 #' @seealso [as_tibble()]
 #'
 #' @export
-set_tibble <- function(x) {
-  assert_class(x, "data.frame")
-  if (!inherits(x, "tbl_df")) {
-    if (!has_ptr(x, error_raise = FALSE)) {
+set_tibble <- function(df) {
+  assert_class(df, "data.frame")
+  if (!inherits(df, "tbl_df")) {
+    if (!has_ptr(df, error_raise = FALSE)) {
       n <- sys.nframe()
-      x_name <- desub(x)
-      old_class <- class(x)
-      x <- tibble::as_tibble(x)
-      assign(x_name, x, envir = parent.frame(n))
+      df_name <- desub(df)
+      old_class <- class(df)
+      df <- tibble::as_tibble(df)
+      assign(df_name, df, envir = parent.frame(n))
       if (n > 1)
-        assign(x_name, x, envir = parent.frame(n-1))
+        assign(df_name, df, envir = parent.frame(n-1))
     }
     else {
-      set_attr(x, "class", c("tbl_df", "tbl", "data.frame"))
+      set_attr(df, "class", c("tbl_df", "tbl", "data.frame"))
     }
   }
 }
@@ -372,7 +388,7 @@ set_tibble <- function(x) {
 #'
 #' Get external pointer
 #'
-#' @param x a data.frame
+#' @param df a data.frame
 #' @return No return value.
 #'
 #' @examples
@@ -384,8 +400,8 @@ set_tibble <- function(x) {
 #' get_ptr(df)}
 #'
 #' @export
-get_ptr <- function(x)
-  attr(x, ".internal.selfref")
+get_ptr <- function(df)
+  attr(df, ".internal.selfref")
 
 #' Is a null external pointer?
 #'
@@ -409,7 +425,7 @@ is.null.externalptr <- function(pointer) {
 #'
 #' Has not a null external pointer?
 #'
-#' @param x a data.frame
+#' @param df a data.frame
 #' @param error_raise a logcial whether to raise an error or not
 #' @return a logical value whether to have not a null external pointer or not
 #'
@@ -418,10 +434,10 @@ is.null.externalptr <- function(pointer) {
 #' \donttest{has_ptr(iris, error_raise = FALSE)}
 #'
 #' @export
-has_ptr <- function(x, error_raise = TRUE) {
-  assert_class(x, "data.frame")
-  x_name <- desub(x)
-  p <- get_ptr(x)
+has_ptr <- function(df, error_raise = TRUE) {
+  assert_class(df, "data.frame")
+  df_name <- desub(df)
+  p <- get_ptr(df)
   rt <- TRUE
   if (is.null(p)) {
     rt <- !rt
@@ -433,7 +449,7 @@ has_ptr <- function(x, error_raise = TRUE) {
   if (!error_raise)
     return(rt)
   if (!rt)
-    stop("'", x_name, "'", " doesn't have a pointer.", call. = FALSE)
+    stop("'", df_name, "'", " doesn't have a pointer.", call. = FALSE)
 }
 
 #' Equal columns of two data frames.
