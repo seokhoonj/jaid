@@ -35,7 +35,7 @@ set_attr <- function(x, name, value)
 #' has_attr(mtcars, c("names", "types"), error_raise = TRUE)}
 #'
 #' @export
-has_attr <- function(df, attr, error_raise = TRUE) {
+has_attr <- function(df, attr, error_raise = FALSE) {
   df_name <- desub(df)
   df_attr <- names(attributes(df))
   diff_attr <- setdiff(attr, df_attr)

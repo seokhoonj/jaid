@@ -30,7 +30,7 @@ is.null.externalptr <- function(pointer) {
 #'
 #' @export
 set_ptr <- function(df) {
-  if (!has_ptr(df, error_raise = FALSE)) {
+  if (!has_ptr(df)) {
     n <- sys.nframe()
     df_name <- desub(df)
     old_class <- class(df)
@@ -91,7 +91,7 @@ del_ptr <- function(df)
 #' \donttest{has_ptr(iris, error_raise = FALSE)}
 #'
 #' @export
-has_ptr <- function(df, error_raise = TRUE) {
+has_ptr <- function(df, error_raise = FALSE) {
   assert_class(df, "data.frame")
   df_name <- desub(df)
   p <- get_ptr(df)

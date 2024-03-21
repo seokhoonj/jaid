@@ -163,7 +163,7 @@ regex_cols <- function(df, pattern) {
 #' has_rows(df, error_raise = TRUE)}
 #'
 #' @export
-has_rows <- function(df, error_raise = TRUE) {
+has_rows <- function(df, error_raise = FALSE) {
   assert_class(df, "data.frame")
   df_name <- desub(df)
   nrows <- nrow(df)
@@ -194,7 +194,7 @@ has_rows <- function(df, error_raise = TRUE) {
 #' has_cols(mtcars, c("cyl", "iris"), error_raise = TRUE)}
 #'
 #' @export
-has_cols <- function(df, cols, error_raise = TRUE) {
+has_cols <- function(df, cols, error_raise = FALSE) {
   assert_class(df, "data.frame")
   df_name <- desub(df)
   df_cols <- colnames(df)
@@ -307,7 +307,7 @@ get_copied_dt <- function(df)
 #' @export
 set_dt <- function(df) {
   assert_class(df, "data.frame")
-  if (!has_ptr(df, error_raise = FALSE)) {
+  if (!has_ptr(df)) {
     n <- sys.nframe()
     df_name <- desub(df)
     old_class <- class(df)
@@ -332,7 +332,7 @@ set_dt <- function(df) {
 #' @export
 set_tibble <- function(df) {
   assert_class(df, "data.frame")
-  if (!has_ptr(df, error_raise = FALSE)) {
+  if (!has_ptr(df)) {
     n <- sys.nframe()
     df_name <- desub(df)
     old_class <- class(df)
