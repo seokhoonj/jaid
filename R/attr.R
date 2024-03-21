@@ -102,7 +102,7 @@ regex_attr <- function(x, name)
 #'
 #' @export
 set_attr_class <- function(x, name, class, regex = TRUE) {
-  nms <- ifelse(regex, regex_attr(x, name), match_attr(x, name))
+  nms <- if(regex) regex_attr(x, name) else match_attr(x, name)
   invisible(lapply(nms, function(s)
     data.table::setattr(attr(x, s), "class", class)
   ))
