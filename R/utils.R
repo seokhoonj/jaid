@@ -312,6 +312,7 @@ set_dt <- function(df) {
     df_name <- desub(df)
     old_class <- class(df)
     data.table::setDT(df)
+    assign(df_name, df, envir = parent.frame(n))
     invisible()
   }
   if (!inherits(df, "data.table")) {
