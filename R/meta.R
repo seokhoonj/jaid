@@ -16,6 +16,8 @@ meta <- function(x) UseMethod("meta")
 meta.data.frame <- function(x) {
   column <- names(x)
   class <- sapply(x, class)
+  if (is.list(class))
+    class <- sapply(class, function(x) paste(x, collapse = ","))
   type <- sapply(x, typeof)
   nrows <- nrow(x)
   n <- sapply(x, function(x) sum(!is.na(x)))
