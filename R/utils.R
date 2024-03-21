@@ -209,50 +209,6 @@ has_cols <- function(df, cols, error_raise = TRUE) {
   }
 }
 
-#' Has attributes
-#'
-#' Whether the data has specific attributes
-#'
-#' @param df a data frame
-#' @param attr attribute names
-#' @param error_raise a boolean whether to raise an error or not
-#' @return a boolean value
-#'
-#' @examples
-#' # has attributes
-#' \donttest{has_attr(mtcars, c("names", "class"))}
-#'
-#' # raise an error
-#' \dontrun{
-#' has_attr(mtcars, c("names", "types"), error_raise = TRUE)}
-#'
-#' @export
-has_attr <- function(df, attr, error_raise = TRUE) {
-  df_name <- desub(df)
-  df_attr <- names(attributes(df))
-  diff_attr <- setdiff(attr, df_attr)
-  rt <- length(diff_attr) == 0
-  if (!error_raise)
-    return(rt)
-  if (!rt) {
-    stop("'", df_name, "' doesn't have attributes(s): ",
-         paste0(diff_attr, collapse = ", "), ".",
-         call. = FALSE)
-  }
-}
-
-has_missing <- function(df) {
-  col_nm <- desub(df)
-  if (any(is.na(df))) {
-    stop("'", col_nm, "' has missing value(s): ",
-         call. = FALSE)
-  }
-}
-
-sort_group_by <- function(x) {
-  .Call(SortGroupBy, x)
-}
-
 #' Paste vectors of a list
 #'
 #' Paste vectors of equal length in a list or data.frame
@@ -275,25 +231,6 @@ paste_list <- function(x, sep = "|") {
     return(do.call(function(...) paste(..., sep = sep), x))
   }
 }
-
-#' Set attributes
-#'
-#' setattr functions re-exported from `data.table`.
-#'
-#' @param x any objects; e.g, list, columns of a data.frame or data.table
-#' @param name the character attribute name.
-#' @param value the value to assign to the attribute or `NULL` removes teh attribute, if present.
-#' @return the changed object (invisibly) for use in compound statements.
-#'
-#' @examples
-#' # set attributes
-#' \dontrun{df <- data.frame(a = 1:3, b = 4:6)
-#' set_attr(df, "flag", TRUE)
-#' attr(df, "flag")}
-#'
-#' @export
-set_attr <- function(x, name, value)
-  data.table::setattr(x, name, value)
 
 #' Change columns from uppercase to lowercase or from lowercase to uppercase
 #'
@@ -341,67 +278,6 @@ set_labels <- function(df, labels, cols) {
          function(x) data.table::setattr(df[[cols[[x]]]], "label", labels[[x]]))
   invisible(df)
 }
-
-#' Set external pointer
-#'
-#' Set external pointer
-#'
-#' @param df a data.frame
-#' @return No return value.
-#'
-#' @examples
-#' # set pointer
-#' \donttest{set_ptr(iris)}
-#'
-#' @export
-set_ptr <- function(df) {
-  if (!has_ptr(df, error_raise = FALSE)) {
-    n <- sys.nframe()
-    df_name <- desub(df)
-    old_class <- class(df)
-    data.table::setalloccol(df)
-    set_attr(df, "class", old_class)
-    assign(df_name, df, envir = parent.frame(n))
-  }
-}
-
-#' Get external pointer
-#'
-#' Get external pointer
-#'
-#' @param df a data.frame
-#' @return No return value.
-#'
-#' @examples
-#' # get pointer
-#' \dontrun{
-#' df <- data.frame(x = c(1:3), y = c("a", "b", "c"))
-#' get_ptr(df)
-#' df <- setalloccol(df)
-#' get_ptr(df)}
-#'
-#' @export
-get_ptr <- function(df)
-  attr(df, ".internal.selfref")
-
-#' Delete external pointer
-#'
-#' Delete external pointer
-#'
-#' @param df a data.frame
-#' @return No return value.
-#'
-#' @examples
-#' # delete pointer
-#' \donttest{df <- data.frame(x = c(1:3), y = c("a", "b", "c"))
-#' data.table::setalloccol(df)
-#' get_ptr(df)
-#' del_ptr(df)
-#' get_ptr(df) # NULL}
-#'
-#' @export
-del_ptr <- function(df)
-  data.table::setattr(df, ".internal.selfref", NULL)
 
 #' Get a copied data.table
 #'
@@ -471,55 +347,6 @@ set_tibble <- function(df) {
   }
 }
 
-#' Is a null external pointer?
-#'
-#' Is a null external pointer?
-#'
-#' @param pointer an externalptr object
-#' @return a logical value whether it is null external pointer or not.
-#'
-#' @examples
-#' # is null external pointer?
-#' \dontrun{
-#' p <- new("externalptr")
-#' is.null.externalptr(p)}
-#'
-#' @export
-is.null.externalptr <- function(pointer) {
-  assert_class(pointer, "externalptr")
-  .Call(IsNullExternalPtr, pointer)
-}
-
-#' Has not a null pointer?
-#'
-#' Has not a null external pointer?
-#'
-#' @param df a data.frame
-#' @param error_raise a logcial whether to raise an error or not
-#' @return a logical value whether to have not a null external pointer or not
-#'
-#' @examples
-#' # Has not null external pointer?
-#' \donttest{has_ptr(iris, error_raise = FALSE)}
-#'
-#' @export
-has_ptr <- function(df, error_raise = TRUE) {
-  assert_class(df, "data.frame")
-  df_name <- desub(df)
-  p <- get_ptr(df)
-  rt <- TRUE
-  if (is.null(p)) {
-    rt <- !rt
-  }
-  else {
-    if (is.null.externalptr(p))
-      rt <- !rt
-  }
-  if (!error_raise)
-    return(rt)
-  if (!rt)
-    stop("'", df_name, "'", " doesn't have a pointer.", call. = FALSE)
-}
 
 #' Equal columns of two data frames.
 #'
@@ -556,3 +383,6 @@ equal <- function(x, y) {
   return(sapply(x_cols, function(s) all(x[[s]] == y[[s]])))
 }
 
+sort_group_by <- function(x) {
+  .Call(SortGroupBy, x)
+}
