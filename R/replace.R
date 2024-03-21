@@ -20,7 +20,7 @@ replace_na_with_zero <- function(df) {
   cols <- names(class)[which(class %in% c("numeric", "integer"))]
   df[, `:=`((cols), lapply(.SD, function(x) ifelse(is.na(x), 0, x))),
      .SDcols = cols]
-  setattr(df, "class", old_class)
+  data.table::setattr(df, "class", old_class)
   invisible(df[])
 }
 
@@ -46,7 +46,7 @@ replace_zero_with_na <- function(df) {
   cols <- names(class)[which(class %in% c("numeric", "integer"))]
   df[, `:=`((cols), lapply(.SD, function(x) ifelse(x == 0, NA, x))),
      .SDcols = cols]
-  setattr(df, "class", old_class)
+  data.table::setattr(df, "class", old_class)
   invisible(df[])
 }
 
@@ -72,7 +72,7 @@ replace_empty_with_na <- function(df) {
   cols <- names(class)[which(class == "character")]
   df[, `:=`((cols), lapply(.SD, function(x) ifelse(x == "", NA, x))),
      .SDcols = cols]
-  setattr(df, "class", old_class)
+  data.table::setattr(df, "class", old_class)
   invisible(df[])
 }
 
@@ -98,7 +98,7 @@ replace_na_with_empty <- function(df) {
   cols <- names(class)[which(class == "character")]
   df[, `:=`((cols), lapply(.SD, function(x) ifelse(is.na(x), "", x))),
      .SDcols = cols]
-  setattr(df, "class", old_class)
+  data.table::setattr(df, "class", old_class)
   invisible(df[])
 }
 

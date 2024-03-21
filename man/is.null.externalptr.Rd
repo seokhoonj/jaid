@@ -17,7 +17,8 @@ Is a null external pointer?
 }
 \examples{
 # is null external pointer?
-\donttest{p <- new("externalptr")
+\dontrun{
+p <- new("externalptr")
 is.null.externalptr(p)}
 
 }

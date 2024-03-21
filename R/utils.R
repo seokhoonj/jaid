@@ -49,7 +49,60 @@ desub <- function(x) {
     eval(envir = parent.frame(n = 11)) |>
     eval(envir = parent.frame(n = 12)) |>
     eval(envir = parent.frame(n = 13)) |>
+    deparse()
+}
+
+desubs <- function(x) {
+  substitute(x) |>
+    substitute() |>
+    substitute() |>
+    substitute() |>
+    substitute() |>
+    substitute() |>
+    substitute() |>
+    substitute() |>
+    substitute() |>
+    substitute() |>
+    substitute() |>
+    substitute() |>
+    substitute() |>
+    substitute() |>
+    eval(envir = parent.frame(n =  1)) |>
+    eval(envir = parent.frame(n =  2)) |>
+    eval(envir = parent.frame(n =  3)) |>
+    eval(envir = parent.frame(n =  4)) |>
+    eval(envir = parent.frame(n =  5)) |>
+    eval(envir = parent.frame(n =  6)) |>
+    eval(envir = parent.frame(n =  7)) |>
+    eval(envir = parent.frame(n =  8)) |>
+    eval(envir = parent.frame(n =  9)) |>
+    eval(envir = parent.frame(n = 10)) |>
+    eval(envir = parent.frame(n = 11)) |>
+    eval(envir = parent.frame(n = 12)) |>
+    eval(envir = parent.frame(n = 13)) |>
     vapply(FUN = deparse, FUN.VALUE = "character")
+}
+
+#' Assert class
+#'
+#' Assert object class.
+#'
+#' @param obj an object
+#' @param class an object class
+#' @return no return
+#'
+#' @examples
+#' # assert object class
+#' \donttest{assert_class(cars, "data.frame")}
+#'
+#' @export
+assert_class <- function(obj, class) {
+  obj_name <- desub(obj)
+  if (!inherits(obj, class)) {
+    stop(obj_name, " is not an object of class: '",
+         paste(class, collapse = ", "), "'",
+         call. = FALSE)
+  }
 }
 
 #' Match columns
@@ -346,12 +399,9 @@ set_dt <- function(df) {
       df_name <- desub(df)
       old_class <- class(df)
       data.table::setDT(df)
-      assign(df_name, df, envir = parent.frame(n))
-      if (n > 1)
-        assign(df_name, df, envir = parent.frame(n-1))
     }
     else {
-      set_attr(df, "class", c("data.table", "data.frame"))
+      data.table::setattr(df, "class", c("data.table", "data.frame"))
     }
   }
 }
@@ -373,13 +423,12 @@ set_tibble <- function(df) {
       n <- sys.nframe()
       df_name <- desub(df)
       old_class <- class(df)
-      df <- tibble::as_tibble(df)
+      data.table::setalloccol(df)
+      data.table::setattr(df, "class", c("tbl_df", "tbl", "data.frame"))
       assign(df_name, df, envir = parent.frame(n))
-      if (n > 1)
-        assign(df_name, df, envir = parent.frame(n-1))
     }
     else {
-      set_attr(df, "class", c("tbl_df", "tbl", "data.frame"))
+      data.table::setattr(df, "class", c("tbl_df", "tbl", "data.frame"))
     }
   }
 }
@@ -412,12 +461,13 @@ get_ptr <- function(df)
 #'
 #' @examples
 #' # is null external pointer?
-#' \donttest{p <- new("externalptr")
+#' \dontrun{
+#' p <- new("externalptr")
 #' is.null.externalptr(p)}
 #'
 #' @export
 is.null.externalptr <- function(pointer) {
-  stopifnot(methods::is(pointer, "externalptr"))
+  assert_class(pointer, "externalptr")
   .Call(IsNullExternalPtr, pointer)
 }
 
