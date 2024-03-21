@@ -19,6 +19,6 @@ Find matched attributes using regular expressions.
 }
 \examples{
 # matched attributes using regular expressions
-\donttest{regex_attr(x, "class|names")}
+\donttest{regex_attr(iris, "class|names")}
 
 }

@@ -307,16 +307,15 @@ get_copied_dt <- function(df)
 #' @export
 set_dt <- function(df) {
   assert_class(df, "data.frame")
+  if (!has_ptr(df, error_raise = FALSE)) {
+    n <- sys.nframe()
+    df_name <- desub(df)
+    old_class <- class(df)
+    data.table::setDT(df)
+    invisible()
+  }
   if (!inherits(df, "data.table")) {
-    if (!has_ptr(df, error_raise = FALSE)) {
-      n <- sys.nframe()
-      df_name <- desub(df)
-      old_class <- class(df)
-      data.table::setDT(df)
-    }
-    else {
-      data.table::setattr(df, "class", c("data.table", "data.frame"))
-    }
+    data.table::setattr(df, "class", c("data.table", "data.frame"))
   }
 }
 
@@ -332,18 +331,17 @@ set_dt <- function(df) {
 #' @export
 set_tibble <- function(df) {
   assert_class(df, "data.frame")
+  if (!has_ptr(df, error_raise = FALSE)) {
+    n <- sys.nframe()
+    df_name <- desub(df)
+    old_class <- class(df)
+    data.table::setDT(df)
+    data.table::setattr(df, "class", c("tbl_df", "tbl", "data.frame"))
+    assign(df_name, df, envir = parent.frame(n))
+    invisible()
+  }
   if (!inherits(df, "tbl_df")) {
-    if (!has_ptr(df, error_raise = FALSE)) {
-      n <- sys.nframe()
-      df_name <- desub(df)
-      old_class <- class(df)
-      data.table::setDT(df)
-      data.table::setattr(df, "class", c("tbl_df", "tbl", "data.frame"))
-      assign(df_name, df, envir = parent.frame(n))
-    }
-    else {
-      data.table::setattr(df, "class", c("tbl_df", "tbl", "data.frame"))
-    }
+    data.table::setattr(df, "class", c("tbl_df", "tbl", "data.frame"))
   }
 }
 

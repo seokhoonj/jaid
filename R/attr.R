@@ -75,7 +75,7 @@ match_attr <- function(x, name)
 #'
 #' @examples
 #' # matched attributes using regular expressions
-#' \donttest{regex_attr(x, "class|names")}
+#' \donttest{regex_attr(iris, "class|names")}
 #'
 #' @export
 regex_attr <- function(x, name)
