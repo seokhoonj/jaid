@@ -337,7 +337,7 @@ set_tibble <- function(df) {
       n <- sys.nframe()
       df_name <- desub(df)
       old_class <- class(df)
-      data.table::setalloccol(df)
+      data.table::setDT(df)
       data.table::setattr(df, "class", c("tbl_df", "tbl", "data.frame"))
       assign(df_name, df, envir = parent.frame(n))
     }
