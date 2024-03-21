@@ -365,6 +365,44 @@ set_ptr <- function(df) {
   }
 }
 
+#' Get external pointer
+#'
+#' Get external pointer
+#'
+#' @param df a data.frame
+#' @return No return value.
+#'
+#' @examples
+#' # get pointer
+#' \dontrun{
+#' df <- data.frame(x = c(1:3), y = c("a", "b", "c"))
+#' get_ptr(df)
+#' df <- setalloccol(df)
+#' get_ptr(df)}
+#'
+#' @export
+get_ptr <- function(df)
+  attr(df, ".internal.selfref")
+
+#' Delete external pointer
+#'
+#' Delete external pointer
+#'
+#' @param df a data.frame
+#' @return No return value.
+#'
+#' @examples
+#' # delete pointer
+#' \donttest{df <- data.frame(x = c(1:3), y = c("a", "b", "c"))
+#' data.table::setalloccol(df)
+#' get_ptr(df)
+#' del_ptr(df)
+#' get_ptr(df) # NULL}
+#'
+#' @export
+del_ptr <- function(df)
+  data.table::setattr(df, ".internal.selfref", NULL)
+
 #' Get a copied data.table
 #'
 #' Get a copied data.table.
@@ -432,25 +470,6 @@ set_tibble <- function(df) {
     }
   }
 }
-
-#' Get external pointer
-#'
-#' Get external pointer
-#'
-#' @param df a data.frame
-#' @return No return value.
-#'
-#' @examples
-#' # get pointer
-#' \dontrun{
-#' df <- data.frame(x = c(1:3), y = c("a", "b", "c"))
-#' get_ptr(df)
-#' df <- setalloccol(df)
-#' get_ptr(df)}
-#'
-#' @export
-get_ptr <- function(df)
-  attr(df, ".internal.selfref")
 
 #' Is a null external pointer?
 #'

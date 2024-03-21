@@ -25,7 +25,7 @@
 #' @export
 fill_zero_not_first_pos <- function(x, cols) {
   if (is.null(rownames(x)))
-    stop(devars(x), " doesn't have row names", call. = FALSE)
+    stop(desub(x), " doesn't have row names", call. = FALSE)
   if (missing(cols)) cols <- rep(1, ncol(x))
   .Call(FillZeroNotFirstPos, x, id = rownames(x), ot = cols)
 }
@@ -34,7 +34,7 @@ fill_zero_not_first_pos <- function(x, cols) {
 #' @export
 set_zero_not_first_pos <- function(x, cols) {
   if (is.null(rownames(x)))
-    stop(devars(x), " doesn't have row names", call. = FALSE)
+    stop(desub(x), " doesn't have row names", call. = FALSE)
   if (missing(cols)) cols <- rep(1, ncol(x))
   invisible(.Call(SetZeroNotFirstPos, x, id = rownames(x), ot = cols))
 }
@@ -62,7 +62,7 @@ set_zero_not_first_pos <- function(x, cols) {
 #' @export
 fill_one_before_first_one <- function(x) {
   if (is.null(rownames(x)))
-    stop(devars(x), " doesn't have row names", call. = FALSE)
+    stop(desub(x), " doesn't have row names", call. = FALSE)
   .Call(FillOneBeforeFirstOne, x = x, id = rownames(x))
 }
 
@@ -70,6 +70,6 @@ fill_one_before_first_one <- function(x) {
 #' @export
 set_one_before_first_one <- function(x) {
   if (is.null(rownames(x)))
-    stop(devars(x), " doesn't have row names", call. = FALSE)
+    stop(desub(x), " doesn't have row names", call. = FALSE)
   invisible(.Call(SetOneBeforeFirstOne, x = x, id = rownames(x)))
 }
