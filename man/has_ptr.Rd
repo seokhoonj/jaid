@@ -4,7 +4,7 @@
 \alias{has_ptr}
 \title{Has not a null pointer?}
 \usage{
-has_ptr(df, error_raise = TRUE)
+has_ptr(df, error_raise = FALSE)
 }
 \arguments{
 \item{df}{a data.frame}

@@ -4,7 +4,7 @@
 \alias{has_cols}
 \title{Has columns}
 \usage{
-has_cols(df, cols, error_raise = TRUE)
+has_cols(df, cols, error_raise = FALSE)
 }
 \arguments{
 \item{df}{a data frame}

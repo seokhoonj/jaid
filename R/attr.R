@@ -23,16 +23,12 @@ set_attr <- function(x, name, value)
 #'
 #' @param df a data frame
 #' @param attr attribute names
-#' @param error_raise a boolean whether to raise an error or not
-#' @return a boolean value
+#' @param error_raise a logical whether to raise an error or not
+#' @return a logical value
 #'
 #' @examples
 #' # has attributes
 #' \donttest{has_attr(mtcars, c("names", "class"))}
-#'
-#' # raise an error
-#' \dontrun{
-#' has_attr(mtcars, c("names", "types"), error_raise = TRUE)}
 #'
 #' @export
 has_attr <- function(df, attr, error_raise = FALSE) {
@@ -43,7 +39,7 @@ has_attr <- function(df, attr, error_raise = FALSE) {
   if (!error_raise)
     return(rt)
   if (!rt) {
-    stop("'", df_name, "' doesn't have attributes(s): ",
+    stop("'", df_name, "' doesn't have attribute(s): ",
          paste0(diff_attr, collapse = ", "), ".",
          call. = FALSE)
   }

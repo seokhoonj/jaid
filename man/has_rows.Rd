@@ -4,7 +4,7 @@
 \alias{has_rows}
 \title{Has rows}
 \usage{
-has_rows(df, error_raise = TRUE)
+has_rows(df, error_raise = FALSE)
 }
 \arguments{
 \item{df}{a data frame}

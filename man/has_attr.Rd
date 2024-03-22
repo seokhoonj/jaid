@@ -4,17 +4,17 @@
 \alias{has_attr}
 \title{Has attributes}
 \usage{
-has_attr(df, attr, error_raise = TRUE)
+has_attr(df, attr, error_raise = FALSE)
 }
 \arguments{
 \item{df}{a data frame}
 
 \item{attr}{attribute names}
 
-\item{error_raise}{a boolean whether to raise an error or not}
+\item{error_raise}{a logical whether to raise an error or not}
 }
 \value{
-a boolean value
+a logical value
 }
 \description{
 Whether the data has specific attributes
@@ -22,9 +22,5 @@ Whether the data has specific attributes
 \examples{
 # has attributes
 \donttest{has_attr(mtcars, c("names", "class"))}
-
-# raise an error
-\dontrun{
-has_attr(mtcars, c("names", "types"), error_raise = TRUE)}
 
 }
