@@ -7,7 +7,7 @@
 regex_cols(df, pattern)
 }
 \arguments{
-\item{df}{a data frame}
+\item{df}{a data.frame}
 
 \item{pattern}{a string vector specifying columns}
 }

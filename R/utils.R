@@ -128,7 +128,7 @@ match_cols <- function(df, cols) {
 #'
 #' Find columns using regular expression pattern
 #'
-#' @param df a data frame
+#' @param df a data.frame
 #' @param pattern a string vector specifying columns
 #' @return a string vector
 #'
@@ -143,11 +143,28 @@ regex_cols <- function(df, pattern) {
   colnames(df)[grepl(pattern, names(df), perl = TRUE)]
 }
 
+#' Different columns
+#'
+#' Columns that the data frame does not contain
+#'
+#' @param df a data.frame
+#' @param cols a string vector specifying columns
+#' @return a string vector
+#'
+#' @examples
+#' # different columns
+#' \donttest{diff_cols(mtcars, c("mpg", "cyl", "disp", "hp", "drat"))}
+#'
+#'
+#' @export
+diff_cols <- function(df, cols)
+  setdiff(colnames(df), cols)
+
 #' Has rows
 #'
 #' Whether the data has rows
 #'
-#' @param df a data frame
+#' @param df a data.frame
 #' @param error_raise a logcial whether to raise an error or not
 #' @return a boolean value
 #'

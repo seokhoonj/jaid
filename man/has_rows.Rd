@@ -7,7 +7,7 @@
 has_rows(df, error_raise = FALSE)
 }
 \arguments{
-\item{df}{a data frame}
+\item{df}{a data.frame}
 
 \item{error_raise}{a logcial whether to raise an error or not}
 }
