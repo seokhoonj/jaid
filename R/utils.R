@@ -197,7 +197,7 @@ has_rows <- function(df, error_raise = FALSE) {
 #'
 #' Whether the data has specific columns
 #'
-#' @param df a data frame
+#' @param df a data.frame
 #' @param cols column names
 #' @param error_raise a boolean whether to raise an error or not
 #' @return a boolean value

@@ -7,7 +7,7 @@
 has_cols(df, cols, error_raise = FALSE)
 }
 \arguments{
-\item{df}{a data frame}
+\item{df}{a data.frame}
 
 \item{cols}{column names}
 
