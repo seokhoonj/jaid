@@ -12,7 +12,7 @@ has_rows(df, error_raise = FALSE)
 \item{error_raise}{a logcial whether to raise an error or not}
 }
 \value{
-a boolean value
+a logical value
 }
 \description{
 Whether the data has rows

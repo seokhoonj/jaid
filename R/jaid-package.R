@@ -9,7 +9,7 @@
 #' @importFrom openssl aes_cbc_decrypt aes_cbc_encrypt sha256
 #' @importFrom openxlsx addStyle addWorksheet createStyle createWorkbook
 #' insertPlot saveWorkbook setColWidths writeData
-#' @importFrom rlang as_name enexpr enquo enquos quo_is_null
+#' @importFrom rlang as_name enexpr enquo enquos has_length quo_is_null
 #' @importFrom tibble as_tibble
 #' @importFrom utils head object.size tail
 "_PACKAGE"

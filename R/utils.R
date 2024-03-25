@@ -166,7 +166,7 @@ diff_cols <- function(df, cols)
 #'
 #' @param df a data.frame
 #' @param error_raise a logcial whether to raise an error or not
-#' @return a boolean value
+#' @return a logical value
 #'
 #' @examples
 #' # has rows
@@ -199,8 +199,8 @@ has_rows <- function(df, error_raise = FALSE) {
 #'
 #' @param df a data.frame
 #' @param cols column names
-#' @param error_raise a boolean whether to raise an error or not
-#' @return a boolean value
+#' @param error_raise a logical whether to raise an error or not
+#' @return a logical value
 #'
 #' @examples
 #' # has columns
@@ -224,6 +224,33 @@ has_cols <- function(df, cols, error_raise = FALSE) {
          paste0(diff_cols, collapse = ", "), ".",
          call. = FALSE)
   }
+}
+
+#' Has a length
+#'
+#' Whether the object has a length or not
+#'
+#' @param x a
+#' @param error_raise a logical whether to raise an error or not
+#' @return a logical value
+#'
+#' @examples
+#' # has a length
+#' \donttest{has_len(c(numeric(), character()))}
+#'
+#' # raise an error
+#' \dontrun{
+#' has_len(c(numeric(), character()), error_raise = TRUE)}
+#'
+#' @export
+has_len <- function(x, error_raise = FALSE) {
+  assert_class(x, c("character", "integer", "numeric", "Date", "POSIXt"))
+  x_name <- desub(x)
+  rt <- rlang::has_length(x)
+  if (!error_raise)
+    return(rt)
+  if (!rt)
+    stop("'", x_name, "' doesn't have a length.", call. = FALSE)
 }
 
 #' Paste vectors of a list
@@ -369,7 +396,7 @@ set_tibble <- function(df) {
 #' Whether the columns of two data frames are equal.
 #'
 #' @param x,y two data frames
-#' @return a boolean vector
+#' @return a logical vector
 #'
 #' @examples
 #' # Are the columns of two data frames equal?

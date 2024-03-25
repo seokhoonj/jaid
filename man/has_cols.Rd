@@ -11,10 +11,10 @@ has_cols(df, cols, error_raise = FALSE)
 
 \item{cols}{column names}
 
-\item{error_raise}{a boolean whether to raise an error or not}
+\item{error_raise}{a logical whether to raise an error or not}
 }
 \value{
-a boolean value
+a logical value
 }
 \description{
 Whether the data has specific columns

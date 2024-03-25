@@ -10,7 +10,7 @@ equal(x, y)
 \item{x, y}{two data frames}
 }
 \value{
-a boolean vector
+a logical vector
 }
 \description{
 Whether the columns of two data frames are equal.
