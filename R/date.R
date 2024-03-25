@@ -20,6 +20,28 @@ add_mon <- function (date, mon) {
   return(as.Date(date))
 }
 
+#' Add years
+#'
+#' Add years to the date.
+#'
+#' @param date A date
+#' @param year A number of years to be added
+#'
+#' @return A date
+#'
+#' @examples
+#' # add years
+#' \donttest{
+#' date <- Sys.Date()
+#' add_year(date, 3)}
+#'
+#' @export
+add_year <- function(date, year) {
+  date <- as.POSIXlt(date)
+  date$year <- date$year + year
+  as.Date(date)
+}
+
 #' Beginning of the month, End of the month
 #'
 #' Get the beginning of the month.
