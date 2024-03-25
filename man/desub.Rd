@@ -2,9 +2,12 @@
 % Please edit documentation in R/utils.R
 \name{desub}
 \alias{desub}
+\alias{desubs}
 \title{Desub}
 \usage{
 desub(x)
+
+desubs(x)
 }
 \arguments{
 \item{x}{an expression that can be a string vector}
@@ -28,5 +31,18 @@ f2(iris) # iris
 f3(iris) # iris
 f4(iris) # iris
 f5(iris) # iris}
+
+# desubs
+\donttest{f1 <- function(a) desubs(a)
+f2 <- function(b) f1(b)
+f3 <- function(c) f2(c)
+f4 <- function(d) f3(d)
+f5 <- function(e) f4(e)
+desubs(c(iris, cars)) # "c" "iris" "cars"
+f1(c(iris, cars)) # "c" "iris" "cars"
+f2(c(iris, cars)) # "c" "iris" "cars"
+f3(c(iris, cars)) # "c" "iris" "cars"
+f4(c(iris, cars)) # "c" "iris" "cars"
+f5(c(iris, cars)) # "c" "iris" "cars"}
 
 }
