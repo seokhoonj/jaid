@@ -441,6 +441,55 @@ equal <- function(x, y) {
   return(sapply(x_cols, function(s) all(x[[s]] == y[[s]])))
 }
 
+#' Paste comma
+#'
+#' Paste vector elements with commas.
+#'
+#' @param x a vector
+#' @param newline a logical whether to add newlines by each element
+#'
+#' @examples
+#' # paste comma
+#' \donttest{paste_comma(names(mtcars))}
+#'
+#' @export
+paste_comma <- function(x, newline = FALSE) {
+  if (newline) {
+    cat(paste0("c(", paste0("\"", paste(x, collapse = "\"\n, \""), "\""), "\n)"))
+  }
+  else {
+    cat(paste0("c(", paste0("\"", paste(x, collapse = "\", \""), "\""), ")"))
+  }
+}
+
+#' Quote and paste comma
+#'
+#' Quote vector elements and paste it with commas.
+#'
+#' @param ... an expressions with no quotations
+#' @param newline a logical whether to add newlines by each element
+#'
+#' @examples
+#' # quote comma
+#' \donttest{quote_comma(mpg, cyl, disp, hp, drat)}
+#'
+#' @export
+quote_comma <- function(..., newline = FALSE) {
+  if (newline) {
+    cat(paste0("c(", paste0("\"", paste(vapply(substitute(list(...)),
+                                  deparse, "character")[-1L], collapse = "\"\n, \""),
+               "\""), "\n)"))
+  }
+  else {
+    cat(paste0("c(", paste0("\"", paste(vapply(substitute(list(...)),
+                                  deparse, "character")[-1L], collapse = "\", \""),
+               "\""), ")"))
+  }
+  cat("\n")
+}
+
+# to be updated -----------------------------------------------------------
+
 sort_group_by <- function(x) {
   .Call(SortGroupBy, x)
 }
