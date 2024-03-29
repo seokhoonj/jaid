@@ -11,9 +11,13 @@ Depends: R (>= 3.5.0)
 Imports:
     Rcpp (>= 0.12.10),
     data.table (>= 1.13.0),
+    grDevices (>= 4.2.3),
+    grid (>= 4.2.3),
+    kableExtra (>= 1.4.0),
     methods (>= 4.2.3),
     openssl (>= 1.4.1),
     openxlsx (>= 4.2.3),
+    png (>= 0.1.8),
     rlang (>= 1.1.1),
     tibble (>= 3.2.1)
 Roxygen: list(markdown = TRUE)

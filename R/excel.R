@@ -186,46 +186,64 @@ draw_xlsx <- function(images, file, rc = c(1L, 1L), width = 12, height = 6,
   openxlsx::saveWorkbook(wb = wb, file = file, overwrite = TRUE)
 }
 
+# data image --------------------------------------------------------------
 
-# save_xlsx <- function(..., file, width = 12, height = 6, overwrite = FALSE) {
-#   data_list <- list(...)
-#   wb <- createWorkbook()
-#   sheetName <- NULL
-#   for (i in seq_along(data_list)) {
-#     data <- data_list[[i]][[1L]]
-#     if (is.data.frame(data) | is.ggplot(data))
-#       data <- list(data)
-#     dataSheetName <- names(data)
-#     if (is.null(dataSheetName))
-#       dataSheetName <- sprintf("Sheet %s", seq_along(data))
-#     sheetName <- c(sheetName, dataSheetName)
-#   }
-#   sheetName <- unique(sheetName)
-#   lapply(seq_along(sheetName), function(x) {
-#     addWorksheet(wb = wb, sheetName = sheetName[[x]], gridLines = FALSE)
-#   })
-#   for (i in seq_along(data_list)) {
-#     data <- data_list[[i]][[1L]]
-#     if (is.data.frame(data) | is.ggplot(data))
-#       data <- list(data)
-#     dataSheetName <- names(data)
-#     if (is.null(dataSheetName))
-#       dataSheetName <- sprintf("Sheet %s", seq_along(data))
-#     if (is.data.frame(data) | is.ggplot(data))
-#       data <- list(data)
-#     rc <- if (length(data_list[[i]]) >= 2) data_list[[i]][[2L]] else c(1, 1)
-#     w  <- if (length(data_list[[i]]) >= 3) data_list[[i]][[3L]] else width
-#     h  <- if (length(data_list[[i]]) == 4) data_list[[i]][[4L]] else height
-#     if (is.data.frame(data[[1L]]))
-#       lapply(seq_along(data), function(x) {
-#         write_data(wb, sheet = dataSheetName[[x]], data = data[[x]],
-#                    rc = rc, rowNames = FALSE)
-#       })
-#     if (is.ggplot(data[[1L]]))
-#       lapply(seq_along(data), function(x) {
-#         draw_image(wb, sheet = dataSheetName[[x]], image = data[[x]],
-#                    rc = rc, width = w, height = h)
-#       })
-#   }
-#   saveWorkbook(wb = wb, file = file, overwrite = overwrite)
-# }
+view_data_image <- function(data, caption = "Table.1", footnote = NULL,
+                            digits = 2, full_width = FALSE,
+                            html_font = "Comic Sans MS") {
+  kableExtra::kbl(data, caption = caption, digits = digits) |>
+    kableExtra::kable_classic(full_width = full_width, html_font = html_font)
+}
+
+save_data_image <- function(data, caption = "Table.1", footnote = NULL,
+                            digits = 2, full_width = FALSE,
+                            html_font = "Comic Sans MS", zoom = 1.5, file) {
+  if (missing(file))
+    file <- sprintf("%s.png", tempfile())
+  kableExtra::kbl(data, caption = caption, digits = digits) |>
+    kableExtra::kable_classic(full_width = full_width, html_font = html_font) |>
+    kableExtra::footnote(symbol = footnote) |>
+    kableExtra::save_kable(file, zoom = zoom)
+}
+
+#' Plot a data image
+#'
+#' Plot a data image.
+#'
+#' @param data a data.frame
+#' @param caption The table caption.
+#' @param footnote A vector of footnote texts, Footnotes here will be labeled with special symbols.
+#' The vector here should not have more than 20 elements.
+#' @param digits Maximum number of digits for numeric columns, passed to round(). This can also be a vector of length ncol(x), to set the
+#' number of digits for individual columns.
+#' @param full_width A TRUE or FALSE variable controlling whether the HTML table should have the preferable format for
+#' `full_width`. If not specified, a HTML table will have full width by default but this option will be set to `FALSE` for a LaTeX table
+#' @param html_font A string for HTML css font.
+#' @param zoom A number specifying the zoom factor. A zoom factor of 2 will result in twice as many pixels vertically and horizontally. Note that
+#' using 2 is not exactly the same as taking a screenshot on a HiDPI (Retina) device: it is like increasing the zoom to 200 doubling the
+#' height and width of the browser window. This differs from using a HiDPI device because some web pages load different, higher-
+#' resolution images when they know they will be displayed on a HiDPI device (but using zoom will not report that there is a HiDPI
+#' device).
+#' @param height A numeric vector or unit object specifying height.
+#' @param width A numeric vector or unit object specifying width.
+#' @return no return value.
+#'
+#' @examples
+#' # plot a data image
+#' \dontrun{
+#' plot_data_image(head(data), height = .5)}
+#'
+#' @export
+plot_data_image <- function(data, caption = "Table.1", footnote = NULL,
+                            digits = 2, full_width = FALSE,
+                            html_font = "Comic Sans MS", zoom = 1.5,
+                            height = .5, width = NULL) {
+  file <- sprintf("%s.png", tempfile())
+  kableExtra::kbl(data, caption = caption, digits = digits) |>
+    kableExtra::kable_classic(full_width = full_width, html_font = html_font) |>
+    kableExtra::footnote(symbol = footnote) |>
+    kableExtra::save_kable(file, zoom = zoom)
+  dev.off()
+  png <- png::readPNG(file)
+  grid::grid.raster(png, width = width, height = height)
+}
