@@ -191,7 +191,8 @@ draw_xlsx <- function(images, file, rc = c(1L, 1L), width = 12, height = 6,
 view_data_image <- function(data, caption = "Table.1", footnote = NULL,
                             digits = 2, full_width = FALSE,
                             html_font = "Comic Sans MS") {
-  kableExtra::kbl(data, caption = caption, digits = digits) |>
+  kableExtra::kbl(data, caption = caption, digits = digits,
+                  format.args = list(big.mark = ",")) |>
     kableExtra::kable_classic(full_width = full_width, html_font = html_font)
 }
 
@@ -200,7 +201,8 @@ save_data_image <- function(data, caption = "Table.1", footnote = NULL,
                             html_font = "Comic Sans MS", zoom = 1.5, file) {
   if (missing(file))
     file <- sprintf("%s.png", tempfile())
-  kableExtra::kbl(data, caption = caption, digits = digits) |>
+  kableExtra::kbl(data, caption = caption, digits = digits,
+                  format.args = list(big.mark = ",")) |>
     kableExtra::kable_classic(full_width = full_width, html_font = html_font) |>
     kableExtra::footnote(symbol = footnote) |>
     kableExtra::save_kable(file, zoom = zoom)
@@ -239,11 +241,12 @@ plot_data_image <- function(data, caption = "Table.1", footnote = NULL,
                             html_font = "Comic Sans MS", zoom = 1.5,
                             height = .5, width = NULL) {
   file <- sprintf("%s.png", tempfile())
-  kableExtra::kbl(data, caption = caption, digits = digits) |>
+  kableExtra::kbl(data, caption = caption, digits = digits,
+                  format.args = list(big.mark = ",")) |>
     kableExtra::kable_classic(full_width = full_width, html_font = html_font) |>
     kableExtra::footnote(symbol = footnote) |>
     kableExtra::save_kable(file, zoom = zoom)
-  dev.off()
   png <- png::readPNG(file)
+  while (!is.null(dev.list())) dev.off()
   grid::grid.raster(png, width = width, height = height)
 }
