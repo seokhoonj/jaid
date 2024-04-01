@@ -21,6 +21,8 @@ save_data_image(
   digits = 2,
   full_width = FALSE,
   html_font = "Comic Sans MS",
+  vwidth = 992,
+  vheight = 744,
   zoom = 1.5,
   file
 )
@@ -40,6 +42,10 @@ number of digits for individual columns.}
 \code{full_width}. If not specified, a HTML table will have full width by default but this option will be set to \code{FALSE} for a LaTeX table}
 
 \item{html_font}{A string for HTML css font.}
+
+\item{vwidth}{Viewport width. This is the width of the browser "window".}
+
+\item{vheight}{Viewport height This is the height of the browser "window".}
 
 \item{zoom}{A number specifying the zoom factor. A zoom factor of 2 will result in twice as many pixels vertically and horizontally. Note that
 using 2 is not exactly the same as taking a screenshot on a HiDPI (Retina) device: it is like increasing the zoom to 200 doubling the

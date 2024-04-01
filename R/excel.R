@@ -206,8 +206,8 @@ draw_xlsx <- function(images, file, rc = c(1L, 1L), width = 12, height = 6,
 #' height and width of the browser window. This differs from using a HiDPI device because some web pages load different, higher-
 #' resolution images when they know they will be displayed on a HiDPI device (but using zoom will not report that there is a HiDPI
 #' device).
-#' @param height A numeric vector or unit object specifying height.
 #' @param width A numeric vector or unit object specifying width.
+#' @param height A numeric vector or unit object specifying height.
 #' @return no return value.
 #'
 #' @examples
@@ -219,7 +219,7 @@ draw_xlsx <- function(images, file, rc = c(1L, 1L), width = 12, height = 6,
 plot_data_image <- function(data, caption = "Table.1", footnote = NULL,
                             digits = 2, full_width = FALSE,
                             html_font = "Comic Sans MS", zoom = 1.5,
-                            height = .5, width = NULL) {
+                            width = NULL, height = .5) {
   file <- sprintf("%s.png", tempfile())
   kableExtra::kbl(data, caption = caption, digits = digits,
                   format.args = list(big.mark = ",")) |>
@@ -257,10 +257,13 @@ view_data_image <- function(data, caption = "Table.1", footnote = NULL,
                             html_font = "Comic Sans MS") {
   kableExtra::kbl(data, caption = caption, digits = digits,
                   format.args = list(big.mark = ",")) |>
+    kableExtra::footnote(symbol = footnote) |>
     kableExtra::kable_classic(full_width = full_width, html_font = html_font)
 }
 
 #' @rdname view_data_image
+#' @param vwidth Viewport width. This is the width of the browser "window".
+#' @param vheight Viewport height This is the height of the browser "window".
 #' @param zoom A number specifying the zoom factor. A zoom factor of 2 will result in twice as many pixels vertically and horizontally. Note that
 #' using 2 is not exactly the same as taking a screenshot on a HiDPI (Retina) device: it is like increasing the zoom to 200 doubling the
 #' height and width of the browser window. This differs from using a HiDPI device because some web pages load different, higher-
@@ -270,12 +273,13 @@ view_data_image <- function(data, caption = "Table.1", footnote = NULL,
 #' @export
 save_data_image <- function(data, caption = "Table.1", footnote = NULL,
                             digits = 2, full_width = FALSE,
-                            html_font = "Comic Sans MS", zoom = 1.5, file) {
+                            html_font = "Comic Sans MS",
+                            vwidth = 992, vheight = 744, zoom = 1.5, file) {
   if (missing(file))
     file <- sprintf("%s.png", tempfile())
   kableExtra::kbl(data, caption = caption, digits = digits,
                   format.args = list(big.mark = ",")) |>
     kableExtra::kable_classic(full_width = full_width, html_font = html_font) |>
     kableExtra::footnote(symbol = footnote) |>
-    kableExtra::save_kable(file, zoom = zoom)
+    kableExtra::save_kable(file, vwidth = vwidth, vheight = vheight, zoom = zoom)
 }

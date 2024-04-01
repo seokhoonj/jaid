@@ -12,8 +12,8 @@ plot_data_image(
   full_width = FALSE,
   html_font = "Comic Sans MS",
   zoom = 1.5,
-  height = 0.5,
-  width = NULL
+  width = NULL,
+  height = 0.5
 )
 }
 \arguments{
@@ -38,9 +38,9 @@ height and width of the browser window. This differs from using a HiDPI device b
 resolution images when they know they will be displayed on a HiDPI device (but using zoom will not report that there is a HiDPI
 device).}
 
-\item{height}{A numeric vector or unit object specifying height.}
-
 \item{width}{A numeric vector or unit object specifying width.}
+
+\item{height}{A numeric vector or unit object specifying height.}
 }
 \value{
 no return value.

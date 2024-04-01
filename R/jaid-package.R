@@ -5,7 +5,7 @@
 #' @importFrom Rcpp sourceCpp
 #' @importFrom data.table `:=` `.SD` `%chin%` address copy set setalloccol
 #' setattr setDF setDT setnames setorder setorderv
-#' @importFrom grDevices dev.off
+#' @importFrom grDevices dev.list dev.off
 #' @importFrom grid grid.raster
 #' @importFrom kableExtra footnote kable_classic kbl save_kable
 #' @importFrom methods is
