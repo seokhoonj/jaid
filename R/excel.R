@@ -257,8 +257,8 @@ view_data_image <- function(data, caption = "Table.1", footnote = NULL,
                             html_font = "Comic Sans MS") {
   kableExtra::kbl(data, caption = caption, digits = digits,
                   format.args = list(big.mark = ",")) |>
-    kableExtra::footnote(symbol = footnote) |>
-    kableExtra::kable_classic(full_width = full_width, html_font = html_font)
+    kableExtra::kable_classic(full_width = full_width, html_font = html_font) |>
+    kableExtra::footnote(symbol = footnote)
 }
 
 #' @rdname view_data_image
