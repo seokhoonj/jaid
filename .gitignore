@@ -13,4 +13,7 @@
 *.pptx
 *.doc
 *.docx
+*.png
+*.jpg
+*.jpeg
 tests/
