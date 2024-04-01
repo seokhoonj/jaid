@@ -184,9 +184,9 @@ plot_xlsx <- function(plots, file, rc = c(1L, 1L), width = 12, height = 6,
     openxlsx::addWorksheet(wb = wb, sheetName = newNames[[x]], gridLines = FALSE))
   lapply(seq_along(plots), function(x) {
     print(plots[[x]])
-    openxlsx::insertPlot(wb, sheet = names(plots)[[x]], image = plots[[x]],
-                         width = width, height = height, startRow = rc[1L],
-                         startCol = rc[2L], dpi = dpi)
+    openxlsx::insertPlot(wb, sheet = names(plots)[[x]], width = width,
+                         height = height, startRow = rc[1L], startCol = rc[2L],
+                         dpi = dpi)
   })
   openxlsx::saveWorkbook(wb = wb, file = file, overwrite = TRUE)
 }
