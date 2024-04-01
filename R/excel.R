@@ -132,37 +132,86 @@ write_xlsx <- function(data, file, rc = c(1L, 1L), rowNames = FALSE,
     openxlsx::addWorksheet(wb = wb, sheetName = newNames[[x]], gridLines = FALSE))
   lapply(seq_along(data), function(x)
     write_data(wb, sheet = names(data)[[x]], data = data[[x]], rc = rc,
-                      rowNames = rowNames))
+               rowNames = rowNames))
   openxlsx::saveWorkbook(wb = wb, file = file, overwrite = overwrite)
 }
 
-draw_image <- function(wb, sheet, image, rc = c(1L, 1L), width = 12, height = 6) {
-  print(image)
+insert_plot <- function(wb, sheet, plot, rc = c(1L, 1L), width = 12, height = 6,
+                        dpi = 300) {
+  print(plot)
   openxlsx::insertPlot(wb, sheet = sheet, width = width, height = height,
-                       xy = rev(rc))
+                       startRow = rc[1L], startCol = rc[2L], dpi = dpi)
 }
 
-#' Draw images in an excel file
+#' Draw plots in an excel file
 #'
-#' Draw images in an excel file.
+#' Draw plots in an excel file.
 #'
-#' @param images image files
-#' @param file A file path
-#' @param rc A vector of starting point row and column, default c(1L, 1L)
+#' @param plots ggplot files
+#' @param file a file path
+#' @param rc a vector of starting point row and column, default c(1L, 1L)
 #' @param width image width
 #' @param height image height
+#' @param dpi image resolution
 #' @param overwrite A boolean value that overwrite or not
-#'
 #' @return no return
 #'
 #' @examples
-#' # draw images in an excel file
+#' # draw ggplot objects in an excel file
 #' \dontrun{
 #' draw_xlsx(list(image1, image2), "image.xlsx")}
 #'
 #' @export
-draw_xlsx <- function(images, file, rc = c(1L, 1L), width = 12, height = 6,
-                      overwrite = FALSE) {
+plot_xlsx <- function(plots, file, rc = c(1L, 1L), width = 12, height = 6,
+                      dpi = 300, overwrite = FALSE) {
+  if (!file.exists(file)) {
+    wb <- openxlsx::createWorkbook()
+    sheetNames <- NULL
+  } else {
+    wb <- openxlsx::loadWorkbook(file)
+    sheetNames <- openxlsx::getSheetNames(file)
+  }
+  plotNames <- names(plots)
+  if (is.null(plotNames)) {
+    plotNames <- sprintf("Sheet %s", seq_along(plots))
+  } else {
+    plotLen <- length(plotNames[which(plotNames == "")])
+    plotNames[which(plotNames == "")] <- sprintf("Sheet %s", seq_along(plotLen))
+  }
+  names(plots) <- plotNames
+  newNames <- setdiff(plotNames, sheetNames)
+  lapply(seq_along(newNames), function(x)
+    openxlsx::addWorksheet(wb = wb, sheetName = newNames[[x]], gridLines = FALSE))
+  lapply(seq_along(plots), function(x) {
+    print(plots[[x]])
+    openxlsx::insertPlot(wb, sheet = names(plots)[[x]], image = plots[[x]],
+                         width = width, height = height, startRow = rc[1L],
+                         startCol = rc[2L], dpi = dpi)
+  })
+  openxlsx::saveWorkbook(wb = wb, file = file, overwrite = TRUE)
+}
+
+#' Insert images in an excel file
+#'
+#' Insert images in an excel file.
+#'
+#' @param images image file paths
+#' @param file a file path
+#' @param rc a vector of starting point row and column, default c(1L, 1L)
+#' @param width image width
+#' @param height image height
+#' @param dpi image resolution
+#' @param overwrite A boolean value that overwrite or not
+#' @return no return
+#'
+#' @examples
+#' # insert images in an excel file
+#' \dontrun{
+#' image_xlsx(list(image1, image2), "image.xlsx")}
+#'
+#' @export
+image_xlsx <- function(images, file, rc = c(1L, 1L), width = 12, height = 6,
+                       dpi = 300, overwrite = FALSE) {
   if (!file.exists(file)) {
     wb <- openxlsx::createWorkbook()
     sheetNames <- NULL
@@ -180,9 +229,12 @@ draw_xlsx <- function(images, file, rc = c(1L, 1L), width = 12, height = 6,
   names(images) <- imageNames
   newNames <- setdiff(imageNames, sheetNames)
   lapply(seq_along(newNames), function(x)
-    openxlsx::addWorksheet(wb = wb, sheetName = newNames[[x]], gridLines = FALSE))
+    openxlsx::addWorksheet(wb = wb, sheetName = newNames[[x]], gridLines = FALSE)
+  )
   lapply(seq_along(images), function(x)
-    draw_image(wb, sheet = names(images)[[x]], image = images[[x]], rc = rc))
+    openxlsx::insertImage(wb, sheet = names(images)[[x]], file = images[[x]],
+                          startRow = rc[1L], startCol = rc[2L], dpi = dpi)
+  )
   openxlsx::saveWorkbook(wb = wb, file = file, overwrite = TRUE)
 }
 
