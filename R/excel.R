@@ -108,8 +108,8 @@ write_data <- function(wb, sheet, data, rc = c(1L, 1L), rowNames = TRUE,
 #' write_xlsx(list(cars = cars, matcars = mtcars), "data.xlsx")}
 #'
 #' @export
-write_xlsx <- function(data, file, rc = c(1L, 1L), rowNames = FALSE,
-                       overwrite = FALSE) {
+data_xlsx <- function(data, file, rc = c(1L, 1L), rowNames = FALSE,
+                      overwrite = FALSE) {
   if (is.data.frame(data))
     data <- list(data)
   if (!file.exists(file)) {
@@ -188,7 +188,7 @@ plot_xlsx <- function(plots, file, rc = c(1L, 1L), width = 12, height = 6,
                          height = height, startRow = rc[1L], startCol = rc[2L],
                          dpi = dpi)
   })
-  openxlsx::saveWorkbook(wb = wb, file = file, overwrite = TRUE)
+  openxlsx::saveWorkbook(wb = wb, file = file, overwrite = overwrite)
 }
 
 #' Insert images in an excel file

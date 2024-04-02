@@ -19,5 +19,4 @@ Convert a numeric vector to a comma applied string vector.
 # convert to a comma applied string vector
 \donttest{as_comma(c(123456, 234567))}
 
-
 }

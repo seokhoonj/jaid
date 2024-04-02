@@ -405,7 +405,6 @@ set_tibble <- function(df) {
   }
 }
 
-
 #' Equal columns of two data frames.
 #'
 #' Whether the columns of two data frames are equal.
@@ -452,7 +451,6 @@ equal <- function(x, y) {
 #' @examples
 #' # convert to a comma applied string vector
 #' \donttest{as_comma(c(123456, 234567))}
-#'
 #'
 #' @export
 as_comma <- function(x) {
