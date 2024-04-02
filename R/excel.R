@@ -232,10 +232,11 @@ image_xlsx <- function(images, file, rc = c(1L, 1L), width = 12, height = 6,
     openxlsx::addWorksheet(wb = wb, sheetName = newNames[[x]], gridLines = FALSE)
   )
   lapply(seq_along(images), function(x)
-    openxlsx::insertImage(wb, sheet = names(images)[[x]], file = images[[x]],
+    openxlsx::insertImage(wb, sheet = names(images)[[x]], width = width,
+                          height = height, file = images[[x]],
                           startRow = rc[1L], startCol = rc[2L], dpi = dpi)
   )
-  openxlsx::saveWorkbook(wb = wb, file = file, overwrite = TRUE)
+  openxlsx::saveWorkbook(wb = wb, file = file, overwrite = overwrite)
 }
 
 # data image --------------------------------------------------------------
