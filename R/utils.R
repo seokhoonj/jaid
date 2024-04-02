@@ -441,6 +441,25 @@ equal <- function(x, y) {
   return(sapply(x_cols, function(s) all(x[[s]] == y[[s]])))
 }
 
+
+#' As comma applied label
+#'
+#' Convert a numeric vector to a comma applied string vector.
+#'
+#' @param x a numeric vector
+#' @return a string vector
+#'
+#' @examples
+#' # convert to a comma applied string vector
+#' \donttest{as_comma(c(123456, 234567))}
+#'
+#'
+#' @export
+as_comma <- function(x) {
+  assert_class(x, "numeric")
+  format(round(x), big.mark = ",")
+}
+
 #' Paste comma
 #'
 #' Paste vector elements with commas.
