@@ -69,3 +69,20 @@ bmonth <- function(date) {
 emonth <- function(date) {
   add_mon(date, 1L) - 1L
 }
+
+#' Is a date format?
+#'
+#' Is a date or date format vector?
+#'
+#' @param x value to check
+#' @return a logical whether it's a date format or not.
+#'
+#' @export
+is_date_format <- function(x) {
+  if (inherits(x, c("Date", "POSIXt")))
+    return(TRUE)
+  if (inherits(x, c("character", "factor"))) {
+    return(all(grepl(local(.DATE_FORMAT, envir = .JAID_ENV), x)))
+  }
+  return(FALSE)
+}

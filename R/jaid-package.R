@@ -15,5 +15,5 @@
 #' @importFrom png readPNG
 #' @importFrom rlang as_name enexpr enquo enquos has_length quo_is_null
 #' @importFrom tibble as_tibble
-#' @importFrom utils head object.size tail
+#' @importFrom utils globalVariables head object.size tail
 "_PACKAGE"
