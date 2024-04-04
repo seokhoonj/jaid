@@ -274,6 +274,8 @@ plot_data_image <- function(data, caption = "Table.1", footnote = NULL,
                             html_font = "Comic Sans MS", zoom = 1.5,
                             width = NULL, height = .5) {
   file <- sprintf("%s.png", tempfile())
+  op <- options(knitr.kable.NA = "")
+  on.exit(op)
   kableExtra::kbl(data, caption = caption, digits = digits,
                   format.args = list(big.mark = ",")) |>
     kableExtra::kable_classic(full_width = full_width, html_font = html_font) |>
@@ -308,6 +310,8 @@ plot_data_image <- function(data, caption = "Table.1", footnote = NULL,
 view_data_image <- function(data, caption = "Table.1", footnote = NULL,
                             digits = 2, full_width = FALSE,
                             html_font = "Comic Sans MS") {
+  op <- options(knitr.kable.NA = "")
+  on.exit(op)
   kableExtra::kbl(data, caption = caption, digits = digits,
                   format.args = list(big.mark = ",")) |>
     kableExtra::kable_classic(full_width = full_width, html_font = html_font) |>
@@ -330,6 +334,8 @@ save_data_image <- function(data, caption = "Table.1", footnote = NULL,
                             vwidth = 992, vheight = 744, zoom = 1.5, file) {
   if (missing(file))
     file <- sprintf("%s.png", tempfile())
+  op <- options(knitr.kable.NA = "")
+  on.exit(op)
   kableExtra::kbl(data, caption = caption, digits = digits,
                   format.args = list(big.mark = ",")) |>
     kableExtra::kable_classic(full_width = full_width, html_font = html_font) |>
