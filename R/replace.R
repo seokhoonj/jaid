@@ -14,6 +14,7 @@
 #'
 #' @export
 replace_na_with_zero <- function(df) {
+  has_ptr(df, error_raise = TRUE)
   old_class <- class(df)
   set_dt(df)
   class <- sapply(df, class)
@@ -40,6 +41,7 @@ replace_na_with_zero <- function(df) {
 #'
 #' @export
 replace_zero_with_na <- function(df) {
+  has_ptr(df, error_raise = TRUE)
   old_class <- class(df)
   set_dt(df)
   class <- sapply(df, class)
@@ -66,6 +68,7 @@ replace_zero_with_na <- function(df) {
 #'
 #' @export
 replace_empty_with_na <- function(df) {
+  has_ptr(df, error_raise = TRUE)
   old_class <- class(df)
   set_dt(df)
   class <- sapply(df, class)
@@ -92,6 +95,7 @@ replace_empty_with_na <- function(df) {
 #'
 #' @export
 replace_na_with_empty <- function(df) {
+  has_ptr(df, error_raise = TRUE)
   old_class <- class(df)
   set_dt(df)
   class <- sapply(df, class)
@@ -106,9 +110,10 @@ replace_na_with_empty <- function(df) {
 #'
 #' Trim white space
 #'
-#' @param df a data frame
+#' @param df a data.frame
+#' @param cols a string vector specifying columns
 #' @param ws a white space [regular expression]
-#' @return no return value
+#' @return no return values
 #'
 #' @examples
 #' \donttest{df <- data.frame(x = c(" A", "B ", " C "), y = c(1, 2, 3))
@@ -118,14 +123,50 @@ replace_na_with_empty <- function(df) {
 #' df}
 #'
 #' @export
-trim_ws <- function(df, ws = "[ \t\r\n]") {
+trim_ws <- function(df, cols, ws = "[ \t\r\n]") {
+  has_ptr(df, error_raise = TRUE)
   old_class <- class(df)
   set_dt(df)
-  class <- sapply(df, class)
-  cols <- names(class)[which(class == "character")]
+  if (missing(cols)) {
+    class <- sapply(df, class)
+    cols <- names(class)[which(class == "character")]
+  } else {
+    cols <- match_cols(df, sapply(rlang::enexpr(cols), rlang::as_name))
+  }
   re <- sprintf("^%s+|%s+$", ws, ws)
   df[, `:=`((cols), lapply(.SD, function(x)
     gsub(re, "", x, perl = TRUE))), .SDcols = cols]
+  data.table::setattr(df, "class", old_class)
+  invisible(df[])
+}
+
+#' Remove punctuations
+#'
+#' Remove punctuations.
+#'
+#' @param df a data.frame
+#' @param cols a string vector specifying columns
+#' @param pattern a string containing a [regular expression]
+#' @return no return values
+#'
+#' @examples
+#' # remove punctuations
+#' \donttest{df <- data.table(x = c("A3-", "$+_B", "C+_&"), y = c("123", "R&", "4q_++"))
+#' rm_punct(df)}
+#'
+#' @export
+rm_punct <- function(df, cols, pattern = "(?!\\*)[[:punct:]]") {
+  has_ptr(df, error_raise = TRUE)
+  old_class <- class(df)
+  set_dt(df)
+  if (missing(cols)) {
+    class <- sapply(df, class)
+    cols <- names(class)[which(class == "character")]
+  } else {
+    cols <- match_cols(df, sapply(rlang::enexpr(cols), rlang::as_name))
+  }
+  df[, `:=`((cols), lapply(.SD, function(x)
+    gsub(pattern, "", x, perl = TRUE))), .SDcols = cols]
   data.table::setattr(df, "class", old_class)
   invisible(df[])
 }

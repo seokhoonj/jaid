@@ -12,7 +12,7 @@ trim_ws(df, ws = "[ \\t\\r\\n]")
 \item{ws}{a white space \link{regular expression}}
 }
 \value{
-no return value
+no return values
 }
 \description{
 Trim white space
