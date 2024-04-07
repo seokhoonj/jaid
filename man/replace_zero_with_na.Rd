@@ -17,9 +17,10 @@ Replace zero values with NA_integer_ or NA_real_ in a memory-efficient way
 }
 \examples{
 \donttest{df <- data.frame(x = c(1, 0, 3), y = c("A", "B", NA), z = c(0, 5, 0))
-pryr::address(df)
+set_ptr(df)
+data.table::address(df)
 replace_zero_with_na(df)
-pryr::address(df)
+data.table::address(df)
 df}
 
 }

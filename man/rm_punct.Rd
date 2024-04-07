@@ -21,7 +21,9 @@ Remove punctuations.
 }
 \examples{
 # remove punctuations
-\donttest{df <- data.table(x = c("A3-", "$+_B", "C+_&"), y = c("123", "R&", "4q_++"))
-rm_punct(df)}
+\donttest{df <- data.frame(x = c("A3-", "$+_B", "C+_&"), y = c("123", "R&", "4q_++"))
+set_ptr(df)
+rm_punct(df)
+df}
 
 }

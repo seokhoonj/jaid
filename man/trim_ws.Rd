@@ -4,10 +4,12 @@
 \alias{trim_ws}
 \title{Trim white space}
 \usage{
-trim_ws(df, ws = "[ \\t\\r\\n]")
+trim_ws(df, cols, ws = "[ \\t\\r\\n]")
 }
 \arguments{
-\item{df}{a data frame}
+\item{df}{a data.frame}
+
+\item{cols}{a string vector specifying columns}
 
 \item{ws}{a white space \link{regular expression}}
 }
@@ -19,9 +21,10 @@ Trim white space
 }
 \examples{
 \donttest{df <- data.frame(x = c(" A", "B ", " C "), y = c(1, 2, 3))
-pryr::address(df)
+set_ptr(df)
+data.table::address(df)
 trim_ws(df)
-pryr::address(df)
+data.table::address(df)
 df}
 
 }

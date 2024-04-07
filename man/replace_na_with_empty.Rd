@@ -17,9 +17,10 @@ Replace NA_character_ with "" in a memory-efficient way
 }
 \examples{
 \donttest{df <- data.frame(x = c("A", "B", NA), y = c(1, NA, 3), z = c(NA, "E", NA))
-pryr::address(df)
+set_ptr(df)
+data.table::address(df)
 replace_na_with_empty(df)
-pryr::address(df)
+data.table::address(df)
 df}
 
 }
