@@ -19,6 +19,6 @@ Split strings
 }
 \examples{
 # split strings
-\donttest{split_str(c("a|b", "c|d"), split = "|")}
+\donttest{split_str(c("a|b|a", "c|d|c"), split = "|")}
 
 }

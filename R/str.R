@@ -62,11 +62,37 @@ paste_sort_uni_str <- function(x, collapse = "|")
 #'
 #' @examples
 #' # split strings
-#' \donttest{split_str(c("a|b", "c|d"), split = "|")}
+#' \donttest{split_str(c("a|b|a", "c|d|c"), split = "|")}
 #'
 #' @export
 split_str <- function(x, split = "|")
   strsplit(x, split = split, fixed = TRUE)
+
+#' Split and paste unique strings
+#'
+#' Split and paste unique strings
+#'
+#' @param x a string vector
+#' @param split a string to use for splitting
+#' @return a string vector
+#'
+#' @examples
+#' # split and paste unique strings
+#' \donttest{split_and_paste_uni_str(c("b|a|b", "d|c|d"), split = "|")
+#' split_and_paste_sort_uni_str(c("b|a|b", "d|c|d"), split = "|")}
+#'
+#' @export
+split_and_paste_uni_str <- function(x, split = "|") {
+  z <- split_str(x, split = split)
+  sapply(z, function(x) paste_uni_str(x, collapse = split))
+}
+
+#' @rdname split_and_paste_uni_str
+#' @export
+split_and_paste_sort_uni_str <- function(x, split = "|") {
+  z <- split_str(x, split = split)
+  sapply(z, function(x) paste_sort_uni_str(x, collapse = split))
+}
 
 #' Get a first pattern
 #'
@@ -127,3 +153,32 @@ get_pattern_all <- function(pattern, x, collapse = "|", ignore.case = TRUE) {
 #' @export
 del_pattern <- function(pattern, x)
   gsub(pattern, "", x)
+
+#' Paste vectors of a list
+#'
+#' Paste vectors of equal length in a list or data.frame
+#'
+#' @param x a list with same length vectors or data frame column vectors you want to paste.
+#' @param sep a character string to separate the terms.
+#' @param na.rm a logical evaluating to TRUE or FALSE indicating whether NA values should be stripped before the computation proceeds.
+#' @return a vector pasted
+#'
+#' @examples
+#' # paste length and width of iris
+#' iris$size <- paste_list(iris[, c("Sepal.Length", "Sepal.Width", "Petal.Length", "Petal.Width")])
+#' head(iris)
+#'
+#' @export
+paste_list <- function(x, sep = "|", na.rm = FALSE) {
+  if (na.rm)
+    x[] <- lapply(x, function(s) ifelse(is.na(s), "", s))
+  pattern <- sprintf("^\\%s|\\%s\\%s|\\%s$", sep, sep, sep, sep)
+  n <- length(x)
+  if (n == 1L)
+    return(x[[1L]])
+  x <- do.call(function(...) paste(..., sep = sep), x)
+  x <- gsub(pattern, "", x)
+  if (na.rm)
+    x <- ifelse(x == "", NA, x)
+  return(x)
+}

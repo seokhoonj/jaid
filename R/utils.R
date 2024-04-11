@@ -268,29 +268,6 @@ has_len <- function(x, error_raise = FALSE) {
     stop("'", x_name, "' doesn't have a length.", call. = FALSE)
 }
 
-#' Paste vectors of a list
-#'
-#' Paste vectors of equal length in a list or data.frame
-#'
-#' @param x a list with same length vectors or data frame column vectors you want to paste.
-#' @param sep a character string to separate the terms.
-#' @return a vector pasted
-#'
-#' @examples
-#' # paste length and width of iris
-#' iris$size <- paste_list(iris[, c("Sepal.Length", "Sepal.Width", "Petal.Length", "Petal.Width")])
-#' head(iris)
-#'
-#' @export
-paste_list <- function(x, sep = "|") {
-  n <- length(x)
-  if (n == 1L) {
-    return(x[[1L]])
-  } else {
-    return(do.call(function(...) paste(..., sep = sep), x))
-  }
-}
-
 #' Change columns from uppercase to lowercase or from lowercase to uppercase
 #'
 #' Change columns from uppercase to lowercase or from lowercase to uppercase
@@ -509,4 +486,9 @@ quote_comma <- function(..., newline = FALSE) {
 
 sort_group_by <- function(x) {
   .Call(SortGroupBy, x)
+}
+
+join <- function(..., by, all = FALSE, all.x = all, all.y = all, sort = TRUE) {
+  Reduce(function(...) merge(..., by = by, all = all, all.x = all.x,
+                             all.y = all.y, sort = sort), list(...))
 }
