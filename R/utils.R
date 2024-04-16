@@ -431,7 +431,7 @@ equal <- function(x, y) {
 #'
 #' @export
 as_comma <- function(x) {
-  assert_class(x, "numeric")
+  assert_class(x, c("integer", "numeric"))
   format(round(x), big.mark = ",")
 }
 
