@@ -2,9 +2,12 @@
 % Please edit documentation in R/utils.R
 \name{set_labels}
 \alias{set_labels}
+\alias{get_labels}
 \title{Set labels}
 \usage{
 set_labels(df, labels, cols)
+
+get_labels(df, cols)
 }
 \arguments{
 \item{df}{a data.frame}

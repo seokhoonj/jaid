@@ -311,8 +311,16 @@ set_labels <- function(df, labels, cols) {
   if (length(cols) != length(labels))
     stop("the length of columns and the length of labels are different.")
   lapply(seq_along(cols),
-         function(x) data.table::setattr(df[[cols[[x]]]], "label", labels[[x]]))
+         function(x) data.table::setattr(df[[cols[[x]]]], "labels", labels[[x]]))
   invisible(df)
+}
+
+#' @rdname set_labels
+#' @export
+get_labels <- function(df, cols) {
+  if (missing(cols))
+    cols <- names(df)
+  sapply(cols, function(x) attr(df[[x]], "labels"), USE.NAMES = FALSE)
 }
 
 #' Get a copied data.table
