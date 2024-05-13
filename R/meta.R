@@ -25,7 +25,7 @@ meta.data.frame <- function(x) {
   zero <- sapply(x, function(x) sum(x == 0, na.rm = TRUE))
   distinct <- sapply(x, unilen)
   mode <- sapply(x, function(s) mostfreq(s, na.rm = TRUE))
-  df <- data.frame(column, class, type, n, missing, zero, distinct,
+  df <- data.table(column, class, type, n, missing, zero, distinct,
                    prop = 1 - missing/nrows, nzprop = 1 - zero/nrows,
                    mode, row.names = NULL)
   data.table::setattr(df, "class", c("meta", class(df)))
