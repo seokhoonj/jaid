@@ -3,6 +3,7 @@
 #' Replace NA_integer_ or NA_real_ values with zero in a memory-efficient way
 #'
 #' @param df a data frame
+#' @param cols a string vector specifying columns
 #' @return no return value
 #'
 #' @examples
@@ -14,12 +15,13 @@
 #' df}
 #'
 #' @export
-replace_na_with_zero <- function(df) {
+replace_na_with_zero <- function(df, cols) {
   has_ptr(df, error_raise = TRUE)
   old_class <- class(df)
   set_dt(df)
   class <- sapply(df, class)
-  cols <- names(class)[which(class %in% c("numeric", "integer"))]
+  if (missing(cols))
+    cols <- names(class)[which(class %in% c("numeric", "integer"))]
   df[, `:=`((cols), lapply(.SD, function(x) ifelse(is.na(x), 0, x))),
      .SDcols = cols]
   data.table::setattr(df, "class", old_class)
@@ -31,6 +33,7 @@ replace_na_with_zero <- function(df) {
 #' Replace zero values with NA_integer_ or NA_real_ in a memory-efficient way
 #'
 #' @param df a data frame
+#' @param cols a string vector specifying columns
 #' @return no return value
 #'
 #' @examples
@@ -42,12 +45,13 @@ replace_na_with_zero <- function(df) {
 #' df}
 #'
 #' @export
-replace_zero_with_na <- function(df) {
+replace_zero_with_na <- function(df, cols) {
   has_ptr(df, error_raise = TRUE)
   old_class <- class(df)
   set_dt(df)
   class <- sapply(df, class)
-  cols <- names(class)[which(class %in% c("numeric", "integer"))]
+  if (missing(cols))
+    cols <- names(class)[which(class %in% c("numeric", "integer"))]
   df[, `:=`((cols), lapply(.SD, function(x) ifelse(x == 0, NA, x))),
      .SDcols = cols]
   data.table::setattr(df, "class", old_class)
@@ -59,6 +63,7 @@ replace_zero_with_na <- function(df) {
 #' Replace empty string like "" with NA_character_ in a memory-efficient way
 #'
 #' @param df a data frame
+#' @param cols a string vector specifying columns
 #' @return no return value
 #'
 #' @examples
@@ -70,12 +75,13 @@ replace_zero_with_na <- function(df) {
 #' df}
 #'
 #' @export
-replace_empty_with_na <- function(df) {
+replace_empty_with_na <- function(df, cols) {
   has_ptr(df, error_raise = TRUE)
   old_class <- class(df)
   set_dt(df)
   class <- sapply(df, class)
-  cols <- names(class)[which(class == "character")]
+  if (missing(cols))
+    cols <- names(class)[which(class == "character")]
   df[, `:=`((cols), lapply(.SD, function(x) ifelse(x == "", NA, x))),
      .SDcols = cols]
   data.table::setattr(df, "class", old_class)
@@ -87,6 +93,7 @@ replace_empty_with_na <- function(df) {
 #' Replace NA_character_ with "" in a memory-efficient way
 #'
 #' @param df a data frame
+#' @param cols a string vector specifying columns
 #' @return no return value
 #'
 #' @examples
@@ -98,12 +105,13 @@ replace_empty_with_na <- function(df) {
 #' df}
 #'
 #' @export
-replace_na_with_empty <- function(df) {
+replace_na_with_empty <- function(df, cols) {
   has_ptr(df, error_raise = TRUE)
   old_class <- class(df)
   set_dt(df)
   class <- sapply(df, class)
-  cols <- names(class)[which(class == "character")]
+  if (missing(cols))
+    cols <- names(class)[which(class == "character")]
   df[, `:=`((cols), lapply(.SD, function(x) ifelse(is.na(x), "", x))),
      .SDcols = cols]
   data.table::setattr(df, "class", old_class)

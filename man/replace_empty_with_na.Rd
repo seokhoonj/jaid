@@ -4,10 +4,12 @@
 \alias{replace_empty_with_na}
 \title{Replace empty with NA}
 \usage{
-replace_empty_with_na(df)
+replace_empty_with_na(df, cols)
 }
 \arguments{
 \item{df}{a data frame}
+
+\item{cols}{a string vector specifying columns}
 }
 \value{
 no return value

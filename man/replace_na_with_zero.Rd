@@ -4,10 +4,12 @@
 \alias{replace_na_with_zero}
 \title{Replace NA with zero}
 \usage{
-replace_na_with_zero(df)
+replace_na_with_zero(df, cols)
 }
 \arguments{
 \item{df}{a data frame}
+
+\item{cols}{a string vector specifying columns}
 }
 \value{
 no return value
