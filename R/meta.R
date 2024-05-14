@@ -31,6 +31,7 @@ meta.data.frame <- function(x) {
   return(df)
 }
 
+
 #' Class and type information
 #'
 #' Show class and type information.
@@ -50,5 +51,5 @@ type.data.frame <- function(x) {
   column <- names(x)
   class <- sapply(x, class)
   type <- sapply(x, typeof)
-  data.frame(column, class, type)
+  data.table(column, class, type)
 }
