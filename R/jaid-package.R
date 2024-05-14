@@ -14,6 +14,7 @@
 #' insertImage insertPlot saveWorkbook setColWidths writeData
 #' @importFrom png readPNG
 #' @importFrom rlang as_name enexpr enquo enquos has_length quo_is_null
+#' @importFrom stringi stri_enc_toutf32 stri_trans_general
 #' @importFrom tibble as_tibble
 #' @importFrom utils globalVariables head object.size tail
 "_PACKAGE"
