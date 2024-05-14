@@ -21,5 +21,8 @@
 #' @export
 loadRDS <- function(file, refhook = NULL) {
   df <- readRDS(file, refhook)
+  if (is.list(df)) {
+    return(lapply(df, function(x) data.table::setalloccol(x)))
+  }
   return(data.table::setalloccol(df))
 }
