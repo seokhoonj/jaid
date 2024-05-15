@@ -20,13 +20,14 @@
 #'
 #' @export
 loadRDS <- function(file, refhook = NULL) {
-  df <- readRDS(file, refhook)
+  df <- readRDS(file, refhook = refhook)
   if (inherits(df, "data.frame"))
     return(data.table::setalloccol(df))
   if (inherits(df, "list")) {
     loc <- sapply(x, function(x) inherits(x, "data.frame"))
     if (any(loc)) {
-      return(lapply(df[loc], function(x) data.table::setalloccol(x)))
+      df[loc] <- lapply(df[loc], function(x) data.table::setalloccol(x))
+      return(df)
     }
   }
   return(df)
