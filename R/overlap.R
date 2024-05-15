@@ -45,9 +45,9 @@ combine_overlapping_date_range <- function(df, id_var, merge_var, from_var, to_v
   s <- dt[, list(from = min(from), to = max(to), sub_stay = sum(sub_stay) + sum(sub)),
           keyby = group_var]
   z <- m[s, on = group_var]
-  set(z, j = "loc", value = NULL)
-  set(z, j = "stay", value = as.numeric(z$to - z$from + 1 - z$sub_stay))
-  set(z, j = "sub_stay", value = NULL)
+  data.table::set(z, j = "loc", value = NULL)
+  data.table::set(z, j = "stay", value = as.numeric(z$to - z$from + 1 - z$sub_stay))
+  data.table::set(z, j = "sub_stay", value = NULL)
   data.table::setnames(z, c(all_var, "stay"))
   data.table::setattr(z, "class", old_class)
   data.table::setattr(df, "class", old_class)
