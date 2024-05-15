@@ -2,7 +2,7 @@
 % Please edit documentation in R/vector.R
 \name{reverse}
 \alias{reverse}
-\title{reverse a vector}
+\title{Reverse a vector}
 \usage{
 reverse(x)
 }

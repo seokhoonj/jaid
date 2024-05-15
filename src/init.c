@@ -53,6 +53,15 @@ static const R_CallMethodDef callEntries[] = {
   CALLDEF(SumByColNames, 4),
   CALLDEF(SumByRowNames, 4),
 
+  // Mult
+  CALLDEF(MatXMat, 2),
+  CALLDEF(MatXRow, 2),
+  CALLDEF(MatXCol, 2),
+  CALLDEF(MatXNum, 2),
+
+  // Repeat
+  CALLDEF(RepCol, 2),
+
   // First
   CALLDEF(FillZeroNotFirstPos, 3),
   CALLDEF(SetZeroNotFirstPos, 3),

@@ -1,9 +1,28 @@
-#' length of a unique vector
+
+#' Change vector into row vector or column vector
+#'
+#' Change vector into row vector or column vector.
+#'
+#' @param x a vector
+#' @return a column vector or row vector.
+#'
+#' @examples
+#' # change into column vector
+#' rowvec(c(1, 2, 3, 4, 5))
+#' colvec(c(1, 2, 3, 4, 5))
+#'
+#' @export
+rowvec <- function(x) array(x, dim = c(1L, length(x)), dimnames = list(NULL, names(x)))
+
+#' @rdname rowvec
+#' @export
+colvec <- function(x) array(x, dim = c(length(x), 1L), dimnames = list(names(x), NULL))
+
+#' Length of a unique vector
 #'
 #' Calculate length of a unique vector.
 #'
 #' @param x A vector
-#'
 #' @return A length of a unique vector
 #'
 #' @examples
@@ -14,12 +33,11 @@
 #' @export
 unilen <- function(x) .Call(Unilen, x)
 
-#' reverse a vector
+#' Reverse a vector
 #'
 #' Reverse a vector directly.
 #'
 #' @param x A vector
-#'
 #' @return A reversed vector
 #'
 #' @examples
@@ -30,13 +48,12 @@ unilen <- function(x) .Call(Unilen, x)
 #' @export
 reverse <- function(x) invisible(.Call(Reverse, x))
 
-#' traverse two vectors
+#' Traverse two vectors
 #'
 #' Intersect the elements of two vectors.
 #'
 #' @param x A vector
 #' @param y A vector
-#'
 #' @return A combined vector
 #'
 #' @examples

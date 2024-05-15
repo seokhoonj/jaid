@@ -240,3 +240,76 @@ rotate <- function(x, angle = c(90, 180, 270)) {
   return(z)
 }
 
+
+#' Matrix X Matrix
+#'
+#' Multiply matrices and allocate the result to a first matrix memory.
+#'
+#' @param x a numeric matrix
+#' @param y a numeric matrix
+#' @return no return value
+#'
+#' @export
+matXmat <- function(x, y) {
+  assert_class(x, "matrix")
+  assert_class(y, "matrix")
+  if (is.integer(x) & is.numeric(y))
+    x <- as_numeric(x)
+  if (is.numeric(x) & is.integer(y))
+    y <- as_numeric(y)
+  invisible(.Call(MatXMat, x, y))
+}
+
+#' Matrix X Row vector
+#'
+#' Multiply a matrix and a row vector and allocate the result to the matrix memory.
+#'
+#' @param mat a numeric matrix
+#' @param vec a numeric vector
+#' @return no return value
+#'
+#' @export
+matXrow <- function(mat, vec) {
+  assert_class(mat, "matrix")
+  if (is.integer(mat) & is.numeric(vec))
+    mat <- as_numeric(mat)
+  if (is.numeric(mat) & is.integer(vec))
+    vec <- as_numeric(vec)
+  invisible(.Call(MatXRow, mat, vec))
+}
+
+#' Matrix X Column vector
+#'
+#' Multiply a matrix and a column vector and allocate the result to the matrix memory.
+#'
+#' @param mat a numeric matrix
+#' @param vec a numeric vector
+#' @return no return value
+#'
+#' @export
+matXcol <- function(mat, vec) {
+  assert_class(mat, "matrix")
+  if (is.integer(mat) & is.numeric(vec))
+    mat <- as_numeric(mat)
+  if (is.numeric(mat) & is.integer(vec))
+    vec <- as_numeric(vec)
+  invisible(.Call(MatXCol, mat, vec))
+}
+
+#' Matrix X Number
+#'
+#' Multiply a matrix and a numeric value and allocate the result to the matrix memory.
+#'
+#' @param mat a numeric matrix
+#' @param num a numeric value
+#' @return no return value
+#'
+#' @export
+matXnum <- function(mat, num) {
+  assert_class(mat, "matrix")
+  if (is.integer(mat) & is.numeric(num))
+    mat <- as_numeric(mat)
+  if (is.numeric(mat) & is.integer(num))
+    num <- as_numeric(num)
+  invisible(.Call(MatMulNum, mat, num))
+}

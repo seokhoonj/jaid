@@ -1,23 +1,22 @@
 #include "jaid.h"
 
-/* same as `as.logical`, `as.integer`, `as.numeric`, `as.character`
- * but these functions don't break the original shape. */
+// same as 'as.' but not break the shape
 SEXP AsLogical(SEXP x) {
-  return coerceVector(x, LGLSXP);
+  return Rf_coerceVector(x, LGLSXP);
 }
 
 SEXP AsInteger(SEXP x) {
-  return coerceVector(x, INTSXP);
+  return Rf_coerceVector(x, INTSXP);
 }
 
 SEXP AsDouble(SEXP x) {
-  return coerceVector(x, REALSXP);
+  return Rf_coerceVector(x, REALSXP);
 }
 
 SEXP AsNumeric(SEXP x) {
-  return coerceVector(x, REALSXP);
+  return Rf_coerceVector(x, REALSXP);
 }
 
 SEXP AsCharacter(SEXP x) {
-  return coerceVector(x, STRSXP);
+  return Rf_coerceVector(x, STRSXP);
 }

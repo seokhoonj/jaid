@@ -2,7 +2,7 @@
 % Please edit documentation in R/vector.R
 \name{unilen}
 \alias{unilen}
-\title{length of a unique vector}
+\title{Length of a unique vector}
 \usage{
 unilen(x)
 }

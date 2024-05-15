@@ -2,7 +2,7 @@
 % Please edit documentation in R/vector.R
 \name{traverse}
 \alias{traverse}
-\title{traverse two vectors}
+\title{Traverse two vectors}
 \usage{
 traverse(x, y)
 }
