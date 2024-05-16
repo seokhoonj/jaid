@@ -112,7 +112,7 @@ desubs <- function(x) {
 #'
 #' @export
 assert_class <- function(obj, class) {
-  obj_name <- desub(obj)
+  obj_name <- rlang::as_name(rlang::enquo(obj))
   if (!inherits(obj, class)) {
     stop(obj_name, " is not an object of class: '",
          paste(class, collapse = ", "), "'",
