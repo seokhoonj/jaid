@@ -204,14 +204,15 @@ diff_cols <- function(df, cols)
 #' @export
 has_rows <- function(df, error_raise = FALSE) {
   assert_class(df, "data.frame")
-  df_name <- desub(df)
+  # df_name <- desub(df)
   nrows <- nrow(df)
   rt <- nrows != 0
   if (!error_raise)
     return(rt)
   if (!rt) {
-    stop("'", df_name, "' doesn't have row(s): ",
-         call. = FALSE)
+    # stop("'", df_name, "' doesn't have row(s): ",
+    #      call. = FALSE)
+    stop("No rows", call. = FALSE)
   }
 }
 
@@ -242,7 +243,10 @@ has_cols <- function(df, cols, error_raise = FALSE) {
   if (!error_raise)
     return(rt)
   if (!rt) {
-    stop("'", df_name, "' doesn't have column(s): ",
+    # stop("'", df_name, "' doesn't have column(s): ",
+    #      paste0(diff_cols, collapse = ", "), ".",
+    #      call. = FALSE)
+    stop("No columns: ",
          paste0(diff_cols, collapse = ", "), ".",
          call. = FALSE)
   }
@@ -267,12 +271,13 @@ has_cols <- function(df, cols, error_raise = FALSE) {
 #' @export
 has_len <- function(x, error_raise = FALSE) {
   assert_class(x, c("character", "integer", "numeric", "Date", "POSIXt"))
-  x_name <- desub(x)
+  # x_name <- desub(x)
   rt <- rlang::has_length(x)
   if (!error_raise)
     return(rt)
   if (!rt)
-    stop("'", x_name, "' doesn't have a length.", call. = FALSE)
+    # stop("'", x_name, "' doesn't have a length.", call. = FALSE)
+    stop("No length.", call. = FALSE)
 }
 
 #' Change columns from uppercase to lowercase or from lowercase to uppercase
