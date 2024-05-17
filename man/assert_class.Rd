@@ -12,7 +12,7 @@ assert_class(obj, class)
 \item{class}{an object class}
 }
 \value{
-no return
+No return value
 }
 \description{
 Assert object class.

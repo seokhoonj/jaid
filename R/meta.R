@@ -51,5 +51,5 @@ type.data.frame <- function(x) {
   column <- names(x)
   class <- sapply(x, class)
   type <- sapply(x, typeof)
-  data.table(column, class, type)
+  data.table::data.table(column, class, type)
 }

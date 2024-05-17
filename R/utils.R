@@ -104,7 +104,7 @@ desubs <- function(x) {
 #'
 #' @param obj an object
 #' @param class an object class
-#' @return no return
+#' @return No return value
 #'
 #' @examples
 #' # assert object class
@@ -112,13 +112,20 @@ desubs <- function(x) {
 #'
 #' @export
 assert_class <- function(obj, class) {
-  obj_name <- rlang::as_name(rlang::enquo(obj))
   if (!inherits(obj, class)) {
-    stop(obj_name, " is not an object of class: '",
+    stop("Not an object of class: '",
          paste(class, collapse = ", "), "'",
          call. = FALSE)
   }
 }
+# assert_class <- function(obj, class) {
+#   obj_name <- desub(obj)
+#   if (!inherits(obj, class)) {
+#     stop(obj_name, " is not an object of class: '",
+#          paste(class, collapse = ", "), "'",
+#          call. = FALSE)
+#   }
+# }
 
 #' Match columns
 #'

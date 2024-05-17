@@ -33,7 +33,7 @@ is.null.externalptr <- function(pointer) {
 set_ptr <- function(df) {
   if (!has_ptr(df)) {
     n <- sys.nframe()
-    df_name <- rlang::as_name(rlang::enquo(df))
+    df_name <- desub(df)
     old_class <- class(df)
     data.table::setalloccol(df)
     set_attr(df, "class", old_class)
@@ -94,7 +94,7 @@ del_ptr <- function(df)
 #' @export
 has_ptr <- function(df, error_raise = FALSE) {
   assert_class(df, "data.frame")
-  df_name <- rlang::as_name(rlang::enquo(df))
+  df_name <- desub(df)
   p <- get_ptr(df)
   rt <- TRUE
   if (is.null(p)) {

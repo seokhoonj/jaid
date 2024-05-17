@@ -18,8 +18,10 @@ Imports:
     openssl (>= 1.4.1),
     openxlsx (>= 4.2.3),
     png (>= 0.1.8),
+    readxl (>= 1.4.2),
     rlang (>= 1.1.1),
     stringi (>= 1.7.6),
+    stringr (>= 1.4.0),
     tibble (>= 3.2.1)
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.3

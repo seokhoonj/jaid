@@ -23,8 +23,6 @@
 #' @export
 combine_overlapping_date_range <- function(df, id_var, merge_var, from_var, to_var,
                                            interval = 0, collapse = "|") {
-  old_class <- class(df)
-  set_dt(df)
   id_var    <- match_cols(df, sapply(rlang::enexpr(id_var), rlang::as_name))
   merge_var <- match_cols(df, sapply(rlang::enexpr(merge_var), rlang::as_name))
   from_var  <- rlang::as_name(rlang::enquo(from_var))
