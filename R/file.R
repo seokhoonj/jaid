@@ -24,7 +24,7 @@ loadRDS <- function(file, refhook = NULL) {
   if (inherits(df, "data.frame"))
     return(data.table::setalloccol(df))
   if (inherits(df, "list")) {
-    loc <- sapply(x, function(x) inherits(x, "data.frame"))
+    loc <- sapply(df, function(x) inherits(x, "data.frame"))
     if (any(loc)) {
       df[loc] <- lapply(df[loc], function(x) data.table::setalloccol(x))
       return(df)
