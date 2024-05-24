@@ -313,3 +313,28 @@ matXnum <- function(mat, num) {
     num <- as_numeric(num)
   invisible(.Call(MatMulNum, mat, num))
 }
+
+#' Replace vectors in Matrix
+#'
+#' Replace vectors in Matrix
+#'
+#' @param mat a matrix
+#' @param col string names of columns or numeric order numbers of columns
+#' @param vec a vector to be replaced
+#' @return no return value
+#'
+#' @export
+replace_vec_in_mat <- function(mat, col, vec) {
+  if (is.character(col))
+    col <- icol(mat, col)
+  invisible(.Call(ReplaceVecInMat, mat, col, vec))
+}
+
+
+# sample matrix -----------------------------------------------------------
+
+# zeros <- function(dim) array(0L, dim = dim)
+# randoms <- function(dim, x = c(0L, 1L), replace = TRUE, prob = NULL) {
+#   array(sample(x, size = prod(dim), replace = replace, prob = prob), dim = dim)
+# }
+

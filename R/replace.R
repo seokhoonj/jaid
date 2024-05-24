@@ -16,15 +16,15 @@
 #'
 #' @export
 replace_na_with_zero <- function(df, cols) {
-  has_ptr(df, error_raise = TRUE)
-  old_class <- class(df)
-  set_dt(df)
+  # has_ptr(df, error_raise = TRUE)
+  # old_class <- class(df)
+  # set_dt(df)
   class <- sapply(df, class)
   if (missing(cols))
     cols <- names(class)[which(class %in% c("numeric", "integer"))]
   df[, `:=`((cols), lapply(.SD, function(x) ifelse(is.na(x), 0, x))),
      .SDcols = cols]
-  data.table::setattr(df, "class", old_class)
+  # data.table::setattr(df, "class", old_class)
   invisible(df[])
 }
 
@@ -46,15 +46,15 @@ replace_na_with_zero <- function(df, cols) {
 #'
 #' @export
 replace_zero_with_na <- function(df, cols) {
-  has_ptr(df, error_raise = TRUE)
-  old_class <- class(df)
-  set_dt(df)
+  # has_ptr(df, error_raise = TRUE)
+  # old_class <- class(df)
+  # set_dt(df)
   class <- sapply(df, class)
   if (missing(cols))
     cols <- names(class)[which(class %in% c("numeric", "integer"))]
   df[, `:=`((cols), lapply(.SD, function(x) ifelse(x == 0, NA, x))),
      .SDcols = cols]
-  data.table::setattr(df, "class", old_class)
+  # data.table::setattr(df, "class", old_class)
   invisible(df[])
 }
 
@@ -76,15 +76,15 @@ replace_zero_with_na <- function(df, cols) {
 #'
 #' @export
 replace_empty_with_na <- function(df, cols) {
-  has_ptr(df, error_raise = TRUE)
-  old_class <- class(df)
-  set_dt(df)
+  # has_ptr(df, error_raise = TRUE)
+  # old_class <- class(df)
+  # set_dt(df)
   class <- sapply(df, class)
   if (missing(cols))
     cols <- names(class)[which(class == "character")]
   df[, `:=`((cols), lapply(.SD, function(x) ifelse(x == "", NA, x))),
      .SDcols = cols]
-  data.table::setattr(df, "class", old_class)
+  # data.table::setattr(df, "class", old_class)
   invisible(df[])
 }
 
@@ -106,15 +106,15 @@ replace_empty_with_na <- function(df, cols) {
 #'
 #' @export
 replace_na_with_empty <- function(df, cols) {
-  has_ptr(df, error_raise = TRUE)
-  old_class <- class(df)
-  set_dt(df)
+  # has_ptr(df, error_raise = TRUE)
+  # old_class <- class(df)
+  # set_dt(df)
   class <- sapply(df, class)
   if (missing(cols))
     cols <- names(class)[which(class == "character")]
   df[, `:=`((cols), lapply(.SD, function(x) ifelse(is.na(x), "", x))),
      .SDcols = cols]
-  data.table::setattr(df, "class", old_class)
+  # data.table::setattr(df, "class", old_class)
   invisible(df[])
 }
 
@@ -137,9 +137,9 @@ replace_na_with_empty <- function(df, cols) {
 #'
 #' @export
 trim_ws <- function(df, cols, ws = "[ \t\r\n]") {
-  has_ptr(df, error_raise = TRUE)
-  old_class <- class(df)
-  set_dt(df)
+  # has_ptr(df, error_raise = TRUE)
+  # old_class <- class(df)
+  # set_dt(df)
   if (missing(cols)) {
     class <- sapply(df, class)
     cols <- names(class)[which(class == "character")]
@@ -149,7 +149,7 @@ trim_ws <- function(df, cols, ws = "[ \t\r\n]") {
   re <- sprintf("^%s+|%s+$", ws, ws)
   df[, `:=`((cols), lapply(.SD, function(x)
     gsub(re, "", x, perl = TRUE))), .SDcols = cols]
-  data.table::setattr(df, "class", old_class)
+  # data.table::setattr(df, "class", old_class)
   invisible(df[])
 }
 
@@ -171,9 +171,9 @@ trim_ws <- function(df, cols, ws = "[ \t\r\n]") {
 #'
 #' @export
 rm_punct <- function(df, cols, pattern = "(?!\\*)[[:punct:]]") {
-  has_ptr(df, error_raise = TRUE)
-  old_class <- class(df)
-  set_dt(df)
+  # has_ptr(df, error_raise = TRUE)
+  # old_class <- class(df)
+  # set_dt(df)
   if (missing(cols)) {
     class <- sapply(df, class)
     cols <- names(class)[which(class == "character")]
@@ -182,6 +182,6 @@ rm_punct <- function(df, cols, pattern = "(?!\\*)[[:punct:]]") {
   }
   df[, `:=`((cols), lapply(.SD, function(x)
     gsub(pattern, "", x, perl = TRUE))), .SDcols = cols]
-  data.table::setattr(df, "class", old_class)
+  # data.table::setattr(df, "class", old_class)
   invisible(df[])
 }

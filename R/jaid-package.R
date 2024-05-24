@@ -18,5 +18,6 @@
 #' @importFrom stringi stri_enc_toutf32 stri_trans_general
 #' @importFrom stringr str_pad
 #' @importFrom tibble as_tibble
+#' @importFrom usethis ui_path ui_yeah
 #' @importFrom utils globalVariables head object.size tail
 "_PACKAGE"

@@ -22,7 +22,8 @@ Imports:
     rlang (>= 1.1.1),
     stringi (>= 1.7.6),
     stringr (>= 1.4.0),
-    tibble (>= 3.2.1)
+    tibble (>= 3.2.1),
+    usethis (>= 2.1.6)
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.3
 LinkingTo: 

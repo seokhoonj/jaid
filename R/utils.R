@@ -127,6 +127,23 @@ assert_class <- function(obj, class) {
 #   }
 # }
 
+#' order numbers of columns
+#'
+#' Get order numbers of columns
+#'
+#' @param x a data.frame
+#' @param cols string names of columns
+#' @return order numbers of columns
+#'
+#' @examples
+#' # order numbers of columns
+#' icol(mtcars, c("disp", "drat", "qsec", "am", "carb"))
+#'
+#' @export
+icol <- function(x, cols) {
+  sapply(unique(cols), function(s) which(colnames(x) == s))
+}
+
 #' Match columns
 #'
 #' Get matched columns from a data frame.
