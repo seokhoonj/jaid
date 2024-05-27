@@ -2,7 +2,7 @@ print_pkg_recipe <- function() {
   lines <- c(
     "usethis::create_package(path)",
     "usethis::use_description()",
-    sprintf("Title: %s", chatgtp::ask_chatgpt()),
+    sprintf("Title: %s", 'chatgtp::ask_chatgpt()'),
     "Description: This package is made by ",
     "person(given = \"Seokhoon\", family = \"Joo\", email = \"seokhoonj@gmail.com\",\n       role = c(\"aut\", \"cre\"))",
     "Depends: R (>= 3.5.0)",
