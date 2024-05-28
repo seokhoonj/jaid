@@ -5,8 +5,8 @@
 #' @param path a string value specifying the path of the file.
 #' @return no return value
 #' @examples
-#' # create library.R
-#' \donttest{create_library_r("library.R")}
+#' # create library.R file
+#' \dontrun{create_library_r()}
 #'
 #' @export
 create_library_r <- function(path = "library.R") {

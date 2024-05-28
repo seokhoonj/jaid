@@ -105,10 +105,10 @@ static void MKsetup(R_xlen_t n, HashData *d, R_xlen_t nmax) {
 #ifdef LONG_VECTOR_SUPPORT
   /* M = 2^32 is safe, hence n <= 2^31 -1 */
   if (n < 0) /* protect against overflow to -ve */
-  error(_("length %d is too large for hashing"), n);
+  error(_("length %f is too large for hashing"), n);
 #else
   if( n < 0 || n >= 1073741824) /* protect against overflow to -ve */
-  error(_("length %d is too large for hashing"), n);
+  error(_("length %f is too large for hashing"), n);
 #endif
 
   if (nmax != NA_INTEGER && nmax != 1) n = nmax; // n: XLENGTH(uniqueg), nmax: NA_INTEGER

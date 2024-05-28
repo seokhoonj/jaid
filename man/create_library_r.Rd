@@ -16,7 +16,7 @@ no return value
 Create library.R file
 }
 \examples{
-# create library.R
-\donttest{create_library_r("library.R")}
+# create library.R file
+\dontrun{create_library_r()}
 
 }

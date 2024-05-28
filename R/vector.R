@@ -1,4 +1,3 @@
-
 #' Change vector into row vector or column vector
 #'
 #' Change vector into row vector or column vector.
