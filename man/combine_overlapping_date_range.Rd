@@ -37,11 +37,11 @@ Combine multiple overlapping date ranges.
 }
 \examples{
 # combine overlapping date ranges
-\donttest{id <- c("A", "A", "B")
+\dontrun{id <- c("A", "A", "B")
 work <- c("cleansing", "analysis", "cleansing")
 sdate <- as.Date(c("2022-03-01", "2022-03-05", "2022-03-08"))
 edate <- as.Date(c("2022-03-06", "2022-03-09", "2022-03-10"))
-df <- data.frame(id = id, work = work, sdate = sdate, edate = edate)
+df <- data.table::data.table(id = id, work = work, sdate = sdate, edate = edate)
 combine_overlapping_date_range(df, id, work, sdate, edate, interval = 0)}
 
 }

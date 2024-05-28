@@ -15,6 +15,7 @@ print_pkg_recipe <- function() {
     "usethis::use_readme_md()",
     "usethis::use_cran_badge()",
     "usethis::use_cran_comments()",
+    "devtools::check()",
     "# Change the environment to a terminal",
     "# git add .",
     "# git commit -m ",

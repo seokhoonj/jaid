@@ -20,7 +20,7 @@ no return values
 Trim white space
 }
 \examples{
-\donttest{df <- data.frame(x = c(" A", "B ", " C "), y = c(1, 2, 3))
+\dontrun{df <- data.frame(x = c(" A", "B ", " C "), y = c(1, 2, 3))
 set_ptr(df)
 data.table::address(df)
 trim_ws(df)

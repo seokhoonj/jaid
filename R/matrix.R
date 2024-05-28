@@ -311,7 +311,7 @@ matXnum <- function(mat, num) {
     mat <- as_numeric(mat)
   if (is.numeric(mat) & is.integer(num))
     num <- as_numeric(num)
-  invisible(.Call(MatMulNum, mat, num))
+  invisible(.Call(MatXNum, mat, num))
 }
 
 #' Replace vectors in Matrix

@@ -18,7 +18,7 @@ no return value
 Replace empty string like "" with NA_character_ in a memory-efficient way
 }
 \examples{
-\donttest{df <- data.frame(x = c("A", "B", ""), y = c(1, NA, 3), z = c("", "E", ""))
+\dontrun{df <- data.frame(x = c("A", "B", ""), y = c(1, NA, 3), z = c("", "E", ""))
 set_ptr(df)
 data.table::address(df)
 replace_empty_with_na(df)

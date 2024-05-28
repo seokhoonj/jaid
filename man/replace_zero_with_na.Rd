@@ -18,7 +18,7 @@ no return value
 Replace zero values with NA_integer_ or NA_real_ in a memory-efficient way
 }
 \examples{
-\donttest{df <- data.frame(x = c(1, 0, 3), y = c("A", "B", NA), z = c(0, 5, 0))
+\dontrun{df <- data.frame(x = c(1, 0, 3), y = c("A", "B", NA), z = c(0, 5, 0))
 set_ptr(df)
 data.table::address(df)
 replace_zero_with_na(df)

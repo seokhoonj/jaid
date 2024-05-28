@@ -110,6 +110,10 @@ SEXP ColSum(SEXP x);
 SEXP SumByColNames(SEXP x, SEXP g, SEXP uniqueg, SEXP snarm);
 SEXP SumByRowNames(SEXP x, SEXP g, SEXP uniqueg, SEXP snarm);
 
+// Replace
+SEXP ReplaceVecInMat(SEXP mat, SEXP col, SEXP vec);
+SEXP ReplaceValInMat(SEXP mat, SEXP val, SEXP refmat, SEXP refval);
+
 // Mult
 SEXP MatXMat(SEXP x, SEXP y);
 SEXP MatXRow(SEXP mat, SEXP row);

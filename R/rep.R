@@ -22,7 +22,7 @@ rep_row.data.frame <- function(x, ...) as.data.frame(lapply(x, rep, ...)) # time
 
 #' @rdname rep_row
 #' @export
-rep_row.data.table <- function(x, ...) as.data.table(lapply(x, rep, ...)) # times, each
+rep_row.data.table <- function(x, ...) data.table::as.data.table(lapply(x, rep, ...)) # times, each
 
 
 # to be updated -----------------------------------------------------------

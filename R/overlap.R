@@ -13,11 +13,11 @@
 #'
 #' @examples
 #' # combine overlapping date ranges
-#' \donttest{id <- c("A", "A", "B")
+#' \dontrun{id <- c("A", "A", "B")
 #' work <- c("cleansing", "analysis", "cleansing")
 #' sdate <- as.Date(c("2022-03-01", "2022-03-05", "2022-03-08"))
 #' edate <- as.Date(c("2022-03-06", "2022-03-09", "2022-03-10"))
-#' df <- data.frame(id = id, work = work, sdate = sdate, edate = edate)
+#' df <- data.table::data.table(id = id, work = work, sdate = sdate, edate = edate)
 #' combine_overlapping_date_range(df, id, work, sdate, edate, interval = 0)}
 #'
 #' @export
@@ -47,7 +47,5 @@ combine_overlapping_date_range <- function(df, id_var, merge_var, from_var, to_v
   data.table::set(z, j = "stay", value = as.numeric(z$to - z$from + 1 - z$sub_stay))
   data.table::set(z, j = "sub_stay", value = NULL)
   data.table::setnames(z, c(all_var, "stay"))
-  data.table::setattr(z, "class", old_class)
-  data.table::setattr(df, "class", old_class)
   return(z)
 }

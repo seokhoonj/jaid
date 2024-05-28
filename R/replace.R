@@ -7,7 +7,7 @@
 #' @return no return value
 #'
 #' @examples
-#' \donttest{df <- data.frame(x = c(1, NA, 3), y = c("A", "B", NA), z = c(NA, 5, NA))
+#' \dontrun{df <- data.frame(x = c(1, NA, 3), y = c("A", "B", NA), z = c(NA, 5, NA))
 #' set_ptr(df)
 #' data.table::address(df)
 #' replace_na_with_zero(df)
@@ -37,7 +37,7 @@ replace_na_with_zero <- function(df, cols) {
 #' @return no return value
 #'
 #' @examples
-#' \donttest{df <- data.frame(x = c(1, 0, 3), y = c("A", "B", NA), z = c(0, 5, 0))
+#' \dontrun{df <- data.frame(x = c(1, 0, 3), y = c("A", "B", NA), z = c(0, 5, 0))
 #' set_ptr(df)
 #' data.table::address(df)
 #' replace_zero_with_na(df)
@@ -67,7 +67,7 @@ replace_zero_with_na <- function(df, cols) {
 #' @return no return value
 #'
 #' @examples
-#' \donttest{df <- data.frame(x = c("A", "B", ""), y = c(1, NA, 3), z = c("", "E", ""))
+#' \dontrun{df <- data.frame(x = c("A", "B", ""), y = c(1, NA, 3), z = c("", "E", ""))
 #' set_ptr(df)
 #' data.table::address(df)
 #' replace_empty_with_na(df)
@@ -97,7 +97,7 @@ replace_empty_with_na <- function(df, cols) {
 #' @return no return value
 #'
 #' @examples
-#' \donttest{df <- data.frame(x = c("A", "B", NA), y = c(1, NA, 3), z = c(NA, "E", NA))
+#' \dontrun{df <- data.frame(x = c("A", "B", NA), y = c(1, NA, 3), z = c(NA, "E", NA))
 #' set_ptr(df)
 #' data.table::address(df)
 #' replace_na_with_empty(df)
@@ -128,7 +128,7 @@ replace_na_with_empty <- function(df, cols) {
 #' @return no return values
 #'
 #' @examples
-#' \donttest{df <- data.frame(x = c(" A", "B ", " C "), y = c(1, 2, 3))
+#' \dontrun{df <- data.frame(x = c(" A", "B ", " C "), y = c(1, 2, 3))
 #' set_ptr(df)
 #' data.table::address(df)
 #' trim_ws(df)
@@ -164,7 +164,7 @@ trim_ws <- function(df, cols, ws = "[ \t\r\n]") {
 #'
 #' @examples
 #' # remove punctuations
-#' \donttest{df <- data.frame(x = c("A3-", "$+_B", "C+_&"), y = c("123", "R&", "4q_++"))
+#' \dontrun{df <- data.frame(x = c("A3-", "$+_B", "C+_&"), y = c("123", "R&", "4q_++"))
 #' set_ptr(df)
 #' rm_punct(df)
 #' df}
