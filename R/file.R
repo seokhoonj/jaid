@@ -10,10 +10,9 @@
 #'
 #' @export
 create_library_r <- function(path = "library.R") {
+  ans <- TRUE
   if (file.exists(path)) {
     ans <- usethis::ui_yeah("Overwrite pre-existing file {usethis::ui_path(path)}?")
-  } else {
-    ans <- FALSE
   }
   if (ans) {
     file.create(path)
