@@ -86,3 +86,21 @@ is_date_format <- function(x) {
   }
   return(FALSE)
 }
+
+#' Year month
+#'
+#' Get an year month from the date.
+#'
+#' @param x a date vector
+#' @return a character vector
+#'
+#' @examples
+#' # get year month
+#' x <- as.Date(c("1999-12-31", "2000-01-01"))
+#' yearmon(x)
+#'
+#' @export
+yearmon <- function(x) {
+  # sprintf("%4d%02d", lubridate::year(x), lubridate::month(x))
+  substr(format(x, format = "%Y%m%d"), 1L, 6L)
+}
