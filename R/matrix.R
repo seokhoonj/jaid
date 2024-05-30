@@ -333,8 +333,38 @@ replace_vec_in_mat <- function(mat, col, vec) {
 
 # sample matrix -----------------------------------------------------------
 
-# zeros <- function(dim) array(0L, dim = dim)
-# randoms <- function(dim, x = c(0L, 1L), replace = TRUE, prob = NULL) {
-#   array(sample(x, size = prod(dim), replace = replace, prob = prob), dim = dim)
-# }
+#' Zeros
+#'
+#' Sample matrix containing only zeros
+#'
+#' @param dim a numeric vector specifying dimensions
+#' @return a matrix with zeros
+#'
+#' @examples
+#' # zeros
+#' zeros(c(5, 5))
+#'
+#' @export
+zeros <- function(dim) {
+  array(0L, dim = dim)
+}
+
+#' Rands
+#'
+#' Generate a sample matrix with specific numbers randomly
+#'
+#' @param dim a numeric vector specifying dimensions
+#' @param x a numeric vector specifying numbers
+#' @param replace should sampling be with replacement?
+#' @param prob a vector of probability weights for obtaining the elements of the vector being sampled.
+#' @return a matrix with specific numbers
+#'
+#' @examples
+#' # rands
+#' rands(c(5, 5))
+#'
+#' @export
+rands <- function(dim, x = c(0L, 1L), replace = TRUE, prob = NULL) {
+  array(sample(x, size = prod(dim), replace = replace, prob = prob), dim = dim)
+}
 
