@@ -319,6 +319,32 @@ set_col_lower <- function(df)
 set_col_upper <- function(df)
   data.table::setnames(df, colnames(df), toupper(colnames(df)))
 
+#' Fast column reordering of data.table by reference
+#'
+#' set_col_order reorders the columns of data.table, by reference, to the new order provided.
+#'
+#' @param df a data.table
+#' @param neworder names of columns of the new column name ordering
+#' @param before,after If one of them (not both) was provided with a column name or number, neworder will be inserted before or after that column.
+#' @return no return value
+#'
+#' @examples
+#' \dontrun{
+#' # set_col_order
+#' df <- mtcars
+#' set_col_order(df, .(gear, carb), after = mpg)
+#' set_col_order(df, .(gear, carb), after = am)}
+#'
+#' @export
+set_col_order <- function(df, neworder, before = NULL, after = NULL) {
+  neworder <- match_cols(df, sapply(rlang::enexpr(neworder), rlang::as_name))
+  before <- match_cols(df, sapply(rlang::enexpr(before), rlang::as_name))
+  after  <- match_cols(df, sapply(rlang::enexpr(after), rlang::as_name))
+  if (!has_len(before)) before <- NULL
+  if (!has_len(after)) after <- NULL
+  data.table::setcolorder(x = df, neworder = neworder, before = before, after = after)
+}
+
 #' Set labels
 #'
 #' Set column labels for a data frame.
