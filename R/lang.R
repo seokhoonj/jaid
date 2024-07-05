@@ -1,6 +1,6 @@
-#' Is the text Japanese?
+#' Is the text japanese?
 #'
-#' Is the text Japanese?
+#' Is the text japanese?
 #'
 #' @param x a string vector
 #' @return a boolean vector
@@ -10,6 +10,19 @@ is_japanese <- function(x) {
   japanese <- intToUtf8(c(91, 19968, 45, 40879, 12353, 45, 12435, 12449, 45,
                           12531, 93))
   grepl(japanese, x, perl = TRUE)
+}
+
+#' Get japanese columns?
+#'
+#' Get japanese columns?
+#'
+#' @param x a data frame
+#' @return japanese column names
+#'
+#' @export
+get_japanese_cols <- function(x) {
+  japanese_cols <- sapply(x, function(s) any(is_japanese(s)))
+  names(japanese_cols)[japanese_cols == TRUE]
 }
 
 #' Zenkaku to Hankaku

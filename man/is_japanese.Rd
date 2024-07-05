@@ -2,7 +2,7 @@
 % Please edit documentation in R/lang.R
 \name{is_japanese}
 \alias{is_japanese}
-\title{Is the text Japanese?}
+\title{Is the text japanese?}
 \usage{
 is_japanese(x)
 }
@@ -13,5 +13,5 @@ is_japanese(x)
 a boolean vector
 }
 \description{
-Is the text Japanese?
+Is the text japanese?
 }
