@@ -1,6 +1,5 @@
 // [[Rcpp::plugins(cpp11)]]
 
-#include <RcppArmadillo.h>
 #include <Rcpp.h>
 #include <unordered_map>
 
