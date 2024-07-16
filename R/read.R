@@ -80,8 +80,8 @@ read_wb <- function(xlsxFile, sheet = NULL, startRow = 1, colNames = TRUE,
                     skipEmptyCols = TRUE, rows = NULL, cols = NULL,
                     check.names = FALSE, sep.names = ".", namedRegion = NULL,
                     na.strings = "NA", fillMergedCells = FALSE) {
-  if (missing(path))
-    path <- file.choose()
+  if (missing(xlsxFile))
+    xlsxFile <- file.choose()
   if (is.null(sheet)) {
     op <- options(max.print = .Machine$integer.max)
     sheets <- openxlsx::getSheetNames(file = xlsxFile)
