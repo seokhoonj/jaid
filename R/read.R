@@ -20,6 +20,8 @@
 #'
 #' @export
 read_rds <- function(file, refhook = NULL) {
+  if (missing(file))
+    file <- file.choose()
   df <- readRDS(file, refhook = refhook)
   if (inherits(df, "data.frame"))
     return(data.table::setalloccol(df))
@@ -46,6 +48,8 @@ read_xl <- function(path, sheet = NULL, range = NULL, col_names = TRUE,
                     col_types = NULL, na = "", trim_ws = TRUE, skip = 0,
                     n_max = Inf, guess_max = getOption("jaid.guess_max"),
                     progress = readxl_progress(), .name_repair = "unique") {
+  if (missing(path))
+    path <- file.choose()
   if (is.null(sheet)) {
     op <- options(max.print = .Machine$integer.max)
     sheets <- readxl::excel_sheets(path = path)
@@ -76,6 +80,8 @@ read_wb <- function(xlsxFile, sheet = NULL, startRow = 1, colNames = TRUE,
                     skipEmptyCols = TRUE, rows = NULL, cols = NULL,
                     check.names = FALSE, sep.names = ".", namedRegion = NULL,
                     na.strings = "NA", fillMergedCells = FALSE) {
+  if (missing(path))
+    path <- file.choose()
   if (is.null(sheet)) {
     op <- options(max.print = .Machine$integer.max)
     sheets <- openxlsx::getSheetNames(file = xlsxFile)
