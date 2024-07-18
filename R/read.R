@@ -53,7 +53,7 @@ read_xl <- function(path, sheet = NULL, range = NULL, col_names = TRUE,
   if (is.null(sheet)) {
     op <- options(max.print = .Machine$integer.max)
     sheets <- readxl::excel_sheets(path = path)
-    hprint(data.frame(no = seq_along(sheets), sheet = sheets))
+    hprint(data.frame(no = seq_along(sheets), sheet = sheets), hchar = 5)
     on.exit(op)
     sheet <- readline("Please insert the sheet name: ")
   }
@@ -85,9 +85,11 @@ read_wb <- function(xlsxFile, sheet = NULL, startRow = 1, colNames = TRUE,
   if (is.null(sheet)) {
     op <- options(max.print = .Machine$integer.max)
     sheets <- openxlsx::getSheetNames(file = xlsxFile)
-    hprint(data.frame(no = seq_along(sheets), sheet = sheets))
+    hprint(data.frame(order = seq_along(sheets), sheet = sheets), hchar = 5)
     on.exit(op)
     sheet <- readline("Please insert the sheet name: ")
+    if (sheet == "")
+      sheet <- 1L
   }
   z <- openxlsx::readWorkbook(
     xlsxFile = xlsxFile, sheet = sheet, startRow = startRow, colNames = colNames,
