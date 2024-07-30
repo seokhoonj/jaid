@@ -20,8 +20,11 @@
 #'
 #' @export
 read_rds <- function(file, refhook = NULL) {
-  if (missing(file))
+  if (missing(file)) {
     file <- file.choose()
+    cat(sprintf("Path: %s\n", file))
+    cat(sprintf("Code: jaid::read_rds(\"%s\")\n", file))
+  }
   df <- readRDS(file, refhook = refhook)
   if (inherits(df, "data.frame"))
     return(data.table::setalloccol(df))
@@ -48,8 +51,10 @@ read_xl <- function(path, sheet = NULL, range = NULL, col_names = TRUE,
                     col_types = NULL, na = "", trim_ws = TRUE, skip = 0,
                     n_max = Inf, guess_max = getOption("jaid.guess_max"),
                     progress = readxl_progress(), .name_repair = "unique") {
-  if (missing(path))
+  if (missing(path)) {
     path <- file.choose()
+    cat(sprintf("Path: %s\n", path))
+  }
   if (is.null(sheet)) {
     op <- options(max.print = .Machine$integer.max)
     sheets <- readxl::excel_sheets(path = path)
@@ -58,6 +63,8 @@ read_xl <- function(path, sheet = NULL, range = NULL, col_names = TRUE,
     sheet <- readline("Please insert the sheet name (or Press `Enter` for the first sheet): ")
     if (sheet == "")
       sheet <- 1L
+    tsheet <- ifelse(!is.numeric(sheet), sprintf("\"%s\"", sheet), sheet)
+    cat(sprintf("Code: jaid::read_xl(\"%s\", sheet = %s)\n", path, tsheet))
   }
   z <- readxl::read_excel(
     path = path, sheet = sheet, range = range, col_names = col_names,
@@ -82,8 +89,10 @@ read_wb <- function(xlsxFile, sheet = NULL, startRow = 1, colNames = TRUE,
                     skipEmptyCols = TRUE, rows = NULL, cols = NULL,
                     check.names = FALSE, sep.names = ".", namedRegion = NULL,
                     na.strings = "NA", fillMergedCells = FALSE) {
-  if (missing(xlsxFile))
+  if (missing(xlsxFile)) {
     xlsxFile <- file.choose()
+    cat(sprintf("Path: %s\n", xlsxFile))
+  }
   if (is.null(sheet)) {
     op <- options(max.print = .Machine$integer.max)
     sheets <- openxlsx::getSheetNames(file = xlsxFile)
@@ -92,6 +101,8 @@ read_wb <- function(xlsxFile, sheet = NULL, startRow = 1, colNames = TRUE,
     sheet <- readline("Please insert the sheet name (or Press `Enter` for the first sheet): ")
     if (sheet == "")
       sheet <- 1L
+    tsheet <- ifelse(!is.numeric(sheet), sprintf("\"%s\"", sheet), sheet)
+    cat(sprintf("Code: jaid::read_wb(\"%s\", sheet = %s)\n", xlsxFile, tsheet))
   }
   z <- openxlsx::readWorkbook(
     xlsxFile = xlsxFile, sheet = sheet, startRow = startRow, colNames = colNames,
