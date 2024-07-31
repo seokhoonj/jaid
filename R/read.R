@@ -58,13 +58,17 @@ read_xl <- function(path, sheet = NULL, range = NULL, col_names = TRUE,
   if (is.null(sheet)) {
     op <- options(max.print = .Machine$integer.max)
     sheets <- readxl::excel_sheets(path = path)
-    hprint(data.frame(no = seq_along(sheets), sheet = sheets), hchar = 5)
+    dsheets <- data.frame(no = seq_along(sheets), sheet = sheets)
+    hprint(dsheets, hchar = 5)
     on.exit(op)
-    sheet <- readline("Please insert the sheet name (or Press `Enter` for the first sheet): ")
-    if (sheet == "")
-      sheet <- 1L
-    tsheet <- ifelse(!is.numeric(sheet), sprintf("\"%s\"", sheet), sheet)
-    cat(sprintf("Code: jaid::read_xl(\"%s\", sheet = %s)\n", path, tsheet))
+    no <- readline("Please insert the sheet number (or Press `Enter` for the 1st sheet): ")
+    if (no == "")
+      no <- 1
+    if (!grepl("^[1-9]\\d*$", no))
+      stop(" Invalid type for a `sheet number`")
+    no <- as.numeric(no)
+    sheet <- dsheets[dsheets$no == no,]$sheet
+    cat(sprintf("Code: jaid::read_xl(\"%s\", sheet = \"%s\")\n", path, sheet))
   }
   z <- readxl::read_excel(
     path = path, sheet = sheet, range = range, col_names = col_names,
@@ -96,13 +100,17 @@ read_wb <- function(xlsxFile, sheet = NULL, startRow = 1, colNames = TRUE,
   if (is.null(sheet)) {
     op <- options(max.print = .Machine$integer.max)
     sheets <- openxlsx::getSheetNames(file = xlsxFile)
-    hprint(data.frame(no = seq_along(sheets), sheet = sheets), hchar = 5)
+    dsheets <- data.frame(no = seq_along(sheets), sheet = sheets)
+    hprint(dsheets, hchar = 5)
     on.exit(op)
-    sheet <- readline("Please insert the sheet name (or Press `Enter` for the first sheet): ")
-    if (sheet == "")
-      sheet <- 1L
-    tsheet <- ifelse(!is.numeric(sheet), sprintf("\"%s\"", sheet), sheet)
-    cat(sprintf("Code: jaid::read_wb(\"%s\", sheet = %s)\n", xlsxFile, tsheet))
+    no <- readline("Please insert the sheet number (or Press `Enter` for the 1st sheet): ")
+    if (no == "")
+      no <- 1
+    if (!grepl("^[1-9]\\d*$", no))
+      stop(" Invalid type for a `sheet number`")
+    no <- as.numeric(no)
+    sheet <- dsheets[dsheets$no == no,]$sheet
+    cat(sprintf("Code: jaid::read_wb(\"%s\", sheet = \"%s\")\n", xlsxFile, sheet))
   }
   z <- openxlsx::readWorkbook(
     xlsxFile = xlsxFile, sheet = sheet, startRow = startRow, colNames = colNames,
