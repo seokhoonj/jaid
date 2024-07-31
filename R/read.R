@@ -21,7 +21,7 @@
 #' @export
 read_rds <- function(file, refhook = NULL) {
   if (missing(file)) {
-    file <- file.choose()
+    file <- gsub(sprintf("%s/", getwd()), "", file.choose())
     cat(sprintf("Path: %s\n", file))
     cat(sprintf("Code: jaid::read_rds(\"%s\")\n", file))
   }
@@ -52,7 +52,7 @@ read_xl <- function(path, sheet = NULL, range = NULL, col_names = TRUE,
                     n_max = Inf, guess_max = getOption("jaid.guess_max"),
                     progress = readxl_progress(), .name_repair = "unique") {
   if (missing(path)) {
-    path <- file.choose()
+    path <- gsub(sprintf("%s/", getwd()), "", file.choose())
     cat(sprintf("Path: %s\n", path))
   }
   if (is.null(sheet)) {
@@ -90,7 +90,7 @@ read_wb <- function(xlsxFile, sheet = NULL, startRow = 1, colNames = TRUE,
                     check.names = FALSE, sep.names = ".", namedRegion = NULL,
                     na.strings = "NA", fillMergedCells = FALSE) {
   if (missing(xlsxFile)) {
-    xlsxFile <- file.choose()
+    xlsxFile <- gsub(sprintf("%s/", getwd()), "", file.choose())
     cat(sprintf("Path: %s\n", xlsxFile))
   }
   if (is.null(sheet)) {
