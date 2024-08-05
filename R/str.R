@@ -94,6 +94,24 @@ split_and_paste_sort_uni_str <- function(x, split = "|") {
   sapply(z, function(x) paste_sort_uni_str(x, collapse = split))
 }
 
+#' Count pattern matched strings
+#'
+#' Count pattern matched strings from a string vector.
+#'
+#' @param pattern a string containing a [regular expression]
+#' @param x a string
+#' @param ignore.case if `FALSE`, the pattern matching is case sensitive and if `TRUE`, case is ignored during matching.
+#' @return a string vector
+#'
+#' @examples
+#' # count pattern matched strings from a string vector
+#' \donttest{count_pattern(pattern = "c", c("a|b|c", "a|c|c"))}
+#'
+#' @export
+count_pattern <- function(pattern, x, ignore.case = FALSE) {
+  sapply(gregexpr(pattern, x, ignore.case = ignore.case, perl = TRUE), length)
+}
+
 #' Get a first pattern
 #'
 #' Get a first pattern from a string vector.
