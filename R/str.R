@@ -109,7 +109,8 @@ split_and_paste_sort_uni_str <- function(x, split = "|") {
 #'
 #' @export
 count_pattern <- function(pattern, x, ignore.case = FALSE) {
-  sapply(gregexpr(pattern, x, ignore.case = ignore.case, perl = TRUE), length)
+  sapply(gregexpr(pattern, x, ignore.case = ignore.case, perl = TRUE),
+         function(x) length(x[x != -1]))
 }
 
 #' Get a first pattern
