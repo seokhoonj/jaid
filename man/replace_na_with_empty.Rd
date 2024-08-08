@@ -18,7 +18,8 @@ no return value
 Replace NA_character_ with "" in a memory-efficient way
 }
 \examples{
-\dontrun{df <- data.frame(x = c("A", "B", NA), y = c(1, NA, 3), z = c(NA, "E", NA))
+\dontrun{
+df <- data.table(x = c("A", "B", NA), y = c(1, NA, 3), z = c(NA, "E", NA))
 set_ptr(df)
 data.table::address(df)
 replace_na_with_empty(df)

@@ -7,7 +7,8 @@
 #' @return no return value
 #'
 #' @examples
-#' \dontrun{df <- data.frame(x = c(1, NA, 3), y = c("A", "B", NA), z = c(NA, 5, NA))
+#' \dontrun{
+#' df <- data.table(x = c(1, NA, 3), y = c("A", "B", NA), z = c(NA, 5, NA))
 #' set_ptr(df)
 #' data.table::address(df)
 #' replace_na_with_zero(df)
@@ -37,7 +38,8 @@ replace_na_with_zero <- function(df, cols) {
 #' @return no return value
 #'
 #' @examples
-#' \dontrun{df <- data.frame(x = c(1, 0, 3), y = c("A", "B", NA), z = c(0, 5, 0))
+#' \dontrun{
+#' df <- data.table(x = c(1, 0, 3), y = c("A", "B", NA), z = c(0, 5, 0))
 #' set_ptr(df)
 #' data.table::address(df)
 #' replace_zero_with_na(df)
@@ -67,7 +69,8 @@ replace_zero_with_na <- function(df, cols) {
 #' @return no return value
 #'
 #' @examples
-#' \dontrun{df <- data.frame(x = c("A", "B", ""), y = c(1, NA, 3), z = c("", "E", ""))
+#' \dontrun{
+#' df <- data.table(x = c("A", "B", ""), y = c(1, NA, 3), z = c("", "E", ""))
 #' set_ptr(df)
 #' data.table::address(df)
 #' replace_empty_with_na(df)
@@ -97,7 +100,8 @@ replace_empty_with_na <- function(df, cols) {
 #' @return no return value
 #'
 #' @examples
-#' \dontrun{df <- data.frame(x = c("A", "B", NA), y = c(1, NA, 3), z = c(NA, "E", NA))
+#' \dontrun{
+#' df <- data.table(x = c("A", "B", NA), y = c(1, NA, 3), z = c(NA, "E", NA))
 #' set_ptr(df)
 #' data.table::address(df)
 #' replace_na_with_empty(df)
@@ -117,6 +121,39 @@ replace_na_with_empty <- function(df, cols) {
   # data.table::setattr(df, "class", old_class)
   invisible(df[])
 }
+
+#' Replace A with B
+#'
+#' Replace string A with string B in a memory-efficient way
+#'
+#' @param df a data frame
+#' @param cols a string vector specifying columns
+#' @param a a string
+#' @param b a string
+#' @return no return value
+#'
+#' @examples
+#' \dontrun{
+#' df <- data.table(x = c("A", "A", "C"), y = c("A", "C", "C"))
+#' set_ptr(df)
+#' data.table::address(df)
+#' replace_a_with_b(df, a = "A", b = "B")
+#' data.table::address(df)
+#' df}
+#'
+#' @export
+replace_a_with_b <- function(df, cols, a, b) {
+  # has_ptr(df, error_raise = TRUE)
+  # old_class <- class(df)
+  # set_dt(df)
+  class <- sapply(df, class)
+  if (missing(cols))
+    cols <- names(class)[which(class == "character")]
+  df[, `:=`((cols), lapply(.SD, function(x) ifelse(x == a, b, x))), .SDcols = cols]
+  # data.table::setattr(df, "class", old_class)
+  invisible(df[])
+}
+
 
 #' Trim white space
 #'
