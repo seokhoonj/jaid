@@ -57,3 +57,23 @@ get_stat_by <- function(df, group_var, value_var, fun = sum) {
   # data.table::setattr(df, "class", old_class)
   return(dt)
 }
+
+#' Get proportion from a vector
+#'
+#' Get proportion from a vector.
+#'
+#' @param x a vector
+#' @return a proportion data.frame
+#'
+#' @examples
+#' \dontrun{
+#' get_prop(sample(1:10, 1000, replace = TRUE))}
+#'
+#' @export
+get_prop <- function(x) {
+  op <- options(scipen = 14)
+  df <- data.table::as.data.table(prop.table(table(x)))
+  set_col_lower(df)
+  on.exit(op)
+  return(df)
+}
