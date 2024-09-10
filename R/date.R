@@ -104,3 +104,36 @@ yearmon <- function(x) {
   # sprintf("%4d%02d", lubridate::year(x), lubridate::month(x))
   substr(format(x, format = "%Y%m%d"), 1L, 6L)
 }
+
+#' Month difference
+#'
+#' Month difference between two dates
+#'
+#' @param sdate a start date vector
+#' @param edate a end date vector
+#' @return a numeric vector
+#'
+#' @examples
+#' # mondiff
+#' sdate <- as.Date("1999-12-31")
+#' edate <- as.Date("2000-01-01")
+#' mondiff(sdate, edate)
+#'
+#' @export
+mondiff <- function(sdate, edate, day_limit = c(0:31)) {
+  # if the sdate month day <  day_limit: count
+  # if the edate month day >= day_limit: count
+  assert_class(sdate, "Date")
+  assert_class(edate, "Date")
+  ys <- data.table::year(sdate)
+  ye <- data.table::year(edate)
+  ms <- data.table::month(sdate)
+  me <- data.table::month(edate)
+  ds <- de <- 0
+  if (day_limit[1L]) {
+    ds <- ifelse(data.table::mday(sdate) >= day_limit[1L], 1, 0)
+    de <- ifelse(data.table::mday(edate) <  day_limit[1L], 1, 0)
+  }
+  z <- (ye - ys) * 12 + (me - ms) + 1 - ds - de
+  return(as.numeric(z))
+}

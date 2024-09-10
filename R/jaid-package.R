@@ -4,7 +4,8 @@
 #' @useDynLib jaid, .registration = TRUE
 #' @importFrom Rcpp sourceCpp
 #' @importFrom data.table `:=` `.SD` `%chin%` address as.data.table copy
-#' data.table set setalloccol setattr setDF setDT setnames setorder setorderv
+#' data.table mday month set setalloccol setattr setDF setDT setnames setorder
+#' setorderv year
 #' @importFrom grDevices dev.list dev.off
 #' @importFrom grid grid.raster
 #' @importFrom kableExtra footnote kable_classic kbl save_kable
