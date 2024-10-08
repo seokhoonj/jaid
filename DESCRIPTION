@@ -20,12 +20,13 @@ Imports:
     png (>= 0.1.8),
     readxl (>= 1.4.2),
     rlang (>= 1.1.1),
+    scales (>= 1.3.0),
     stringi (>= 1.7.6),
     stringr (>= 1.4.0),
     tibble (>= 3.2.1),
     usethis (>= 2.1.6)
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.2.3
+RoxygenNote: 7.3.2
 LinkingTo: 
     Rcpp
 Suggests: 

@@ -10,6 +10,10 @@ mondiff(sdate, edate, day_limit = c(0:31))
 \item{sdate}{a start date vector}
 
 \item{edate}{a end date vector}
+
+\item{day_limit}{if the day of sdate is less than \code{day_limit}, count it as a
+full month, if the day of edate is greater than or equal to \code{day_limit},
+count it as a full month.}
 }
 \value{
 a numeric vector

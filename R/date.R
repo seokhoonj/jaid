@@ -111,6 +111,9 @@ yearmon <- function(x) {
 #'
 #' @param sdate a start date vector
 #' @param edate a end date vector
+#' @param day_limit if the day of sdate is less than `day_limit`, count it as a
+#' full month, if the day of edate is greater than or equal to `day_limit`,
+#' count it as a full month.
 #' @return a numeric vector
 #'
 #' @examples

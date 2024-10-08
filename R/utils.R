@@ -545,6 +545,19 @@ quote_comma <- function(..., newline = FALSE) {
   cat("\n")
 }
 
+#' Integer64 to numeric
+#'
+#' Change class from `integer64` to `numeric` for a `data.frame`
+#'
+#' @param df a `data.frame`
+#'
+#' @export
+i64_to_num <- function(df) {
+  cols <- jaid::type(df)[class == "integer64"]$column
+  df[, (cols) := lapply(.SD, as.numeric), .SDcols = cols]
+  return(df)
+}
+
 # to be updated -----------------------------------------------------------
 
 sort_group_by <- function(x) {

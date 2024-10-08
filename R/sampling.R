@@ -20,13 +20,13 @@
 #' strati_sampling(dt, group_var = Species, size = 0.1)}
 #'
 #' @export
-strati_sampling <- function(dt, group_var, size, replace = TRUE, contain0 = FALSE,
+strati_sampling <- function(df, group_var, size, replace = TRUE, contain0 = FALSE,
                             method = c("round", "floor", "ceiling"), verbose = TRUE,
                             seed = 123) {
-  assert_class(dt, "data.table")
-  # group_var <- match_cols(dt, vapply(substitute(group_var), deparse, "character"))
-  group_var <- match_cols(dt, sapply(rlang::enexpr(group_var), rlang::as_name))
-  group <- dt[, .(n = .N), keyby = group_var]
+  assert_class(df, "data.table")
+  # group_var <- match_cols(df, vapply(substitute(group_var), deparse, "character"))
+  group_var <- match_cols(df, sapply(rlang::enexpr(group_var), rlang::as_name))
+  group <- df[, .(n = .N), keyby = group_var]
   data.table::set(group, j = "g", value = seq_len(nrow(group)))
   if (size > 0 & size < 1) {
     method <- match.arg(method)
@@ -44,10 +44,10 @@ strati_sampling <- function(dt, group_var, size, replace = TRUE, contain0 = FALS
     cat(sprintf("Target prop: %.2f %% (method = %s, replace = %s)\n",
                 size * 100, method, replace))
     cat(sprintf("Population : %s unit\n",
-                stringr::str_pad(scales::comma(sum(group$n)), width = 14,
+                stringr::str_pad(scales::comma(sum(group$n)), widfh = 14,
                                  pad = " ")))
     cat(sprintf("Sample     : %s unit\n",
-                stringr::str_pad(scales::comma(sum(group$s)), width = 14,
+                stringr::str_pad(scales::comma(sum(group$s)), widfh = 14,
                                  pad = " ")))
     cat(sprintf("Actual prop: %.2f %%\n", sum(group$s)/sum(group$n) * 100))
     cat(draw_line(), "\n")
@@ -55,14 +55,15 @@ strati_sampling <- function(dt, group_var, size, replace = TRUE, contain0 = FALS
     cat(draw_line(), "\n")
   }
   if (nrow(group) > 1) {
-    dt[group, on = group_var, `:=`(g, i.g)]
+    g <- NULL
+    df[group, on = group_var, `:=`(g, g)]
   }
   else {
-    data.table::set(dt, j = "g", value = 1L)
+    data.table::set(df, j = "g", value = 1L)
   }
   n <- group$n
   s <- group$s
-  spl <- split(seq_len(nrow(dt)), dt$g)
+  spl <- split(seq_len(nrow(df)), df$g)
   if (!missing(seed))
     set.seed(seed)
   v <- sort(unlist(lapply(seq_along(spl), function(x) {
@@ -73,13 +74,28 @@ strati_sampling <- function(dt, group_var, size, replace = TRUE, contain0 = FALS
       sample(unname(spl[x]), s[x], replace = replace)
     }
   })))
-  z <- dt[v]
+  z <- df[v]
   data.table::setorder(z, g)
   data.table::setattr(z, "group", group)
   rm_cols(z, g)
   return(z[])
 }
 
+#' Random sampling
+#'
+#' Random sampling for a `data.frame` or a vector
+#'
+#' @param x either a `data.frame` or a vector
+#' @param size a non-negative integer giving the number of items to choose.
+#' @param replace should sampling be with replacement?
+#' @param prob a vector of probability weights for obtaining the elements of the vector being sampled.
+#' @param seed a single value, interpreted as an integer, or NULL.
+#' @return either a `data.frame` or a vector
+#'
+#' @examples
+#' \dontrun{
+#' random_sampling(iris)}
+#'
 #' @export
 random_sampling <- function(x, size, replace = TRUE, prob = NULL, seed = 123) {
   if (is.vector(x))

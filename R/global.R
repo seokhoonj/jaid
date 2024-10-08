@@ -1,2 +1,2 @@
 
-utils::globalVariables(c(".DATE_FORMAT"))
+utils::globalVariables(c(".", ".DATE_FORMAT", ".N"))

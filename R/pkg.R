@@ -1,4 +1,3 @@
-#' @export
 print_pkg_recipe <- function() {
   lines <- c(
     "usethis::create_package(path)",
@@ -25,13 +24,12 @@ print_pkg_recipe <- function() {
   cat("path = \"\"", paste0("\n", lines))
 }
 
-#' @export
 print_descr_depends <- function() {
   cat(sprintf("Depends: R (>= %s)\n", getRversion()))
 }
 
-#' @export
 print_descr_imports <- function(pkgs = c("data.table", "ggplot2")) {
-  lines <- sort(unique(sapply(pkgs, function(x) sprintf("%s (>= %s)", x, packageVersion(x)))))
+  lines <- sort(unique(sapply(pkgs, function(x) sprintf("%s (>= %s)", x,
+                                                        utils::packageVersion(x)))))
   cat("Imports:", paste0("\n  ", lines))
 }

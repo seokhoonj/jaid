@@ -5,7 +5,7 @@
 \title{Stratified Sampling}
 \usage{
 strati_sampling(
-  dt,
+  df,
   group_var,
   size,
   replace = TRUE,
@@ -16,6 +16,8 @@ strati_sampling(
 )
 }
 \arguments{
+\item{df}{data.table object}
+
 \item{group_var}{names of group variables}
 
 \item{size}{a positive numeric sampling size. if the size < 0, it's proportion.}
@@ -29,8 +31,6 @@ strati_sampling(
 \item{verbose}{if \code{TRUE}sampling summary will be shown.}
 
 \item{seed}{a single value, interpreted as integer, or NULL}
-
-\item{df}{data.table object}
 }
 \value{
 a data.table
