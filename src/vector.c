@@ -17,7 +17,7 @@ SEXP Unilen(SEXP x) {
         count[px[i]] = true;
       }
     }
-    R_Free(count);
+    free(count);
     return ScalarInteger(j);
   }
   if (isLogical(x)) {
@@ -34,7 +34,7 @@ SEXP Unilen(SEXP x) {
         count[cs] = true;
       }
     }
-    R_Free(count);
+    free(count);
     return ScalarInteger(j);
   }
   const R_xlen_t n = xlength(x);
@@ -111,7 +111,7 @@ SEXP Unilen(SEXP x) {
   default:
     error(_("invalid input"));
   }
-  Free(h);
+  free(h);
   return ScalarInteger(count);
 }
 
