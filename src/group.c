@@ -13,8 +13,8 @@ SEXP iunique(int arr[], size_t n) {
     K++;
   } // M = 2^K; if n = 512, M = 1024, K = 10; if n = 1024, M = 2048, K = 11
   size_t count = 0;
-  int *h = (int*)R_Calloc(M, int);
-  int *p = (int*)R_Calloc(n, int);
+  int *h = (int*)calloc(M, sizeof(int));
+  int *p = (int*)calloc(n, sizeof(int));
   for (int i = 0; i < n; ++i) { // length of array
     int id = (arr[i] == INT_MIN) ? 0 : HASH(arr[i], K);
     while (h[id]) {
@@ -29,7 +29,7 @@ SEXP iunique(int arr[], size_t n) {
     iblt:;
   }
   size_t ct = 0;
-  int *z = (int*)R_Calloc(count, int);
+  int *z = (int*)calloc(count, sizeof(int));
   for (int i = 0; ct < count; ++i) {
     if (p[i]) {
       z[ct++] = arr[i];
@@ -52,7 +52,7 @@ SEXP SortGroupBy(SEXP id) {
   switch(TYPEOF(id)) {
   case VECSXP:{
     m = XLENGTH(VECTOR_ELT(id, 0)), n = XLENGTH(id);
-    int *ipos = (int*)R_Calloc(m*n, int);
+    int *ipos = (int*)calloc(m*n, sizeof(int));
     ipos[p++] = 0;
     for (i = 0; i < n; ++i) {
       v = VECTOR_ELT(id, i);

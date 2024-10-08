@@ -5,7 +5,7 @@ SEXP Unilen(SEXP x) {
   if (isFactor(x)) {
     const int len = LENGTH(PROTECT(getAttrib(x, R_LevelsSymbol)));
     UNPROTECT(1);
-    bool *count = (bool*)R_Calloc(len+1, bool);
+    bool *count = (bool*)calloc(len+1, sizeof(bool));
     const int *px = INTEGER(x);
     const int xlen = LENGTH(x);
     int j = 0;
@@ -21,7 +21,7 @@ SEXP Unilen(SEXP x) {
     return ScalarInteger(j);
   }
   if (isLogical(x)) {
-    bool *count = (bool*)Calloc(3, bool);
+    bool *count = (bool*)calloc(3, sizeof(bool));
     const int *px = LOGICAL(x);
     const int xlen = LENGTH(x);
     int j = 0;
@@ -56,7 +56,7 @@ SEXP Unilen(SEXP x) {
     error("Type %s is not supported", type2char(tx));
   }
   R_xlen_t count = 0;
-  int* h = (int*)R_Calloc(M, int);
+  int* h = (int*)calloc(M, sizeof(int));
   switch(tx) {
   case INTSXP:{
     const int* px = INTEGER(x);
