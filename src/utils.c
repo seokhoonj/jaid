@@ -47,7 +47,7 @@ SEXP BeforeChangeIndex(SEXP x) {
   }
 
   ipos[p++] = s; // the last value is fixed to the length of x
-  SETLENGTH(pos, p);
+  pos = xlengthgets(pos, p);
   UNPROTECT(1);
   return pos;
 }

@@ -5,7 +5,7 @@ typedef size_t hlen;
 
 #define NIL -1
 #define HTDATA_INT(d) (INTEGER0((d)->HashTable))
-#define HTDATA_DBL(d) (REAL0((d)->HashTable))
+#define HTDATA_DBL(d) (REAL((d)->HashTable))
 
 // Hash function and equality test for keys
 typedef struct _HashData HashData;
