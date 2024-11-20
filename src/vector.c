@@ -93,7 +93,7 @@ SEXP Unilen(SEXP x) {
     }
   } break;
   case STRSXP:{
-    const SEXP *px = STRING_PTR_RO(x);
+    const SEXP *px = STRING_PTR_RO(x); // Not STRING_PTR
     size_t id = 0;
     for (int i = 0; i < n; ++i) {
       id = HASH(((intptr_t) px[i] & 0xffffffff), K);

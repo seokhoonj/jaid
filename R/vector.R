@@ -92,5 +92,19 @@ mostfreq <- function(x, na.rm = FALSE) {
   uniqx[which.max(tabulate(match(x, uniqx)))]
 }
 
+#' List of sequential vectors
+#'
+#' Generate list of sequential vectors
+#'
+#' @param from,to the starting and (maximal) end vectors of the sequence.
+#' @param by number: increment of the sequence.
+#'
+#' @export
+seqvec <- function(from, to, by = 1L) {
+  if (length(from) != length(to))
+    stop("Two vectors have a different length.")
+  lapply(seq_along(from), function(x) seq(from[x], to[x], by))
+}
+
 
 before_change_index <- function(x) .Call(BeforeChangeIndex, x)
