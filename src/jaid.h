@@ -107,6 +107,8 @@ SEXP ColMax(SEXP x);
 SEXP ColMin(SEXP x);
 SEXP ColSum(SEXP x);
 
+SEXP ColDiff(SEXP x);
+
 SEXP SumByColNames(SEXP x, SEXP g, SEXP uniqueg, SEXP snarm);
 SEXP SumByRowNames(SEXP x, SEXP g, SEXP uniqueg, SEXP snarm);
 

@@ -61,6 +61,16 @@ col_min <- function(x) .Call(ColMin, x)
 #' @export
 col_sum <- function(x) .Call(ColSum, x)
 
+#' Column diffrences
+#'
+#' Column diffrences for a numeric matrix
+#'
+#' @param x a numeric matrix
+#' @return a numeric matrix
+#'
+#' @export
+col_diff <- function(x) .Call(ColDiff, x)
+
 
 #' max, min, sum by row names
 #'

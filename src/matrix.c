@@ -853,6 +853,45 @@ SEXP ColSum(SEXP x) {
   return z;
 }
 
+SEXP ColDiff(SEXP x) {
+  R_xlen_t i, j, m, n;
+  SEXP z;
+
+  m = nrows(x);
+  n = ncols(x);
+
+  if (n < 2) {
+    error("The matrix must have at least two columns to compute column differences.");
+  }
+
+  switch(TYPEOF(x)){
+  case INTSXP:{
+    PROTECT(z = allocMatrix(INTSXP, m, n - 1));
+    int *ix = INTEGER(x);
+    int *iz = INTEGER(z);
+    for (i = 0; i < m; ++i) {
+      for (j = 0; j < n - 1; ++j) {
+        iz[i + j * m] = ix[i + (j + 1) * m] - ix[i + j * m];
+      }
+    }
+  } break;
+  case REALSXP:{
+    PROTECT(z = allocMatrix(REALSXP, m, n - 1));
+    double *ix = REAL(x);
+    double *iz = REAL(z);
+    for (i = 0; i < m; ++i) {
+      for (j = 0; j < n - 1; ++j) {
+        iz[i + j * m] = ix[i + (j + 1) * m] - ix[i + j * m];
+      }
+    }
+  } break;
+  default:
+    error(_("invalid length"));
+  }
+  UNPROTECT(1);
+  return z;
+}
+
 SEXP Rotate(SEXP x, SEXP angle) {
   R_xlen_t i, j, m, n, p, degree;
   SEXP z;
