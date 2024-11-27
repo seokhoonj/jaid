@@ -889,7 +889,7 @@ SEXP ColDiff(SEXP x) {
     error(_("invalid input"));
   }
   PROTECT(rownames = VECTOR_ELT(getAttrib(x, R_DimNamesSymbol), 0));
-  SetRowNames(z, rownames = rownames);
+  SetRowNames(z, rownames);
   UNPROTECT(2);
   return z;
 }
