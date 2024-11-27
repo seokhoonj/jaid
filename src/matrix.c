@@ -855,7 +855,7 @@ SEXP ColSum(SEXP x) {
 
 SEXP ColDiff(SEXP x) {
   R_xlen_t i, j, m, n;
-  SEXP z;
+  SEXP rownames, z;
 
   m = nrows(x);
   n = ncols(x);
@@ -886,9 +886,11 @@ SEXP ColDiff(SEXP x) {
     }
   } break;
   default:
-    error(_("invalid length"));
+    error(_("invalid input"));
   }
-  UNPROTECT(1);
+  PROTECT(rownames = VECTOR_ELT(getAttrib(x, R_DimNamesSymbol), 0));
+  SetRowNames(z, rownames = rownames);
+  UNPROTECT(2);
   return z;
 }
 
