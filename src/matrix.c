@@ -842,7 +842,7 @@ SEXP ColSum(SEXP x) {
     ++xs;
     for (zi = zs; zi != ze; ++zi) {
       for (xi = xs, xs += m; xi != (xs - 1); ++xi) {
-        *zi = (*zi != NA_INTEGER) ? *zi + *xi : NA_INTEGER;
+        *zi = (*zi != NA_REAL) ? *zi + *xi : NA_REAL;
       }
     }
   } break;
@@ -855,7 +855,7 @@ SEXP ColSum(SEXP x) {
 
 SEXP ColDiff(SEXP x) {
   R_xlen_t i, j, m, n;
-  SEXP rownames, z;
+  SEXP dimnames, rownames, z;
 
   m = nrows(x);
   n = ncols(x);
@@ -871,7 +871,7 @@ SEXP ColDiff(SEXP x) {
     int *iz = INTEGER(z);
     for (i = 0; i < m; ++i) {
       for (j = 0; j < n - 1; ++j) {
-        iz[i + j * m] = ix[i + (j + 1) * m] - ix[i + j * m];
+        iz[i + j * m] = (ix[i + (j + 1) * m] != NA_INTEGER && ix[i + j * m] != NA_INTEGER) ? ix[i + (j + 1) * m] - ix[i + j * m] : NA_INTEGER;
       }
     }
   } break;
@@ -881,16 +881,19 @@ SEXP ColDiff(SEXP x) {
     double *iz = REAL(z);
     for (i = 0; i < m; ++i) {
       for (j = 0; j < n - 1; ++j) {
-        iz[i + j * m] = ix[i + (j + 1) * m] - ix[i + j * m];
+        iz[i + j * m] = (ix[i + (j + 1) * m] != NA_REAL && ix[i + j * m] != NA_REAL) ? ix[i + (j + 1) * m] - ix[i + j * m] : NA_REAL;
       }
     }
   } break;
   default:
     error(_("invalid input"));
   }
-  PROTECT(rownames = VECTOR_ELT(getAttrib(x, R_DimNamesSymbol), 0));
-  SetRowNames(z, rownames);
-  UNPROTECT(2);
+  dimnames = getAttrib(x, R_DimNamesSymbol);
+  if (!isNull(dimnames)) {
+    rownames = VECTOR_ELT(dimnames, 0);
+    SetRowNames(z, rownames);
+  }
+  UNPROTECT(1);
   return z;
 }
 
