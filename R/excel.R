@@ -1,3 +1,68 @@
+#' To a R1C1 format column
+#'
+#' Convert a cell or column string from A1 to R1C1 format.
+#'
+#' @param x A string specifying a cell or a column
+#' @return A numeric
+#'
+#' @examples
+#' # convert a cell or column string from A1 to R1C1 format
+#' \donttest{
+#' to_r1c1_col("C33")
+#' to_r1c1_col("ABC")
+#' to_r1c1_col("ABC123")}
+#'
+#' @export
+to_r1c1_col <- function(x) {
+  tbl <- seq_along(LETTERS)
+  names(tbl) <- LETTERS
+  spl <- unlist(strsplit(get_pattern("[A-Z]+", x), split = "",
+                         perl = TRUE))
+  num <- tbl[spl]
+  dig <- rev(seq_along(num) - 1)
+  return(sum(num * 26^dig))
+}
+
+#' To a A1 format column
+#'
+#' Convert a cell or column numeric from R1C1 to A1 format.
+#'
+#' @param x A string specifying a cell or a column
+#' @return A string
+#'
+#' @examples
+#' # convert a cell or column numeric from R1C1 to A1 format.
+#' \donttest{
+#' to_a1_col(1)
+#' to_a1_col(3)
+#' to_a1_col(26)}
+#'
+#' @export
+to_a1_col <- function(x) {
+  tbl <- seq_along(LETTERS)
+  names(tbl) <- LETTERS
+  if (x <= 26) {
+    return(paste0(names(tbl[x]), collapse = ""))
+  }
+  quo_vec <- vector(mode = "integer")
+  rem_vec <- vector(mode = "integer")
+  i <- 1
+  while (x > 26) {
+    quo_vec[i] <- quo <- x%/%26
+    rem_vec[i] <- rem <- x%%26
+    x <- quo
+    i <- i + 1L
+  }
+  quo <- quo_vec[length(quo_vec)]
+  z <- c(quo, rev(rem_vec))
+  for (i in rev(2:length(z))) {
+    if (z[i] == 0) {
+      z[i] <- 26
+      z[i - 1] <- z[i - 1] - 1L
+    }
+  }
+  return(paste0(names(tbl[z]), collapse = ""))
+}
 
 write_data <- function(wb, sheet, data, rc = c(1L, 1L), rowNames = TRUE,
                        fontName = "Comic Sans MS", borderColour = "#000000",
