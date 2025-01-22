@@ -15,6 +15,8 @@
 #' insertImage insertPlot saveWorkbook setColWidths writeData
 #' @importFrom png readPNG
 #' @importFrom readxl excel_sheets read_excel readxl_progress
+#' @importFrom reticulate conda_create conda_list install_miniconda install_python
+#' miniconda_exists py_config py_install use_condaenv use_virtualenv virtualenv_create
 #' @importFrom rlang as_name enexpr enquo enquos has_length quo_is_null
 #' @importFrom scales comma
 #' @importFrom stats IQR median sd
