@@ -42,19 +42,3 @@ already available and installs the specified packages using \code{pip} or Conda.
 \verb{~/.conda/envs/<env_name>}.
 }
 }
-\examples{
-# Create a virtual environment and install packages
-setup_python_env(
-  env_name = "my_python_env",
-  packages = c("numpy", "pandas"),
-  use_miniconda = FALSE
-)
-
-# Create a Conda environment and install packages
-setup_python_env(
-  env_name = "my_conda_env",
-  packages = c("numpy", "pandas", "git+https://github.com/seokhoonj/underwriter"),
-  use_miniconda = TRUE
-)
-
-}

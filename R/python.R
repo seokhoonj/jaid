@@ -26,21 +26,6 @@
 #'
 #' @return No return value. The function creates and configures the Python or Miniconda environment.
 #'
-#' @examples
-#' # Create a virtual environment and install packages
-#' setup_python_env(
-#'   env_name = "my_python_env",
-#'   packages = c("numpy", "pandas"),
-#'   use_miniconda = FALSE
-#' )
-#'
-#' # Create a Conda environment and install packages
-#' setup_python_env(
-#'   env_name = "my_conda_env",
-#'   packages = c("numpy", "pandas", "git+https://github.com/seokhoonj/underwriter"),
-#'   use_miniconda = TRUE
-#' )
-#'
 #' @export
 setup_python_env <- function(
     env_name = "r-reticulate",
