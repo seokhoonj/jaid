@@ -36,6 +36,7 @@ setup_python_env <- function(
   if (!requireNamespace("reticulate", quietly = TRUE)) {
     install.packages("reticulate")
   }
+  library(reticulate)
 
   # 2. Determine the environment path based on `use_miniconda`
   if (use_miniconda) {
@@ -83,16 +84,48 @@ setup_python_env <- function(
     reticulate::use_virtualenv(venv_path, required = TRUE)
   }
 
-  # 3. Install packages
+  # 3. Install packages with update check
   for (package in packages) {
     if (grepl("^git\\+https://", package)) {
-      # Install Git-based packages using pip
-      message("Installing Git package with pip: ", package)
-      tryCatch({
-        reticulate::py_install(package, method = "pip")
+      # Extract the Git repository URL and package name
+      repo_url <- sub("^git\\+https://", "https://", package)
+      package_name <- sub(".*/", "", gsub("\\.git$", "", repo_url))
+
+      # Check installed version (if any)
+      installed_version <- tryCatch({
+        py_result <- reticulate::py_run_string(paste0("
+import subprocess
+result = subprocess.run(['pip', 'show', '", package_name, "'], capture_output=True, text=True)
+result.stdout
+        "), local = TRUE)
+        py_result$result
       }, error = function(e) {
-        stop("Failed to install Git package: ", package, ". Error: ", e$message)
+        NULL
       })
+
+      # Fetch the latest Git commit SHA
+      latest_sha <- tryCatch({
+        py_result <- reticulate::py_run_string(paste0("
+import subprocess
+result = subprocess.run(['git', 'ls-remote', '", repo_url, "'], capture_output=True, text=True)
+result.stdout.splitlines()[0].split()[0]
+        "), local = TRUE)
+        py_result$result
+      }, error = function(e) {
+        stop("Failed to fetch the latest commit SHA for: ", repo_url, ". Error: ", e$message)
+      })
+
+      # Reinstall if the SHA has changed or not installed
+      if (is.null(installed_version) || !grepl(latest_sha, installed_version, fixed = TRUE)) {
+        message("Installing or updating Git package: ", package)
+        tryCatch({
+          reticulate::py_install(package, method = "pip")
+        }, error = function(e) {
+          stop("Failed to install or update Git package: ", package, ". Error: ", e$message)
+        })
+      } else {
+        message("Git package is already up-to-date: ", package_name)
+      }
     } else {
       # Install regular packages
       if (use_miniconda) {
