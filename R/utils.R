@@ -194,10 +194,29 @@ regex_cols <- function(df, pattern) {
 #' # different columns
 #' \donttest{diff_cols(mtcars, c("mpg", "cyl", "disp", "hp", "drat"))}
 #'
-#'
 #' @export
 diff_cols <- function(df, cols)
   setdiff(colnames(df), cols)
+
+#' Validate columns
+#'
+#' Does the data frame contain all columns?
+#'
+#' @param df a data.frame
+#' @param cols a string vector specifying columns
+#' @return no return value
+#'
+#' @examples
+#' # different columns
+#' \donttest{valid_cols(mtcars, c("mpg", "cyl", "disp", "hp", "drat"))}
+#'
+#' @export
+valid_cols <- function(df, cols) {
+  missing_cols <- setdiff(cols, colnames(df))
+  if (length(missing_cols) > 0) {
+    stop("The following columns are missing: ", paste(missing_cols, collapse = ", "))
+  }
+}
 
 #' Has rows
 #'
