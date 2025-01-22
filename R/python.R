@@ -36,12 +36,14 @@ setup_python_env <- function(
   if (!requireNamespace("reticulate", quietly = TRUE)) {
     install.packages("reticulate")
   }
-  library(reticulate)
 
   # 2. Determine the environment path based on `use_miniconda`
   if (use_miniconda) {
     conda_env_path <- file.path("~/.conda/envs", env_name)
-    if (!reticulate::miniconda_exists()) {
+
+    # Check if Miniconda is installed
+    miniconda_dir <- reticulate::miniconda_path()
+    if (!dir.exists(miniconda_dir)) {
       message("Miniconda is not installed. Installing Miniconda...")
       reticulate::install_miniconda()
     }
