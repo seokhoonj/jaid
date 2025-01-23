@@ -208,7 +208,7 @@ diff_cols <- function(df, cols)
 #'
 #' @examples
 #' # different columns
-#' \donttest{valid_cols(mtcars, c("mpg", "cyl", "disp", "hp", "drat"))}
+#' \dontrun{valid_cols(mtcars, c("mpg", "cyl", "disp", "hp", "drat"))}
 #'
 #' @export
 valid_cols <- function(df, cols) {

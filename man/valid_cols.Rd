@@ -19,6 +19,6 @@ Does the data frame contain all columns?
 }
 \examples{
 # different columns
-\donttest{valid_cols(mtcars, c("mpg", "cyl", "disp", "hp", "drat"))}
+\dontrun{valid_cols(mtcars, c("mpg", "cyl", "disp", "hp", "drat"))}
 
 }
