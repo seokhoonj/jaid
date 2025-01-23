@@ -24,5 +24,6 @@
 #' @importFrom stringr str_pad
 #' @importFrom tibble as_tibble
 #' @importFrom usethis ui_path ui_yeah
-#' @importFrom utils globalVariables head object.size packageVersion tail
+#' @importFrom utils globalVariables head install.packages object.size
+#' packageVersion tail
 "_PACKAGE"

@@ -50,7 +50,7 @@ already available and installs the specified packages using \code{pip} or Conda.
 }
 \examples{
 # Create a virtual environment and install packages
-\donttest{setup_python_env(
+\dontrun{setup_python_env(
   env_name = "r-reticulate",
   packages = c("numpy", "pandas", "git+https://github.com/seokhoonj/underwriter"),
   use_miniconda = FALSE,
@@ -58,7 +58,7 @@ already available and installs the specified packages using \code{pip} or Conda.
 )}
 
 # Create a Conda environment and force reinstall packages
-\donttest{setup_python_env(
+\dontrun{setup_python_env(
   env_name = "r-reticulate",
   packages = c("numpy", "pandas", "git+https://github.com/seokhoonj/underwriter"),
   use_miniconda = TRUE,

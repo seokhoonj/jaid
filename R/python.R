@@ -56,7 +56,7 @@ setup_python_env <- function(
 ) {
   # 1. Check and install the reticulate package
   if (!requireNamespace("reticulate", quietly = TRUE)) {
-    install.packages("reticulate")
+    utils::install.packages("reticulate")
   }
 
   # 2. Determine the environment path based on `use_miniconda`
