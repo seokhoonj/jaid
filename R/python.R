@@ -1,7 +1,8 @@
 #' Setup a Python or Miniconda Environment
 #'
 #' This function creates a Python or Miniconda environment, installs necessary Python packages,
-#' and configures the environment for use with the `reticulate` package.
+#' and configures the environment for use with the `reticulate` package. It optionally supports
+#' forced reinstallation of all specified packages.
 #'
 #' @param env_name A character string specifying the name of the environment. For Python-only
 #'   environments, this is the path where the virtual environment will be created
@@ -13,6 +14,8 @@
 #' @param use_miniconda A logical value indicating whether to use Miniconda for environment management.
 #'   If `TRUE`, Miniconda will be used to create and manage the environment. If `FALSE`, a standalone
 #'   Python virtual environment (`virtualenv`) will be used. Default is `FALSE`.
+#' @param force_reinstall A logical value indicating whether to force the reinstallation of all specified
+#'   packages. If `TRUE`, all packages will be reinstalled even if they are already installed. Default is `FALSE`.
 #'
 #' @details
 #' The function dynamically handles the creation and activation of Python or Miniconda environments
@@ -23,20 +26,38 @@
 #'   `~/.virtualenvs/<env_name>`.
 #' - For Miniconda environments, the Conda environment will be created at
 #'   `~/.conda/envs/<env_name>`.
+#' - If `force_reinstall = TRUE`, all packages will be reinstalled, including those already installed.
 #'
 #' @return No return value. The function creates and configures the Python or Miniconda environment.
+#'
+#' @examples
+#' # Create a virtual environment and install packages
+#' \donttest{setup_python_env(
+#'   env_name = "r-reticulate",
+#'   packages = c("numpy", "pandas", "git+https://github.com/seokhoonj/underwriter"),
+#'   use_miniconda = FALSE,
+#'   force_reinstall = FALSE
+#' )}
+#'
+#' # Create a Conda environment and force reinstall packages
+#' \donttest{setup_python_env(
+#'   env_name = "r-reticulate",
+#'   packages = c("numpy", "pandas", "git+https://github.com/seokhoonj/underwriter"),
+#'   use_miniconda = TRUE,
+#'   force_reinstall = TRUE
+#' )}
 #'
 #' @export
 setup_python_env <- function(
     env_name = "r-reticulate",
     packages = c("numpy", "pandas", "git+https://github.com/seokhoonj/underwriter"),
-    use_miniconda = FALSE
+    use_miniconda = FALSE,
+    force_reinstall = FALSE
 ) {
   # 1. Check and install the reticulate package
   if (!requireNamespace("reticulate", quietly = TRUE)) {
     install.packages("reticulate")
   }
-  library(reticulate)
 
   # 2. Determine the environment path based on `use_miniconda`
   if (use_miniconda) {
@@ -84,61 +105,31 @@ setup_python_env <- function(
     reticulate::use_virtualenv(venv_path, required = TRUE)
   }
 
-  # 3. Install packages with update check
+  # 3. Install packages with optional forced reinstallation
   for (package in packages) {
     if (grepl("^git\\+https://", package)) {
-      # Extract the Git repository URL and package name
-      repo_url <- sub("^git\\+https://", "https://", package)
-      package_name <- sub(".*/", "", gsub("\\.git$", "", repo_url))
-
-      # Check installed version (if any)
-      installed_version <- tryCatch({
-        py_result <- reticulate::py_run_string(paste0("
-import subprocess
-result = subprocess.run(['pip', 'show', '", package_name, "'], capture_output=True, text=True)
-result.stdout
-        "), local = TRUE)
-        py_result$result
+      # Install Git-based packages using pip
+      message("Installing or updating Git package: ", package)
+      pip_options <- if (force_reinstall) "--force-reinstall" else NULL
+      tryCatch({
+        reticulate::py_install(package, method = "pip", pip_options = pip_options)
       }, error = function(e) {
-        NULL
+        stop("Failed to install Git package: ", package, ". Error: ", e$message)
       })
-
-      # Fetch the latest Git commit SHA
-      latest_sha <- tryCatch({
-        py_result <- reticulate::py_run_string(paste0("
-import subprocess
-result = subprocess.run(['git', 'ls-remote', '", repo_url, "'], capture_output=True, text=True)
-result.stdout.splitlines()[0].split()[0]
-        "), local = TRUE)
-        py_result$result
-      }, error = function(e) {
-        stop("Failed to fetch the latest commit SHA for: ", repo_url, ". Error: ", e$message)
-      })
-
-      # Reinstall if the SHA has changed or not installed
-      if (is.null(installed_version) || !grepl(latest_sha, installed_version, fixed = TRUE)) {
-        message("Installing or updating Git package: ", package)
-        tryCatch({
-          reticulate::py_install(package, method = "pip")
-        }, error = function(e) {
-          stop("Failed to install or update Git package: ", package, ". Error: ", e$message)
-        })
-      } else {
-        message("Git package is already up-to-date: ", package_name)
-      }
     } else {
       # Install regular packages
       if (use_miniconda) {
         message("Installing Conda package: ", package)
         tryCatch({
-          reticulate::conda_install(env_name, package)
+          reticulate::conda_install(env_name, package, force = force_reinstall)
         }, error = function(e) {
           stop("Failed to install Conda package: ", package, ". Error: ", e$message)
         })
       } else {
         message("Installing package with pip: ", package)
+        pip_options <- if (force_reinstall) "--force-reinstall" else NULL
         tryCatch({
-          reticulate::py_install(package, method = "pip")
+          reticulate::py_install(package, method = "pip", pip_options = pip_options)
         }, error = function(e) {
           stop("Failed to install pip package: ", package, ". Error: ", e$message)
         })

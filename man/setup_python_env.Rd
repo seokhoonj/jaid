@@ -7,7 +7,8 @@
 setup_python_env(
   env_name = "r-reticulate",
   packages = c("numpy", "pandas", "git+https://github.com/seokhoonj/underwriter"),
-  use_miniconda = FALSE
+  use_miniconda = FALSE,
+  force_reinstall = FALSE
 )
 }
 \arguments{
@@ -23,13 +24,17 @@ regular Python packages (e.g., \code{"numpy"}) and Git-based packages (e.g.,
 \item{use_miniconda}{A logical value indicating whether to use Miniconda for environment management.
 If \code{TRUE}, Miniconda will be used to create and manage the environment. If \code{FALSE}, a standalone
 Python virtual environment (\code{virtualenv}) will be used. Default is \code{FALSE}.}
+
+\item{force_reinstall}{A logical value indicating whether to force the reinstallation of all specified
+packages. If \code{TRUE}, all packages will be reinstalled even if they are already installed. Default is \code{FALSE}.}
 }
 \value{
 No return value. The function creates and configures the Python or Miniconda environment.
 }
 \description{
 This function creates a Python or Miniconda environment, installs necessary Python packages,
-and configures the environment for use with the \code{reticulate} package.
+and configures the environment for use with the \code{reticulate} package. It optionally supports
+forced reinstallation of all specified packages.
 }
 \details{
 The function dynamically handles the creation and activation of Python or Miniconda environments
@@ -40,5 +45,24 @@ already available and installs the specified packages using \code{pip} or Conda.
 \verb{~/.virtualenvs/<env_name>}.
 \item For Miniconda environments, the Conda environment will be created at
 \verb{~/.conda/envs/<env_name>}.
+\item If \code{force_reinstall = TRUE}, all packages will be reinstalled, including those already installed.
 }
+}
+\examples{
+# Create a virtual environment and install packages
+\donttest{setup_python_env(
+  env_name = "r-reticulate",
+  packages = c("numpy", "pandas", "git+https://github.com/seokhoonj/underwriter"),
+  use_miniconda = FALSE,
+  force_reinstall = FALSE
+)}
+
+# Create a Conda environment and force reinstall packages
+\donttest{setup_python_env(
+  env_name = "r-reticulate",
+  packages = c("numpy", "pandas", "git+https://github.com/seokhoonj/underwriter"),
+  use_miniconda = TRUE,
+  force_reinstall = TRUE
+)}
+
 }
