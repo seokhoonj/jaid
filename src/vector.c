@@ -150,7 +150,7 @@ SEXP Reverse(SEXP x) {
     }
   } break;
   case STRSXP:{
-    SEXP *ix = STRING_PTR(x);
+    SEXP *ix = STRING_PTR(x); // STRING_PTR function is not public
     SEXP tmp;
     for (i = 0; i < size/2; ++i) {
       tmp = ix[i];

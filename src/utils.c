@@ -203,23 +203,23 @@ SEXP PrintVector(SEXP x) {
   R_xlen_t i = 0, len = xlength(x);
   switch(TYPEOF(x)) {
   case LGLSXP:{
-    int *ix = LOGICAL(x);
+    const int *ix = LOGICAL(x);
     for (; i < len; ++i) Rprintf("%d ", ix[i]);
   } break;
   case INTSXP:{
-    int *ix = INTEGER(x);
+    const int *ix = INTEGER(x);
     for (; i < len; ++i) Rprintf("%d ", ix[i]);
   } break;
   case REALSXP:{
-    double *ix = REAL(x);
+    const double *ix = REAL(x);
     for (; i < len; ++i) Rprintf("%f ", ix[i]);
   } break;
   case CPLXSXP:{
-    Rcomplex *ix = COMPLEX(x);
+    const Rcomplex *ix = COMPLEX(x);
     for (; i < len; ++i) Rprintf("%f+%f ", ix[i].r, ix[i].i);
   } break;
   case STRSXP:{
-    SEXP *ix = STRING_PTR(x);
+    const SEXP *ix = STRING_PTR_RO(x);
     for (; i < len; ++i) Rprintf("%s ", CHAR(ix[i]));
   } break;
   default:
