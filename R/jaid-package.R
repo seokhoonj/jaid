@@ -5,8 +5,8 @@
 #' @importFrom Rcpp sourceCpp
 #' @importFrom cli cli_alert col_cyan col_green cli_h2 col_red cli_text col_yellow
 #' @importFrom data.table `:=` `.SD` `%chin%` address as.data.table copy
-#' data.table mday month set setalloccol setattr setDF setDT setindex setnames
-#' setorder setorderv year
+#' data.table fifelse mday month set setalloccol setattr setDF setDT setindex
+#' setnames setorder setorderv year
 #' @importFrom grDevices dev.list dev.off
 #' @importFrom grid grid.raster
 #' @importFrom kableExtra footnote kable_classic kbl save_kable
