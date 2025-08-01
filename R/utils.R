@@ -286,18 +286,20 @@ check_col_spec <- function(df, col_spec) {
   if (requireNamespace("cli", quietly = TRUE)) {
     cli::cli_h2("Column Check Summary")
     for (stat in c("match", "mismatch", "missing", "extra")) {
-      cols <- dt[status == stat, column]
-      if (length(cols) > 0) {
-        msg <- paste(cols, collapse = ", ")
+      if (stat == "mismatch") {
+        msg <- dt[status == stat, paste0(column, " (", actual, " \u2192 ", expected, ")")]
+      } else {
+        msg <- dt[status == stat, column]
+      }
+      if (length(msg) > 0) {
+        msg_str <- paste(msg, collapse = ", ")
         color_msg <- switch(stat,
-                            match    = cli::col_green(msg),
-                            mismatch = cli::col_red(msg),
-                            missing  = cli::col_yellow(msg),
-                            extra    = cli::col_cyan(msg)
+                            match    = cli::col_green(msg_str),
+                            mismatch = cli::col_red(msg_str),
+                            missing  = cli::col_yellow(msg_str),
+                            extra    = cli::col_cyan(msg_str)
         )
-        icon <- switch(stat,
-                       match = "o", mismatch = "x", missing = "-", extra = "+"
-        )
+        icon <- switch(stat, match = "o", mismatch = "x", missing = "-", extra = "+")
         cli::cli_alert("{.strong {icon} {stat}:} {color_msg}")
       }
     }
