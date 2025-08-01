@@ -40,7 +40,7 @@ df <- data.frame(
 col_spec <- list(
   id = "character",
   name = "character",
-  age = "numeric",
+  age = "integer",
   premium = "numeric"
 )
 
