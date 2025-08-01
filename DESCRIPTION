@@ -7,7 +7,7 @@ Authors@R:
 Description: Joo's functional aid toolkit for efficient and productive programming.
 License: MIT + file LICENSE
 Encoding: UTF-8
-Depends: R (>= 3.5.0)
+Depends: R (>= 4.1.0)
 Imports:
     Rcpp (>= 0.12.10),
     cli (>= 3.6.3),
