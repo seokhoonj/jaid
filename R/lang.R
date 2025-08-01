@@ -55,12 +55,12 @@ zen2han <- function(x) {
 #'
 #' @export
 zen2han4dat <- function(df) {
-  has_ptr(df, error_raise = TRUE)
-  old_class <- class(df)
-  set_dt(df)
+  # has_ptr(df, error_raise = TRUE)
+  # old_class <- class(df)
+  # set_dt(df)
   data.table::setnames(df, zen2han(names(df)))
   cols <- names(which(sapply(df, function(x) any(is_japanese(x)))))
   df[, `:=`((cols), lapply(.SD, zen2han)), .SDcols = cols]
-  data.table::setattr(df, "class", old_class)
+  # data.table::setattr(df, "class", old_class)
   invisible(df[])
 }

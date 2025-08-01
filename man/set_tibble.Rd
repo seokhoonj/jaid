@@ -16,5 +16,5 @@ no return values.
 as_tibble function re-exported from \code{tibble}.
 }
 \seealso{
-\code{\link[=as_tibble]{as_tibble()}}
+\code{\link[tibble:as_tibble]{tibble::as_tibble()}}
 }

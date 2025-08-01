@@ -523,7 +523,7 @@ get_copied_dt <- function(df)
 #' @param df a data.frame
 #' @return no return values.
 #'
-#' @seealso [setDT()]
+#' @seealso [data.table::setDT()]
 #'
 #' @export
 set_dt <- function(df) {
@@ -548,7 +548,7 @@ set_dt <- function(df) {
 #' @param df a data.frame
 #' @return no return values.
 #'
-#' @seealso [as_tibble()]
+#' @seealso [tibble::as_tibble()]
 #'
 #' @export
 set_tibble <- function(df) {

@@ -16,5 +16,5 @@ no return values.
 setDT function re-exported from \code{data.table}.
 }
 \seealso{
-\code{\link[=setDT]{setDT()}}
+\code{\link[data.table:setDT]{data.table::setDT()}}
 }
