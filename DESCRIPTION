@@ -10,6 +10,7 @@ Encoding: UTF-8
 Depends: R (>= 3.5.0)
 Imports:
     Rcpp (>= 0.12.10),
+    cli (>= 3.6.3),
     data.table (>= 1.13.0),
     grDevices (>= 4.2.3),
     grid (>= 4.2.3),

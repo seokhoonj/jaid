@@ -218,6 +218,95 @@ valid_cols <- function(df, cols) {
   }
 }
 
+#' Check Column Specification Against a Data Frame
+#'
+#' Validates whether the columns in a given data frame match an expected
+#' column specification. The specification includes expected column names
+#' and their corresponding classes. The function returns a `data.table`
+#' with the actual and expected classes, along with a status indicating
+#' whether each column matches, is missing, or is extra.
+#'
+#' @param df A `data.frame` or `data.table` containing the data to be checked.
+#' @param col_spec A named `list` defining the expected specification.
+#'   Each name corresponds to a column, and each value is the expected class.
+#'
+#' @return A `data.table` with the following columns:
+#'   \itemize{
+#'     \item \code{column}: Column name
+#'     \item \code{actual}: Actual class of the column (NA if missing)
+#'     \item \code{expected}: Expected class of the column (NA if not specified)
+#'     \item \code{status}: Comparison result: "match", "mismatch", "missing", or "extra"
+#'   }
+#'
+#' @examples
+#'
+#' df <- data.frame(
+#'   id = 1:3,
+#'   name = c("Alice", "Bob", "Charlie"),
+#'   age = c(25, 30, 28),
+#'   paid = c(TRUE, FALSE, TRUE)
+#' )
+#'
+#' col_spec <- list(
+#'   id = "character",
+#'   name = "character",
+#'   age = "numeric",
+#'   premium = "numeric"
+#' )
+#'
+#' check_col_spec(df, col_spec)
+#'
+#' @export
+check_col_spec <- function(df, col_spec) {
+
+  assert_class(df, "data.frame")
+
+  if (!is.list(col_spec) || is.null(names(col_spec)) || any(names(col_spec) == ""))
+    stop("col_spec must be a named list.")
+  if (!all(sapply(col_spec, is.character)))
+    stop("All elements of col_spec must be character strings (expected classes).")
+
+  act_cols <- names(df)
+  exp_cols <- names(col_spec)
+  actual <- sapply(df, class)
+  act_dt <- as.data.table(actual, keep.rownames = "column")
+  exp_dt <- data.table(column = names(col_spec), expected = unlist(col_spec))
+  dt <- data.table::rbindlist(
+    list(
+      act_dt[ exp_dt, on = .(column)],
+      act_dt[!exp_dt, on = .(column)]
+    ),
+    fill = TRUE
+  )
+  dt[, status := fifelse(actual == expected, "match", "mismatch")]
+  dt[is.na(actual), status := "missing"]
+  dt[is.na(expected), status := "extra"]
+
+  # --- Column Check Summary ---
+  if (requireNamespace("cli", quietly = TRUE)) {
+    cli::cli_h2("Column Check Summary")
+    for (stat in c("match", "mismatch", "missing", "extra")) {
+      cols <- dt[status == stat, column]
+      if (length(cols) > 0) {
+        msg <- paste(cols, collapse = ", ")
+        color_msg <- switch(stat,
+                            match    = cli::col_green(msg),
+                            mismatch = cli::col_red(msg),
+                            missing  = cli::col_yellow(msg),
+                            extra    = cli::col_cyan(msg)
+        )
+        icon <- switch(stat,
+                       match = "o", mismatch = "x", missing = "-", extra = "+"
+        )
+        cli::cli_alert("{.strong {icon} {stat}:} {color_msg}")
+      }
+    }
+  }
+  cli::cli_text("")
+  data.table::setindex(dt, NULL)
+  return(dt)
+}
+
 #' Has rows
 #'
 #' Whether the data has rows
