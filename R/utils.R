@@ -268,9 +268,9 @@ check_col_spec <- function(df, col_spec) {
 
   act_cols <- names(df)
   exp_cols <- names(col_spec)
-  actual <- sapply(df, class)
-  act_dt <- as.data.table(actual, keep.rownames = "column")
-  exp_dt <- data.table(column = names(col_spec), expected = unlist(col_spec))
+  actual <- sapply(df, function(x) class(x)[1L])
+  act_dt <- data.table::as.data.table(actual, keep.rownames = "column")
+  exp_dt <- data.table::data.table(column = names(col_spec), expected = unlist(col_spec))
   dt <- data.table::rbindlist(
     list(
       act_dt[ exp_dt, on = .(column)],
@@ -278,7 +278,7 @@ check_col_spec <- function(df, col_spec) {
     ),
     fill = TRUE
   )
-  dt[, status := fifelse(actual == expected, "match", "mismatch")]
+  dt[, status := data.table::fifelse(actual == expected, "match", "mismatch")]
   dt[is.na(actual), status := "missing"]
   dt[is.na(expected), status := "extra"]
 
