@@ -266,6 +266,7 @@ check_col_spec <- function(df, col_spec) {
   if (!all(sapply(col_spec, is.character)))
     stop("All elements of col_spec must be character strings (expected classes).")
 
+  column <- status <- expected <- note <- NULL
   act_cols <- names(df)
   exp_cols <- names(col_spec)
   actual <- sapply(df, function(x) class(x)[1L])
