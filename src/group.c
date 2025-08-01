@@ -58,25 +58,25 @@ SEXP SortGroupBy(SEXP id) {
       v = VECTOR_ELT(id, i);
       switch(TYPEOF(v)){
       case LGLSXP:{
-        int *iv = LOGICAL(v);
+        const int *iv = LOGICAL(v);
         for (j = 0; j < m-1; ++j) {
           if (iv[j] != iv[j+1]) ipos[p++] = j+1;
         }
       } break;
       case INTSXP:{
-        int *iv = INTEGER(v);
+        const int *iv = INTEGER(v);
         for (j = 0; j < m-1; ++j) {
           if (iv[j] != iv[j+1]) ipos[p++] = j+1;
         }
       } break;
       case REALSXP:{
-        double *iv = REAL(v);
+        const double *iv = REAL(v);
         for (j = 0; j < m-1; ++j) {
           if (!REQUAL(iv[j], iv[j+1])) ipos[p++] = j+1;
         }
       } break;
       case STRSXP:{
-        SEXP *iv = STRING_PTR(v);
+        const SEXP *iv = STRING_PTR_RO(v);
         for (j = 0; j < m-1; ++j) {
           if (strcmp(CHAR(iv[j]), CHAR(iv[j+1]))) ipos[p++] = j+1;
         }
@@ -135,19 +135,19 @@ SEXP IndexOverlappingDateRange(SEXP id, SEXP from, SEXP to, SEXP interval) {
       }
       switch(TYPEOF(v)){
       case LGLSXP:{
-        int *iv = LOGICAL(v);
+        const int *iv = LOGICAL(v);
         c1 = (iv[i-1] == iv[i]);
       } break;
       case INTSXP:{
-        int *iv = INTEGER(v);
+        const int *iv = INTEGER(v);
         c1 = (iv[i-1] == iv[i]);
       } break;
       case REALSXP:{
-        double *iv = REAL(v);
+        const double *iv = REAL(v);
         c1 = (iv[i-1] == iv[i]);
       } break;
       case STRSXP:{
-        SEXP *iv = STRING_PTR(v);
+        const SEXP *iv = STRING_PTR_RO(v);
         c1 = (!strcmp(CHAR(iv[i-1]), CHAR(iv[i])));
       } break;
       default:
