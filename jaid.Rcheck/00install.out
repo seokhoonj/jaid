@@ -1,0 +1,30 @@
+* installing *source* package ‘jaid’ ...
+** using staged installation
+** libs
+using C compiler: ‘gcc (Ubuntu 13.3.0-6ubuntu2~24.04) 13.3.0’
+using C++ compiler: ‘g++ (Ubuntu 13.3.0-6ubuntu2~24.04) 13.3.0’
+g++ -std=gnu++17 -I"/usr/share/R/include" -DNDEBUG  -I'/home/seokhoonj/R/x86_64-pc-linux-gnu-library/4.4/Rcpp/include'    -fopenmp -fpic  -g -O2 -ffile-prefix-map=/build/r-base-6tgf7J/r-base-4.4.2=. -fstack-protector-strong -Wformat -Werror=format-security -Wdate-time -D_FORTIFY_SOURCE=2   -c RcppExports.cpp -o RcppExports.o
+gcc -I"/usr/share/R/include" -DNDEBUG  -I'/home/seokhoonj/R/x86_64-pc-linux-gnu-library/4.4/Rcpp/include'     -fpic  -g -O2 -ffile-prefix-map=/build/r-base-6tgf7J/r-base-4.4.2=. -fstack-protector-strong -Wformat -Werror=format-security -Wdate-time -D_FORTIFY_SOURCE=2  -c as.c -o as.o
+gcc -I"/usr/share/R/include" -DNDEBUG  -I'/home/seokhoonj/R/x86_64-pc-linux-gnu-library/4.4/Rcpp/include'     -fpic  -g -O2 -ffile-prefix-map=/build/r-base-6tgf7J/r-base-4.4.2=. -fstack-protector-strong -Wformat -Werror=format-security -Wdate-time -D_FORTIFY_SOURCE=2  -c externalptr.c -o externalptr.o
+gcc -I"/usr/share/R/include" -DNDEBUG  -I'/home/seokhoonj/R/x86_64-pc-linux-gnu-library/4.4/Rcpp/include'     -fpic  -g -O2 -ffile-prefix-map=/build/r-base-6tgf7J/r-base-4.4.2=. -fstack-protector-strong -Wformat -Werror=format-security -Wdate-time -D_FORTIFY_SOURCE=2  -c first.c -o first.o
+gcc -I"/usr/share/R/include" -DNDEBUG  -I'/home/seokhoonj/R/x86_64-pc-linux-gnu-library/4.4/Rcpp/include'     -fpic  -g -O2 -ffile-prefix-map=/build/r-base-6tgf7J/r-base-4.4.2=. -fstack-protector-strong -Wformat -Werror=format-security -Wdate-time -D_FORTIFY_SOURCE=2  -c group.c -o group.o
+gcc -I"/usr/share/R/include" -DNDEBUG  -I'/home/seokhoonj/R/x86_64-pc-linux-gnu-library/4.4/Rcpp/include'     -fpic  -g -O2 -ffile-prefix-map=/build/r-base-6tgf7J/r-base-4.4.2=. -fstack-protector-strong -Wformat -Werror=format-security -Wdate-time -D_FORTIFY_SOURCE=2  -c init.c -o init.o
+gcc -I"/usr/share/R/include" -DNDEBUG  -I'/home/seokhoonj/R/x86_64-pc-linux-gnu-library/4.4/Rcpp/include'     -fpic  -g -O2 -ffile-prefix-map=/build/r-base-6tgf7J/r-base-4.4.2=. -fstack-protector-strong -Wformat -Werror=format-security -Wdate-time -D_FORTIFY_SOURCE=2  -c matrix.c -o matrix.o
+g++ -std=gnu++17 -I"/usr/share/R/include" -DNDEBUG  -I'/home/seokhoonj/R/x86_64-pc-linux-gnu-library/4.4/Rcpp/include'    -fopenmp -fpic  -g -O2 -ffile-prefix-map=/build/r-base-6tgf7J/r-base-4.4.2=. -fstack-protector-strong -Wformat -Werror=format-security -Wdate-time -D_FORTIFY_SOURCE=2   -c mode.cpp -o mode.o
+gcc -I"/usr/share/R/include" -DNDEBUG  -I'/home/seokhoonj/R/x86_64-pc-linux-gnu-library/4.4/Rcpp/include'     -fpic  -g -O2 -ffile-prefix-map=/build/r-base-6tgf7J/r-base-4.4.2=. -fstack-protector-strong -Wformat -Werror=format-security -Wdate-time -D_FORTIFY_SOURCE=2  -c names.c -o names.o
+gcc -I"/usr/share/R/include" -DNDEBUG  -I'/home/seokhoonj/R/x86_64-pc-linux-gnu-library/4.4/Rcpp/include'     -fpic  -g -O2 -ffile-prefix-map=/build/r-base-6tgf7J/r-base-4.4.2=. -fstack-protector-strong -Wformat -Werror=format-security -Wdate-time -D_FORTIFY_SOURCE=2  -c repcol.c -o repcol.o
+gcc -I"/usr/share/R/include" -DNDEBUG  -I'/home/seokhoonj/R/x86_64-pc-linux-gnu-library/4.4/Rcpp/include'     -fpic  -g -O2 -ffile-prefix-map=/build/r-base-6tgf7J/r-base-4.4.2=. -fstack-protector-strong -Wformat -Werror=format-security -Wdate-time -D_FORTIFY_SOURCE=2  -c replace.c -o replace.o
+gcc -I"/usr/share/R/include" -DNDEBUG  -I'/home/seokhoonj/R/x86_64-pc-linux-gnu-library/4.4/Rcpp/include'     -fpic  -g -O2 -ffile-prefix-map=/build/r-base-6tgf7J/r-base-4.4.2=. -fstack-protector-strong -Wformat -Werror=format-security -Wdate-time -D_FORTIFY_SOURCE=2  -c utils.c -o utils.o
+gcc -I"/usr/share/R/include" -DNDEBUG  -I'/home/seokhoonj/R/x86_64-pc-linux-gnu-library/4.4/Rcpp/include'     -fpic  -g -O2 -ffile-prefix-map=/build/r-base-6tgf7J/r-base-4.4.2=. -fstack-protector-strong -Wformat -Werror=format-security -Wdate-time -D_FORTIFY_SOURCE=2  -c vector.c -o vector.o
+g++ -std=gnu++17 -shared -L/usr/lib/R/lib -Wl,-Bsymbolic-functions -flto=auto -ffat-lto-objects -flto=auto -Wl,-z,relro -o jaid.so RcppExports.o as.o externalptr.o first.o group.o init.o matrix.o mode.o names.o repcol.o replace.o utils.o vector.o -fopenmp -llapack -lblas -lgfortran -lm -lquadmath -L/usr/lib/R/lib -lR
+installing to /home/seokhoonj/Dropbox/jaid/jaid.Rcheck/00LOCK-jaid/00new/jaid/libs
+** R
+** byte-compile and prepare package for lazy loading
+** help
+*** installing help indices
+** building package indices
+** testing if installed package can be loaded from temporary location
+** checking absolute paths in shared objects and dynamic libraries
+** testing if installed package can be loaded from final location
+** testing if installed package keeps a record of temporary installation path
+* DONE (jaid)

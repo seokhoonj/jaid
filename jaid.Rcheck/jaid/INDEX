@@ -1,0 +1,119 @@
+add_mon                 Add months
+add_year                Add years
+as_comma                As comma applied label
+as_numeric              As functions
+assert_class            Assert class
+bmonth                  Beginning of the month, End of the month
+check_col_spec          Check Column Specification Against a Data Frame
+col_diff                Column diffrences
+col_max                 max, min, sum on each column of a matrix
+combine_overlapping_date_range
+                        Combine overlapping date ranges
+count_pattern           Count pattern matched strings
+create_library_r        Create library.R
+data_xlsx               Write data in an excel file
+del_pattern             Delete patterns
+del_ptr                 Delete external pointer
+desub                   Desub
+diff_cols               Different columns
+dolock                  dolock, unlock
+draw_line               Draw a line
+equal                   Equal columns of two data frames.
+fill_one_before_first_one
+                        Fill with one before the first one
+fill_zero_not_first_pos
+                        Fill with or set to zero except for the first
+                        positive values
+get_copied_dt           Get a copied data.table
+get_japanese_cols       Get japanese columns?
+get_pattern             Get a first pattern
+get_pattern_all         Get all patterns
+get_prop                Get proportion from a vector
+get_ptr                 Get external pointer
+get_stat_by             Get statistic by groups
+grepl_and               grepl with 'And' conditions
+has_attr                Has attributes
+has_cols                Has columns
+has_len                 Has a length
+has_ptr                 Has not a null pointer?
+has_rows                Has rows
+i64_to_num              Integer64 to numeric
+icol                    order numbers of columns
+image_xlsx              Insert images in an excel file
+is_date_format          Is a date format?
+is_japanese             Is the text japanese?
+is.null.externalptr     Is a null external pointer?
+match_attr              Matched attributes
+match_cols              Match columns
+matXcol                 Matrix X Column vector
+matXmat                 Matrix X Matrix
+matXnum                 Matrix X Number
+matXrow                 Matrix X Row vector
+max_by_colnames         max, min, sum by column names
+max_by_dimnames         max, min, sum by dim (row and column) names
+max_by_rownames         max, min, sum by row names
+meta                    Meta information
+mkdir                   mkdir
+mondiff                 Month difference
+mostfreq                Most frequent value (mode, modal value)
+paste_comma             Paste comma
+paste_list              Paste vectors of a list
+paste_sort_uni_str      Paste sorted unique strings
+paste_str               Paste strings
+paste_uni_str           Paste unique strings
+plot_data_image         Plot a data image
+plot_xlsx               Draw plots in an excel file
+quote_comma             Quote and paste comma
+random_sampling         Random sampling
+rands                   Rands
+read_rds                read_rds
+read_wb                 read_wb
+read_xl                 read_xl
+regex_attr              Matched attributes using regular expressions
+regex_cols              Find columns using regular expression pattern
+rep_row                 Data replication function
+replace_a_with_b        Replace A with B
+replace_empty_with_na   Replace empty with NA
+replace_na_with_empty   Replace NA with empty
+replace_na_with_zero    Replace NA with zero
+replace_vec_in_mat      Replace vectors in Matrix
+replace_zero_with_na    Replace zero with NA
+reverse                 Reverse a vector
+rm_cols                 Remove columns
+rm_punct                Remove punctuations
+rotate                  rotate a matrix
+row_max                 max, min, sum on each row of a matrix
+rowvec                  Change vector into row vector or column vector
+scaler                  Scaler
+seqvec                  List of sequential vectors
+set_attr                Set attributes
+set_attr_class          Set matched attributes' class
+set_col_lower           Change columns from uppercase to lowercase or
+                        from lowercase to uppercase
+set_col_order           Fast column reordering of data.table by
+                        reference
+set_dimnames            Set dimension, row, column names
+set_dt                  Set data.table function
+set_labels              Set labels
+set_ptr                 Set external pointer
+set_stat_by             Set statistic by groups
+set_tibble              Set tibble function
+setup_python_env        Setup a Python or Miniconda Environment
+sizeof                  Object size
+split_and_paste_uni_str
+                        Split and paste unique strings
+split_str               Split strings
+strati_sampling         Stratified Sampling
+timeit                  Time it
+to_a1_col               To a A1 format column
+to_r1c1_col             To a R1C1 format column
+traverse                Traverse two vectors
+trim_ws                 Trim white space
+type                    Class and type information
+unilen                  Length of a unique vector
+valid_cols              Validate columns
+view_data_image         View a html data image
+yearmon                 Year month
+zen2han                 Zenkaku to Hankaku
+zen2han4dat             Zenkaku to Hankaku for a data frame
+zeros                   Zeros
