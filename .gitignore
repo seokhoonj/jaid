@@ -12,9 +12,11 @@
 *.pptx
 *.png
 *.rds
+*.tar.gz
 *.xls
 *.xlsb
 *.xlsm
 *.xlsx
 *.zip
+*.Rcheck/
 tests/
