@@ -1,83 +1,99 @@
+#include <R.h>
+#include <Rinternals.h>
+#include <stdlib.h> // for NULL
 #include <R_ext/Rdynload.h>
-#include <R_ext/Visibility.h>
-#include "jaid.h"
 
-#define CALLDEF(name, n) {#name, (DL_FUNC) &name, n} // # is a stringify operator
+/* .Call calls */
+extern SEXP _jaid_fastMode(SEXP, SEXP);
+extern SEXP _jaid_fastModeX(SEXP, SEXP);
+extern SEXP AsLogical(SEXP);
+extern SEXP AsInteger(SEXP);
+extern SEXP AsDouble(SEXP);
+extern SEXP AsNumeric(SEXP);
+extern SEXP AsCharacter(SEXP);
+extern SEXP BeforeChangeIndex(SEXP);
+extern SEXP IsNullExternalPtr(SEXP);
+extern SEXP IndexOverlappingDateRange(SEXP, SEXP, SEXP, SEXP);
+extern SEXP SortGroupBy(SEXP);
+extern SEXP Unilen(SEXP);
+extern SEXP Reverse(SEXP);
+extern SEXP Traverse(SEXP, SEXP);
+extern SEXP Rotate(SEXP, SEXP);
+extern SEXP SetDimNames(SEXP, SEXP);
+extern SEXP SetColNames(SEXP, SEXP);
+extern SEXP SetRowNames(SEXP, SEXP);
+extern SEXP MaxByColNames(SEXP, SEXP, SEXP, SEXP, SEXP);
+extern SEXP MaxByRowNames(SEXP, SEXP, SEXP, SEXP, SEXP);
+extern SEXP MinByColNames(SEXP, SEXP, SEXP, SEXP, SEXP);
+extern SEXP MinByRowNames(SEXP, SEXP, SEXP, SEXP, SEXP);
+extern SEXP RowMax(SEXP);
+extern SEXP RowMin(SEXP);
+extern SEXP RowSum(SEXP);
+extern SEXP ColMax(SEXP);
+extern SEXP ColMin(SEXP);
+extern SEXP ColSum(SEXP);
+extern SEXP ColDiff(SEXP);
+extern SEXP SumByColNames(SEXP, SEXP, SEXP, SEXP);
+extern SEXP SumByRowNames(SEXP, SEXP, SEXP, SEXP);
+extern SEXP ReplaceVecInMat(SEXP, SEXP, SEXP);
+extern SEXP ReplaceValInMat(SEXP, SEXP, SEXP, SEXP);
+extern SEXP MatXMat(SEXP, SEXP);
+extern SEXP MatXRow(SEXP, SEXP);
+extern SEXP MatXCol(SEXP, SEXP);
+extern SEXP MatXNum(SEXP, SEXP);
+extern SEXP RepCol(SEXP, SEXP);
+extern SEXP FillZeroNotFirstPos(SEXP, SEXP, SEXP);
+extern SEXP SetZeroNotFirstPos(SEXP, SEXP, SEXP);
+extern SEXP FillOneBeforeFirstOne(SEXP, SEXP);
+extern SEXP SetOneBeforeFirstOne(SEXP, SEXP);
 
-static const R_CallMethodDef callEntries[] = {
-  // as
-  CALLDEF(AsLogical, 1),
-  CALLDEF(AsInteger, 1),
-  CALLDEF(AsDouble, 1),
-  CALLDEF(AsNumeric, 1),
-  CALLDEF(AsCharacter, 1),
-
-  // Utils
-  CALLDEF(BeforeChangeIndex, 1),
-
-  // ExternalPtr
-  CALLDEF(IsNullExternalPtr, 1),
-
-  // Group
-  CALLDEF(IndexOverlappingDateRange, 4),
-  CALLDEF(SortGroupBy, 1),
-
-  // Mode
-  CALLDEF(_jaid_fastMode, 2),
-  CALLDEF(_jaid_fastModeX, 2),
-
-  // Vector
-  CALLDEF(Unilen, 1),
-  CALLDEF(Reverse, 1),
-  CALLDEF(Traverse, 2),
-
-  // Matrix
-  CALLDEF(Rotate, 2),
-  CALLDEF(SetDimNames, 2),
-  CALLDEF(SetRowNames, 2),
-  CALLDEF(SetColNames, 2),
-
-  CALLDEF(MaxByColNames, 5),
-  CALLDEF(MaxByRowNames, 5),
-  CALLDEF(MinByColNames, 5),
-  CALLDEF(MinByRowNames, 5),
-
-  CALLDEF(RowMax, 1),
-  CALLDEF(RowMin, 1),
-  CALLDEF(RowSum, 1),
-
-  CALLDEF(ColMax, 1),
-  CALLDEF(ColMin, 1),
-  CALLDEF(ColSum, 1),
-
-  CALLDEF(ColDiff, 1),
-
-  CALLDEF(SumByColNames, 4),
-  CALLDEF(SumByRowNames, 4),
-
-  // Replace
-  CALLDEF(ReplaceVecInMat, 3),
-  CALLDEF(ReplaceValInMat, 4),
-
-  // Mult
-  CALLDEF(MatXMat, 2),
-  CALLDEF(MatXRow, 2),
-  CALLDEF(MatXCol, 2),
-  CALLDEF(MatXNum, 2),
-
-  // Repeat
-  CALLDEF(RepCol, 2),
-
-  // First
-  CALLDEF(FillZeroNotFirstPos, 3),
-  CALLDEF(SetZeroNotFirstPos, 3),
-  CALLDEF(FillOneBeforeFirstOne, 2),
-  CALLDEF(SetOneBeforeFirstOne, 2),
-  {NULL, NULL, 0}
+static const R_CallMethodDef CallEntries[] = {
+    {"_jaid_fastMode",              (DL_FUNC) &_jaid_fastMode,              2},
+    {"_jaid_fastModeX",             (DL_FUNC) &_jaid_fastModeX,             2},
+    {"AsLogical",                   (DL_FUNC) &AsLogical,                   1},
+    {"AsInteger",                   (DL_FUNC) &AsInteger,                   1},
+    {"AsDouble",                    (DL_FUNC) &AsDouble,                    1},
+    {"AsNumeric",                   (DL_FUNC) &AsNumeric,                   1},
+    {"AsCharacter",                 (DL_FUNC) &AsCharacter,                 1},
+    {"BeforeChangeIndex",           (DL_FUNC) &BeforeChangeIndex,           1},
+    {"IsNullExternalPtr",           (DL_FUNC) &IsNullExternalPtr,           1},
+    {"IndexOverlappingDateRange",   (DL_FUNC) &IndexOverlappingDateRange,   4},
+    {"SortGroupBy",                 (DL_FUNC) &SortGroupBy,                 1},
+    {"Unilen",                      (DL_FUNC) &Unilen,                      1},
+    {"Reverse",                     (DL_FUNC) &Reverse,                     1},
+    {"Traverse",                    (DL_FUNC) &Traverse,                    2},
+    {"Rotate",                      (DL_FUNC) &Rotate,                      2},
+    {"SetDimNames",                 (DL_FUNC) &SetDimNames,                 2},
+    {"SetColNames",                 (DL_FUNC) &SetColNames,                 2},
+    {"SetRowNames",                 (DL_FUNC) &SetRowNames,                 2},
+    {"MaxByColNames",               (DL_FUNC) &MaxByColNames,               5},
+    {"MaxByRowNames",               (DL_FUNC) &MaxByRowNames,               5},
+    {"MinByColNames",               (DL_FUNC) &MinByColNames,               5},
+    {"MinByRowNames",               (DL_FUNC) &MinByRowNames,               5},
+    {"RowMax",                      (DL_FUNC) &RowMax,                      1},
+    {"RowMin",                      (DL_FUNC) &RowMin,                      1},
+    {"RowSum",                      (DL_FUNC) &RowSum,                      1},
+    {"ColMax",                      (DL_FUNC) &ColMax,                      1},
+    {"ColMin",                      (DL_FUNC) &ColMin,                      1},
+    {"ColSum",                      (DL_FUNC) &ColSum,                      1},
+    {"ColDiff",                     (DL_FUNC) &ColDiff,                     1},
+    {"SumByColNames",               (DL_FUNC) &SumByColNames,               4},
+    {"SumByRowNames",               (DL_FUNC) &SumByRowNames,               4},
+    {"ReplaceVecInMat",             (DL_FUNC) &ReplaceVecInMat,             3},
+    {"ReplaceValInMat",             (DL_FUNC) &ReplaceValInMat,             4},
+    {"MatXMat",                     (DL_FUNC) &MatXMat,                     2},
+    {"MatXRow",                     (DL_FUNC) &MatXRow,                     2},
+    {"MatXCol",                     (DL_FUNC) &MatXCol,                     2},
+    {"MatXNum",                     (DL_FUNC) &MatXNum,                     2},
+    {"RepCol",                      (DL_FUNC) &RepCol,                      2},
+    {"FillZeroNotFirstPos",         (DL_FUNC) &FillZeroNotFirstPos,         3},
+    {"SetZeroNotFirstPos",          (DL_FUNC) &SetZeroNotFirstPos,          3},
+    {"FillOneBeforeFirstOne",       (DL_FUNC) &FillOneBeforeFirstOne,       2},
+    {"SetOneBeforeFirstOne",        (DL_FUNC) &SetOneBeforeFirstOne,        2},
+    {NULL, NULL, 0}
 };
 
-void attribute_visible R_init_jaid(DllInfo *info) {
-  R_registerRoutines(info, NULL, callEntries, NULL, NULL);
-  R_useDynamicSymbols(info, FALSE);
-  R_forceSymbols(info, TRUE);
+void R_init_jaid(DllInfo *dll) {
+    R_registerRoutines(dll, NULL, CallEntries, NULL, NULL);
+    R_useDynamicSymbols(dll, FALSE);
 }

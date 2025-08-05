@@ -150,12 +150,20 @@ SEXP Reverse(SEXP x) {
     }
   } break;
   case STRSXP:{
-    SEXP *ix = STRING_PTR(x); // STRING_PTR function is not public
+    /* Previous implementation using STRING_PTR (non-API call to R):
+    SEXP *ptr = STRING_PTR(x);
     SEXP tmp;
     for (i = 0; i < size/2; ++i) {
-      tmp = ix[i];
-      ix[i] = ix[size-1-i];
-      ix[size-1-i] = tmp;
+      tmp = ptr[i];
+      ptr[i] = ptr[size-1-i];
+      ptr[size-1-i] = tmp;
+    }
+    */
+    SEXP tmp;
+    for (i = 0; i < size/2; ++i) {
+      tmp = STRING_ELT(x, i);
+      SET_STRING_ELT(x, i, STRING_ELT(x, size-1-i));
+      SET_STRING_ELT(x, size-1-i, tmp);
     }
   } break;
   default:

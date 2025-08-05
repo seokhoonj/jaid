@@ -48,6 +48,10 @@ union uno {
 extern "C" {
 #endif
 
+// Test functions
+SEXP reverse_inplace(SEXP x);
+SEXP reverse_new(SEXP x);
+
 // as
 SEXP AsLogical(SEXP x);
 SEXP AsInteger(SEXP x);
