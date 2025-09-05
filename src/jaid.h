@@ -3,7 +3,7 @@
 
 #include <R.h>
 #include <Rinternals.h>
-#include <stdlib.h> /* qsort in group.c */
+#include <stdlib.h> // qsort in group.c
 #include <stdint.h>
 #include <stdbool.h>
 
@@ -20,16 +20,16 @@
 # include <errno.h>
 #endif
 
-/* for a message translation - simplified to avoid libintl dependency */
+// For a message translation - simplified to avoid libintl dependency
 #define _(String) (String)
 
-/* structure */
+// Structure
 union uno {
   double d;
   unsigned int u[2];
 };
 
-/* functions */
+// functions
 #define UTYPEOF(x) ((unsigned)TYPEOF(x))
 #define DATAPTR_RO(x) ((const void *)DATAPTR(x))
 #define SEXPPTR_RO(x) ((const SEXP *)DATAPTR_RO(x)) // to avoid overhead of looped STRING_ELT ans VECTOR_ELT
@@ -39,96 +39,94 @@ union uno {
 #define B_IsNaN(x, y) (R_IsNaN(x) && R_IsNaN(y)) // both
 #define REQUAL(x, y) (N_ISNAN(x, y) ? (x == y) : (B_IsNA(x, y) || B_IsNaN(x, y)))
 #define HASH(key, K) (3141592653U * (unsigned int)(key) >> (32 - (K)))
+#define HASH32(key, K) ((uint32_t)(2654435761U * (uint32_t)(key)) >> (32 - (K)))
+#define HASH64(key, K) ((uint64_t)(0x9E3779B97F4A7C15ULL * (uint64_t)(key)) >> (64 - (K)))
 
-/* Error messages */
+// Error messages
 #define R_ERR_MSG_NA	_("NaNs produced")
 
-/* C */
+// C
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-// Test functions
-SEXP reverse_inplace(SEXP x);
-SEXP reverse_new(SEXP x);
+  // as
+  SEXP AsLogical(SEXP x);
+  SEXP AsInteger(SEXP x);
+  SEXP AsDouble(SEXP x);
+  SEXP AsNumeric(SEXP x);
+  SEXP AsCharacter(SEXP x);
 
-// as
-SEXP AsLogical(SEXP x);
-SEXP AsInteger(SEXP x);
-SEXP AsDouble(SEXP x);
-SEXP AsNumeric(SEXP x);
-SEXP AsCharacter(SEXP x);
+  // Utils
+  SEXP BeforeChangeIndex(SEXP x);
+  void CopyDimNames(SEXP from, SEXP to);
+  void FillCBool(SEXP x, bool value);
+  void FillCInt(SEXP x, int value);
+  void FillCDouble(SEXP x, double value);
+  void FillCString(SEXP x, const char *value);
+  void FillValue(SEXP x, SEXP value);
+  void PrintArray(int arr[], int len);
+  SEXP PrintVector(SEXP x);
 
-// Utils
-SEXP BeforeChangeIndex(SEXP x);
-void CopyDimNames(SEXP from, SEXP to);
-void FillCBool(SEXP x, bool value);
-void FillCInt(SEXP x, int value);
-void FillCDouble(SEXP x, double value);
-void FillCString(SEXP x, const char *value);
-void FillValue(SEXP x, SEXP value);
-void PrintArray(int arr[], int len);
-SEXP PrintVector(SEXP x);
+  // ExternalPtr
+  SEXP IsNullExternalPtr(SEXP pointer);
 
-// ExternalPtr
-SEXP IsNullExternalPtr(SEXP pointer);
+  // Group
+  SEXP IndexOverlappingDateRange(SEXP id, SEXP from, SEXP to, SEXP interval);
+  SEXP SortGroupBy(SEXP id);
 
-/* Group */
-SEXP IndexOverlappingDateRange(SEXP id, SEXP from, SEXP to, SEXP interval);
-SEXP SortGroupBy(SEXP id);
+  // Mode
+  SEXP _jaid_fastMode(SEXP, SEXP);
+  SEXP _jaid_fastModeX(SEXP, SEXP);
 
-// Mode
-SEXP _jaid_fastMode(SEXP, SEXP);
-SEXP _jaid_fastModeX(SEXP, SEXP);
+  // Vector
+  SEXP Unilen(SEXP x);
+  SEXP Reverse(SEXP x);
+  SEXP Interleave(SEXP x, SEXP y);
 
-// Vector
-SEXP Unilen(SEXP x);
-SEXP Reverse(SEXP x);
-SEXP Traverse(SEXP x, SEXP y);
+  // Matrix
+  SEXP Rotate(SEXP x, SEXP angle);
+  SEXP SetMatDimNames(SEXP x, SEXP dimnames);
+  SEXP SetMatColNames(SEXP x, SEXP colnames);
+  SEXP SetMatRowNames(SEXP x, SEXP rownames);
 
-// Matrix
-SEXP Rotate(SEXP x, SEXP angle);
-SEXP SetDimNames(SEXP x, SEXP dimnames);
-SEXP SetColNames(SEXP x, SEXP colnames);
-SEXP SetRowNames(SEXP x, SEXP rownames);
+  SEXP MaxByColNames(SEXP x, SEXP g, SEXP uniqueg, SEXP snarm, SEXP minval);
+  SEXP MaxByRowNames(SEXP x, SEXP g, SEXP uniqueg, SEXP snarm, SEXP minval);
 
-SEXP MaxByColNames(SEXP x, SEXP g, SEXP uniqueg, SEXP snarm, SEXP minval);
-SEXP MaxByRowNames(SEXP x, SEXP g, SEXP uniqueg, SEXP snarm, SEXP minval);
+  SEXP MinByColNames(SEXP x, SEXP g, SEXP uniqueg, SEXP snarm, SEXP maxval);
+  SEXP MinByRowNames(SEXP x, SEXP g, SEXP uniqueg, SEXP snarm, SEXP maxval);
 
-SEXP MinByColNames(SEXP x, SEXP g, SEXP uniqueg, SEXP snarm, SEXP maxval);
-SEXP MinByRowNames(SEXP x, SEXP g, SEXP uniqueg, SEXP snarm, SEXP maxval);
+  SEXP RowMax(SEXP x);
+  SEXP RowMin(SEXP x);
+  SEXP RowSum(SEXP x);
 
-SEXP RowMax(SEXP x);
-SEXP RowMin(SEXP x);
-SEXP RowSum(SEXP x);
+  SEXP ColMax(SEXP x);
+  SEXP ColMin(SEXP x);
+  SEXP ColSum(SEXP x);
 
-SEXP ColMax(SEXP x);
-SEXP ColMin(SEXP x);
-SEXP ColSum(SEXP x);
+  SEXP ColDiff(SEXP x);
 
-SEXP ColDiff(SEXP x);
+  SEXP SumByColNames(SEXP x, SEXP g, SEXP uniqueg, SEXP snarm);
+  SEXP SumByRowNames(SEXP x, SEXP g, SEXP uniqueg, SEXP snarm);
 
-SEXP SumByColNames(SEXP x, SEXP g, SEXP uniqueg, SEXP snarm);
-SEXP SumByRowNames(SEXP x, SEXP g, SEXP uniqueg, SEXP snarm);
+  // Replace
+  SEXP ReplaceVecInMat(SEXP mat, SEXP col, SEXP vec);
+  SEXP ReplaceValInMat(SEXP mat, SEXP val, SEXP refmat, SEXP refval);
 
-// Replace
-SEXP ReplaceVecInMat(SEXP mat, SEXP col, SEXP vec);
-SEXP ReplaceValInMat(SEXP mat, SEXP val, SEXP refmat, SEXP refval);
+  // Mult
+  SEXP MatXMat(SEXP x, SEXP y);
+  SEXP MatXRow(SEXP mat, SEXP row);
+  SEXP MatXCol(SEXP mat, SEXP col);
+  SEXP MatXNum(SEXP mat, SEXP num);
 
-// Mult
-SEXP MatXMat(SEXP x, SEXP y);
-SEXP MatXRow(SEXP mat, SEXP row);
-SEXP MatXCol(SEXP mat, SEXP col);
-SEXP MatXNum(SEXP mat, SEXP num);
+  // Repeat
+  SEXP RepCol(SEXP x, SEXP each);
 
-// Repeat
-SEXP RepCol(SEXP x, SEXP each);
-
-// First
-SEXP FillZeroNotFirstPos(SEXP x, SEXP id, SEXP ot);
-SEXP SetZeroNotFirstPos(SEXP x, SEXP id, SEXP ot);
-SEXP FillOneBeforeFirstOne(SEXP x, SEXP id);
-SEXP SetOneBeforeFirstOne(SEXP x, SEXP id);
+  // First
+  SEXP FillZeroNotFirstPos(SEXP x, SEXP id, SEXP ot);
+  SEXP SetZeroNotFirstPos(SEXP x, SEXP id, SEXP ot);
+  SEXP FillOneBeforeFirstOne(SEXP x, SEXP id);
+  SEXP SetOneBeforeFirstOne(SEXP x, SEXP id);
 
 #ifdef __cplusplus
 }

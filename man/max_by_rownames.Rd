@@ -4,7 +4,7 @@
 \alias{max_by_rownames}
 \alias{min_by_rownames}
 \alias{sum_by_rownames}
-\title{max, min, sum by row names}
+\title{Aggregate by row names (max, min, sum)}
 \usage{
 max_by_rownames(x, na.rm = TRUE)
 
@@ -13,30 +13,40 @@ min_by_rownames(x, na.rm = TRUE)
 sum_by_rownames(x, na.rm = TRUE)
 }
 \arguments{
-\item{x}{A numeric matrix}
+\item{x}{A numeric matrix with non-\code{NULL} row names.}
 
-\item{na.rm}{a boolean value removing NA or not}
+\item{na.rm}{Logical; if \code{TRUE}, missing values are removed before
+aggregation.}
 }
 \value{
-A matrix of minimum values shrinked by row names
+A numeric matrix with one row per unique row name of \code{x}:
+\itemize{
+\item \code{max_by_rownames()} returns the maximum of each group.
+\item \code{min_by_rownames()} returns the minimum of each group.
+\item \code{sum_by_rownames()} returns the sum of each group.
+}
 }
 \description{
-max, min, sum of values on each row name of a matrix.
+Compute the maximum, minimum, or sum of values in a numeric matrix,
+grouped by identical row names. These functions are implemented in C
+for performance.
 }
 \examples{
-# max by row nm
-\donttest{x <- matrix(c(1:9), nrow = 3)
-set_dimnames(x, list(c("a", "a", "b"), c("a", "b", "b")))
-max_by_rownames(x)}
+\donttest{
+# Maximum values grouped by row names
+x <- matrix(c(1:9), nrow = 3)
+set_mat_dimnames(x, list(c("a", "a", "b"), c("a", "b", "b")))
+max_by_rownames(x)
 
-# min by row nm
-\donttest{x <- matrix(c(1:9), nrow = 3)
-set_dimnames(x, list(c("a", "a", "b"), c("a", "b", "b")))
-min_by_rownames(x)}
+# Minimum values grouped by row names
+x <- matrix(c(1:9), nrow = 3)
+set_mat_dimnames(x, list(c("a", "a", "b"), c("a", "b", "b")))
+min_by_rownames(x)
 
-# sum by row nm
-\donttest{x <- matrix(c(1:9), nrow = 3)
-set_dimnames(x, list(c("a", "a", "b"), c("a", "b", "b")))
-sum_by_rownames(x)}
+# Sum of values grouped by row names
+x <- matrix(c(1:9), nrow = 3)
+set_mat_dimnames(x, list(c("a", "a", "b"), c("a", "b", "b")))
+sum_by_rownames(x)
+}
 
 }

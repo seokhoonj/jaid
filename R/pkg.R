@@ -1,4 +1,4 @@
-print_pkg_recipe <- function() {
+print_package_recipe <- function() {
   lines <- c(
     "usethis::create_package(path)",
     "usethis::use_description()",
@@ -24,12 +24,25 @@ print_pkg_recipe <- function() {
   cat("path = \"\"", paste0("\n", lines))
 }
 
-print_descr_depends <- function() {
+package_license <- function(packages) {
+  license <- sapply(packages, function(x) utils::packageDescription(x)["License"])
+  names(license) <- packages
+  license
+}
+
+print_description_license <- function(packages = c("data.table", "ggplot2")) {
+  lines <- sort(unique(sapply(packages, function(x)
+    sprintf("%s (%s)", x, package_license(x)))))
+  cat("X-PackageLicense:", paste0("\n  ", lines))
+
+}
+
+print_description_depends <- function() {
   cat(sprintf("Depends: R (>= %s)\n", getRversion()))
 }
 
-print_descr_imports <- function(pkgs = c("data.table", "ggplot2")) {
-  lines <- sort(unique(sapply(pkgs, function(x) sprintf("%s (>= %s)", x,
-                                                        utils::packageVersion(x)))))
+print_description_imports <- function(packages = c("data.table", "ggplot2")) {
+  lines <- sort(unique(sapply(packages, function(x)
+    sprintf("%s (>= %s)", x,utils::packageVersion(x)))))
   cat("Imports:", paste0("\n  ", lines))
 }

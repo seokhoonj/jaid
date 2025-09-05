@@ -2,32 +2,34 @@
 % Please edit documentation in R/replace.R
 \name{replace_a_with_b}
 \alias{replace_a_with_b}
-\title{Replace A with B}
+\title{Replace a specific value with another (in place)}
 \usage{
 replace_a_with_b(df, cols, a, b)
 }
 \arguments{
-\item{df}{a data frame}
+\item{df}{A data.table (modified in place).}
 
-\item{cols}{a string vector specifying columns}
+\item{cols}{A character vector of column names. Defaults to all character columns.}
 
-\item{a}{a string}
+\item{a}{A string to be replaced.}
 
-\item{b}{a string}
+\item{b}{Replacement string.}
 }
 \value{
-no return value
+The modified data.table.
 }
 \description{
-Replace string A with string B in a memory-efficient way
+Efficiently replace occurrences of string \code{a} with string \code{b} across selected
+character columns in a data.table. If \code{cols} is missing, all character columns
+are targeted.
 }
 \examples{
 \dontrun{
+# Replace A with B
 df <- data.table(x = c("A", "A", "C"), y = c("A", "C", "C"))
-set_ptr(df)
 data.table::address(df)
 replace_a_with_b(df, a = "A", b = "B")
 data.table::address(df)
-df}
+}
 
 }

@@ -2,18 +2,19 @@
 % Please edit documentation in R/meta.R
 \name{type}
 \alias{type}
-\title{Class and type information}
+\title{Inspect class and storage type}
 \usage{
 type(x)
 }
 \arguments{
-\item{x}{object vector, data.frame, environment and etc}
+\item{x}{An R object (e.g., data.frame).}
 }
 \value{
-class and type information data frame
+An R object summarizing class and storage type.
 }
 \description{
-Show class and type information.
+Generic function to show class and underlying storage type of objects.
+Currently provides a method for \code{data.frame}.
 }
 \examples{
 \donttest{type(cars)}

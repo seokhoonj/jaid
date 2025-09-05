@@ -3,28 +3,29 @@
 \name{bmonth}
 \alias{bmonth}
 \alias{emonth}
-\title{Beginning of the month, End of the month}
+\title{Beginning and end of the month}
 \usage{
 bmonth(date)
 
 emonth(date)
 }
 \arguments{
-\item{date}{A date}
+\item{date}{A Date.}
 }
 \value{
-A date
+A Date object representing the beginning (bmonth) or end (emonth)
+of the month
 }
 \description{
-Get the beginning of the month.
+Get the beginning date (first day) or end date (last day) of the month.
 }
 \examples{
-# the beginning of the month
 \donttest{
-bmonth(Sys.Date())}
+# Beginning of month
+bmonth(Sys.Date())
 
-# the end of the month
-\donttest{
-emonth(Sys.Date())}
+# End of month
+emonth(Sys.Date())
+}
 
 }

@@ -2,21 +2,23 @@
 % Please edit documentation in R/matrix.R
 \name{zeros}
 \alias{zeros}
-\title{Zeros}
+\title{Create a zero matrix}
 \usage{
 zeros(dim)
 }
 \arguments{
-\item{dim}{a numeric vector specifying dimensions}
+\item{dim}{Integer vector giving the dimensions of the result.}
 }
 \value{
-a matrix with zeros
+A numeric matrix of zeros with dimensions specified by \code{dim}.
 }
 \description{
-Sample matrix containing only zeros
+Generate a matrix filled with zeros of the specified dimensions.
 }
 \examples{
-# zeros
+\donttest{
+# 5x5 zero matrix
 zeros(c(5, 5))
+}
 
 }

@@ -2,25 +2,29 @@
 % Please edit documentation in R/attr.R
 \name{has_attr}
 \alias{has_attr}
-\title{Has attributes}
+\title{Check if object has specific attributes}
 \usage{
 has_attr(df, attr, error_raise = FALSE)
 }
 \arguments{
-\item{df}{a data frame}
+\item{df}{An R object to check for attributes.}
 
-\item{attr}{attribute names}
+\item{attr}{Character vector of attribute names to check for.}
 
-\item{error_raise}{a logical whether to raise an error or not}
+\item{error_raise}{Logical; if \code{TRUE}, raises an error when any attributes
+are missing, if \code{FALSE} returns logical result.}
 }
 \value{
-a logical value
+Logical value: \code{TRUE} if all specified attributes exist,
+\code{FALSE} otherwise
 }
 \description{
-Whether the data has specific attributes
+Determines whether an object has all specified attributes.
 }
 \examples{
-# has attributes
-\donttest{has_attr(mtcars, c("names", "class"))}
+\donttest{
+# Check if mtcars has specific attributes
+has_attr(mtcars, c("names", "class"))
+}
 
 }

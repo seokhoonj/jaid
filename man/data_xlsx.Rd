@@ -2,30 +2,22 @@
 % Please edit documentation in R/excel.R
 \name{data_xlsx}
 \alias{data_xlsx}
-\title{Write data in an excel file}
+\title{Deprecated: data_xlsx()}
 \usage{
-data_xlsx(data, file, rc = c(1L, 1L), rowNames = FALSE, overwrite = FALSE)
+data_xlsx(...)
 }
 \arguments{
-\item{data}{A data frame}
-
-\item{file}{A file path}
-
-\item{rc}{A vector of starting point row and column, default c(1L, 1L)}
-
-\item{rowNames}{A boolean value contains row names or not}
-
-\item{overwrite}{A boolean value that overwrite or not}
+\item{...}{Additional arguments passed to \code{\link[=write_data_xlsx]{write_data_xlsx()}}.}
 }
 \value{
-no return
+No return value, called for side effects.
 }
 \description{
-Write data in an excel file.
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}
 }
-\examples{
-# write xlsx file
-\dontrun{
-write_xlsx(list(cars = cars, matcars = mtcars), "data.xlsx")}
-
+\details{
+Use \code{\link[=write_data_xlsx]{write_data_xlsx()}} instead.
+}
+\seealso{
+\code{\link[=write_data_xlsx]{write_data_xlsx()}}
 }

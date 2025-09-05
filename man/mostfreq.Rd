@@ -7,19 +7,19 @@
 mostfreq(x, na.rm = FALSE)
 }
 \arguments{
-\item{x}{A vector}
+\item{x}{A vector.}
 
-\item{na.rm}{A boolean value removing na or not}
+\item{na.rm}{Logical. Should missing values (\code{NA}) be removed? Defaults to FALSE.}
 }
 \value{
-the most frequent value vector and its frequency
+The most frequent value vector and its frequency
 }
 \description{
-Get the most frequent value.
+Returns the most frequently occurring value (the statistical mode) in a vector.
 }
 \examples{
-# get the most frequent values
-\donttest{x <- c(1, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 5)
-mostfreq(x)}
+# Get the most frequent values
+x <- c(1, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 5)
+mostfreq(x)
 
 }

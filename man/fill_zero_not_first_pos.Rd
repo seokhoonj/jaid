@@ -3,37 +3,45 @@
 \name{fill_zero_not_first_pos}
 \alias{fill_zero_not_first_pos}
 \alias{set_zero_not_first_pos}
-\title{Fill with or set to zero except for the first positive values}
+\title{Zero out all but the first positive value per row group}
 \usage{
-fill_zero_not_first_pos(x, cols)
+fill_zero_not_first_pos(x, include_cols)
 
-set_zero_not_first_pos(x, cols)
+set_zero_not_first_pos(x, include_cols)
 }
 \arguments{
-\item{x}{A numerical matrix}
+\item{x}{A numeric matrix with row names.}
 
-\item{cols}{A boolean vector. for example, if you want select first and third
-columns for 3 X 3 matrix, c(1, 0, 1).}
+\item{include_cols}{A logical vector of length \code{ncol(x)} indicating which
+columns should be considered (default: all \code{TRUE}). For example, for a
+3×3 matrix, \code{c(TRUE, FALSE, TRUE)} selects the 1st and 3rd columns.}
 }
 \value{
-A matrix with only first positive value for each row names, and the
-other values become 0.
+\itemize{
+\item \code{fill_zero_not_first_pos()} returns a modified copy of \code{x}.
+\item \code{set_zero_not_first_pos()} modifies \code{x} in place and returns it invisibly.
+}
 }
 \description{
-Fill with or set to zero except for the first positive values of a numerical
-matrix by rownames
+For each group of rows (defined by row names), scan from top to bottom
+and keep only the first positive value in the selected columns. All other
+values in the group are set to zero.
 }
 \examples{
-# fill with zero except for the first positive values of a numerical matrix
-# by rownames
-\donttest{x <- matrix(c(-1, 2, 0, -2, -1, 5, 2, -2, 3), nrow = 3)
-set_rownames(x, c(1, 1, 2))
-fill_zero_not_first_pos(x)}
+\donttest{
+x <- matrix(c(-1,  2, 0,
+              -2, -1, 5,
+               2, -2, 3), nrow = 3, byrow = TRUE)
+set_mat_rownames(x, c(1, 1, 2))
 
-# set to zero except for the first positive values of a numerical matrix by
-# rownames
-\donttest{x <- matrix(c(-1, 2, 0, -2, -1, 5, 2, -2, 3), nrow = 3)
-set_rownames(x, c(1, 1, 2))
-set_zero_not_first_pos(x)}
+# Keep only the first positive per group
+fill_zero_not_first_pos(x)
+
+# Restrict to first and third columns
+fill_zero_not_first_pos(x, include_cols = c(TRUE, FALSE, TRUE))
+
+# In-place modification
+set_zero_not_first_pos(x, include_cols = c(TRUE, FALSE, TRUE))
+}
 
 }

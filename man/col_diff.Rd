@@ -2,16 +2,25 @@
 % Please edit documentation in R/matrix.R
 \name{col_diff}
 \alias{col_diff}
-\title{Column diffrences}
+\title{Column-wise differences}
 \usage{
 col_diff(x)
 }
 \arguments{
-\item{x}{a numeric matrix}
+\item{x}{A numeric matrix.}
 }
 \value{
-a numeric matrix
+A numeric matrix with one fewer row than \code{x}, containing the
+differences between successive elements within each column.
 }
 \description{
-Column diffrences for a numeric matrix
+Compute successive differences down each column of a numeric matrix,
+similar to \code{\link[base:diff]{base::diff()}} but applied column by column.
+}
+\examples{
+\donttest{
+x <- matrix(1:9, nrow = 3)
+col_diff(x)
+}
+
 }

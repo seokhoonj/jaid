@@ -2,28 +2,32 @@
 % Please edit documentation in R/replace.R
 \name{rm_punct}
 \alias{rm_punct}
-\title{Remove punctuations}
+\title{Remove punctuation (in place)}
 \usage{
 rm_punct(df, cols, pattern = "(?!\\\\*)[[:punct:]]")
 }
 \arguments{
-\item{df}{a data.frame}
+\item{df}{A data.table (modified in place).}
 
-\item{cols}{a string vector specifying columns}
+\item{cols}{A character vector of column names. Defaults to all character columns.}
 
-\item{pattern}{a string containing a \link{regular expression}}
+\item{pattern}{A regular expression describing punctuation to remove.}
 }
 \value{
-no return values
+The modified data.table.
 }
 \description{
-Remove punctuations.
+Remove punctuation characters from character columns in a data.table. If
+\code{cols} is missing, all character columns are targeted. The default pattern
+avoids removing asterisks.
 }
 \examples{
-# remove punctuations
-\dontrun{df <- data.frame(x = c("A3-", "$+_B", "C+_&"), y = c("123", "R&", "4q_++"))
-set_ptr(df)
+\dontrun{
+# Remove punctuations
+df <- data.table(x = c("A3-", "$+_B", "C+_&"), y = c("123", "R&", "4q_++"))
+data.table::address(df)
 rm_punct(df)
-df}
+data.table::address(df)
+}
 
 }

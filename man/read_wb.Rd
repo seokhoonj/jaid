@@ -2,66 +2,63 @@
 % Please edit documentation in R/read.R
 \name{read_wb}
 \alias{read_wb}
-\title{read_wb}
+\title{Read an Excel sheet with openxlsx as a data.table}
 \usage{
 read_wb(
-  xlsxFile,
+  xlsx_file,
   sheet = NULL,
-  startRow = 1,
-  colNames = TRUE,
-  rowNames = FALSE,
-  detectDates = FALSE,
-  skipEmptyRows = TRUE,
-  skipEmptyCols = TRUE,
+  start_row = 1,
+  col_names = TRUE,
+  row_names = FALSE,
+  detect_dates = FALSE,
+  skip_empty_rows = TRUE,
+  skip_empty_cols = TRUE,
   rows = NULL,
   cols = NULL,
-  check.names = FALSE,
-  sep.names = ".",
-  namedRegion = NULL,
-  na.strings = "NA",
-  fillMergedCells = FALSE
+  check_names = FALSE,
+  sep_names = ".",
+  named_region = NULL,
+  na_strings = "NA",
+  fill_merged_cells = FALSE
 )
 }
 \arguments{
-\item{xlsxFile}{An xlsx file, Workbook object or URL to xlsx file.}
+\item{xlsx_file}{Path to the .xlsx file.}
 
-\item{sheet}{The name or index of the sheet to read data from.}
+\item{sheet}{A sheet name or 1-based index. If \code{NULL}, an interactive
+selector is shown.}
 
-\item{startRow}{first row to begin looking for data.  Empty rows at the top of a file are always skipped,
-regardless of the value of startRow.}
+\item{start_row}{First row to read (1-based).}
 
-\item{colNames}{If \code{TRUE}, the first row of data will be used as column names.}
+\item{col_names}{Whether the first row contains column names.}
 
-\item{rowNames}{If \code{TRUE}, first column of data will be used as row names.}
+\item{row_names}{Whether the first column contains row names.}
 
-\item{detectDates}{If \code{TRUE}, attempt to recognise dates and perform conversion.}
+\item{detect_dates}{Convert recognised date columns to Date.}
 
-\item{skipEmptyRows}{If \code{TRUE}, empty rows are skipped else empty rows after the first row containing data
-will return a row of NAs.}
+\item{skip_empty_rows}{Skip empty rows while reading.}
 
-\item{skipEmptyCols}{If \code{TRUE}, empty columns are skipped.}
+\item{skip_empty_cols}{Skip empty columns while reading.}
 
-\item{rows}{A numeric vector specifying which rows in the Excel file to read.
-If NULL, all rows are read.}
+\item{rows}{Optional integer vector of rows to read.}
 
-\item{cols}{A numeric vector specifying which columns in the Excel file to read.
-If NULL, all columns are read.}
+\item{cols}{Optional integer vector of columns to read.}
 
-\item{check.names}{logical. If TRUE then the names of the variables in the data frame
-are checked to ensure that they are syntactically valid variable names}
+\item{check_names}{Make column names syntactically valid.}
 
-\item{sep.names}{One character which substitutes blanks in column names. By default, "."}
+\item{sep_names}{Separator to use when repairing duplicate names.}
 
-\item{namedRegion}{A named region in the Workbook. If not NULL startRow, rows and cols parameters are ignored.}
+\item{named_region}{Named region to read instead of specifying \code{rows/cols}.}
 
-\item{na.strings}{A character vector of strings which are to be interpreted as NA. Blank cells will be returned as NA.}
+\item{na_strings}{Character vector of strings to interpret as missing values.}
 
-\item{fillMergedCells}{If TRUE, the value in a merged cell is given to all cells within the merge.}
+\item{fill_merged_cells}{Fill merged cells with their corresponding values.}
 }
 \value{
-a data.table
+A data.table.
 }
 \description{
-read_wb is almost same as \code{\link[openxlsx:readWorkbook]{openxlsx::readWorkbook()}} but it's convenient when not knowing the
-sheet names. and the output type is a data.table not a tibble.
+Convenience wrapper around \code{\link[openxlsx:readWorkbook]{openxlsx::readWorkbook()}}. If \code{sheet} is not
+provided, interactively lists available sheets and prompts for a selection.
+The result is returned as a data.table.
 }

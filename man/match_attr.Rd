@@ -2,23 +2,25 @@
 % Please edit documentation in R/attr.R
 \name{match_attr}
 \alias{match_attr}
-\title{Matched attributes}
+\title{Find matching attributes}
 \usage{
 match_attr(x, name)
 }
 \arguments{
-\item{x}{any objects; e.g, list, columns of a data.frame or data.table}
+\item{x}{Any R object (e.g., \code{list}, \code{data.frame}, \code{data.table}).}
 
-\item{name}{the character attribute names.}
+\item{name}{Character vector of attribute names to match.}
 }
 \value{
-matched attributes' names
+A character vector of matching attribute names.
 }
 \description{
-Find matched attributes.
+Returns the names of attributes in \code{x} that match the specified names.
 }
 \examples{
-# matched attributes
-\donttest{match_attr(iris, c("class", "names"))}
+\donttest{
+# Find attributes by name
+match_attr(iris, c("class", "names"))
+}
 
 }

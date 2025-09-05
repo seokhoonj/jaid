@@ -2,29 +2,46 @@
 % Please edit documentation in R/sampling.R
 \name{random_sampling}
 \alias{random_sampling}
-\title{Random sampling}
+\title{Randomly sample rows from a data frame}
 \usage{
-random_sampling(x, size, replace = TRUE, prob = NULL, seed = 123)
+random_sampling(x, size, replace = TRUE, prob = NULL, seed = NULL)
 }
 \arguments{
-\item{x}{either a \code{data.frame} or a vector}
+\item{x}{A data.frame.}
 
-\item{size}{a non-negative integer giving the number of items to choose.}
+\item{size}{A non-negative integer giving the number of rows to sample.}
 
-\item{replace}{should sampling be with replacement?}
+\item{replace}{Logical. Should sampling be with replacement? Defaults to \code{TRUE}.}
 
-\item{prob}{a vector of probability weights for obtaining the elements of the vector being sampled.}
+\item{prob}{A numeric vector of probability weights for sampling. Its length
+must equal \code{nrow(x)}.}
 
-\item{seed}{a single value, interpreted as an integer, or NULL.}
+\item{seed}{An optional integer. If supplied, sets the random seed for
+reproducibility. If \code{NULL} (default), no seed is set.}
 }
 \value{
-either a \code{data.frame} or a vector
+A data.frame containing the sampled rows.
 }
 \description{
-Random sampling for a \code{data.frame} or a vector
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
+
+Draw a random sample of rows from a data frame. This is a simple wrapper
+around \code{\link[base:sample]{base::sample.int()}} that preserves the data frame structure.
 }
 \examples{
-\dontrun{
-random_sampling(iris)}
+\donttest{
+# Sample 5 rows with replacement
+random_sampling(iris, size = 5)
+
+# Sample rows without replacement
+random_sampling(iris, size = 5, replace = FALSE)
+
+# Weighted sampling
+w <- runif(nrow(iris))
+random_sampling(iris, size = 5, prob = w)
+
+# Reproducible sampling
+random_sampling(iris, size = 5, seed = 42)
+}
 
 }

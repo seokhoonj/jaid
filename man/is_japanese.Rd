@@ -2,16 +2,24 @@
 % Please edit documentation in R/lang.R
 \name{is_japanese}
 \alias{is_japanese}
-\title{Is the text japanese?}
+\title{Detect Japanese characters in strings}
 \usage{
 is_japanese(x)
 }
 \arguments{
-\item{x}{a string vector}
+\item{x}{A character vector.}
 }
 \value{
-a boolean vector
+A logical vector the same length as \code{x}.
 }
 \description{
-Is the text japanese?
+Returns \code{TRUE} for elements of \code{x} that contain any Japanese characters
+(Hiragana, Katakana, or CJK ideographs). Matching is performed with a
+Unicode-range regular expression using \code{perl = TRUE}.
+}
+\examples{
+\dontrun{
+is_japanese(c("abc", "こんにちは", "カタカナ", "漢字"))
+}
+
 }

@@ -2,20 +2,24 @@
 % Please edit documentation in R/utils.R
 \name{paste_comma}
 \alias{paste_comma}
-\title{Paste comma}
+\title{Paste vector elements with commas}
 \usage{
 paste_comma(x, newline = FALSE)
 }
 \arguments{
-\item{x}{a vector}
+\item{x}{A vector.}
 
-\item{newline}{a logical whether to add newlines by each element}
+\item{newline}{Logical; if \code{TRUE}, each element is placed on a new line.}
+}
+\value{
+No return value, prints to the console.
 }
 \description{
-Paste vector elements with commas.
+Combine elements of a vector into a string with commas.
+Optionally insert newlines between elements for readability.
 }
 \examples{
-# paste comma
+# paste elements with commas
 \donttest{paste_comma(names(mtcars))}
 
 }

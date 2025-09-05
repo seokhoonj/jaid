@@ -2,22 +2,38 @@
 % Please edit documentation in R/print.R
 \name{draw_line}
 \alias{draw_line}
-\title{Draw a line}
+\title{Draw a horizontal line in the console}
 \usage{
 draw_line(width, mark = "=")
 }
 \arguments{
-\item{width}{a numeric vector specifying width (default: \code{getOption("width")})}
+\item{width}{A numeric vector specifying the desired line width(s).
+Defaults to the current console width (\code{getOption("width")}).}
 
-\item{mark}{a string specifying mark (default: "=")}
+\item{mark}{A single string giving the character(s) to repeat.
+Defaults to \code{"="}.}
 }
 \value{
-a string vector with repeated mark
+A character vector, each element being a line of repeated marks.
 }
 \description{
-Draw a line in console.
+Create a line made of repeated characters, typically used as a visual
+separator in console output. The line width defaults to the console
+option \code{getOption("width")}.
 }
 \examples{
-\donttest{cat(draw_line())}
+\donttest{
+# Default line
+cat(draw_line())
 
+# Custom width
+cat(draw_line(20))
+
+# Custom mark
+cat(draw_line(30, mark = "="))
+}
+
+}
+\seealso{
+\code{\link[cli:cat_line]{cli::cat_rule()}}
 }

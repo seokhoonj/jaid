@@ -2,29 +2,31 @@
 % Please edit documentation in R/utils.R
 \name{has_cols}
 \alias{has_cols}
-\title{Has columns}
+\title{Check if a data frame has specific columns}
 \usage{
 has_cols(df, cols, error_raise = FALSE)
 }
 \arguments{
-\item{df}{a data.frame}
+\item{df}{A \code{data.frame}.}
 
-\item{cols}{column names}
+\item{cols}{A character vector of column names to check.}
 
-\item{error_raise}{a logical whether to raise an error or not}
+\item{error_raise}{Logical; if \code{TRUE}, raise an error when columns are missing.}
 }
 \value{
-a logical value
+A logical scalar (\code{TRUE} if all specified columns exist, otherwise \code{FALSE}).
 }
 \description{
-Whether the data has specific columns
+Test whether a data frame contains all of the specified columns.
+Can return a logical value or raise an error if \code{error_raise = TRUE}.
 }
 \examples{
-# has columns
-\donttest{has_cols(mtcars, c("cyl", "disp"))}
-
-# raise an error
 \dontrun{
-has_cols(mtcars, c("cyl", "iris"), error_raise = TRUE)}
+# Has columns
+has_cols(mtcars, c("cyl", "disp"))
+
+# Raise an error
+has_cols(mtcars, c("cyl", "iris"), error_raise = TRUE)
+}
 
 }

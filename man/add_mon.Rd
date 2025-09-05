@@ -2,25 +2,27 @@
 % Please edit documentation in R/date.R
 \name{add_mon}
 \alias{add_mon}
-\title{Add months}
+\title{Add months to a date}
 \usage{
 add_mon(date, mon)
 }
 \arguments{
-\item{date}{A date}
+\item{date}{A date-like object (coercible via \code{\link[=as.POSIXlt]{as.POSIXlt()}}).}
 
-\item{mon}{A number of months to be added}
+\item{mon}{Integer number of months to add (can be negative).}
 }
 \value{
-A date
+A Date with the months added.
 }
 \description{
-Add months to the date.
+Add a specified number of months to a date-like object. Negative values
+subtract months. Uses base rollover via POSIXlt.
 }
 \examples{
-# add months
 \donttest{
+# Add months
 date <- Sys.Date()
-add_mon(date, 3)}
+add_mon(date, 3)
+}
 
 }

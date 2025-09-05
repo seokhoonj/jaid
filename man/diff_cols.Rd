@@ -2,23 +2,22 @@
 % Please edit documentation in R/utils.R
 \name{diff_cols}
 \alias{diff_cols}
-\title{Different columns}
+\title{Columns not in a set}
 \usage{
 diff_cols(df, cols)
 }
 \arguments{
-\item{df}{a data.frame}
+\item{df}{A data frame.}
 
-\item{cols}{a string vector specifying columns}
+\item{cols}{A character vector of column names.}
 }
 \value{
-a string vector
+A character vector of column names in \code{df} but not in \code{cols}.
 }
 \description{
-Columns that the data frame does not contain
+Return the columns of a data frame that are \strong{not} in a specified list.
 }
 \examples{
-# different columns
 \donttest{diff_cols(mtcars, c("mpg", "cyl", "disp", "hp", "drat"))}
 
 }

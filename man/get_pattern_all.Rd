@@ -2,29 +2,28 @@
 % Please edit documentation in R/str.R
 \name{get_pattern_all}
 \alias{get_pattern_all}
-\title{Get all patterns}
+\title{Get all matches}
 \usage{
 get_pattern_all(pattern, x, collapse = "|", ignore.case = TRUE)
 }
 \arguments{
-\item{pattern}{a string containing a \link{regular expression}}
+\item{pattern}{A string containing a regular expression.}
 
-\item{x}{a string vector}
+\item{x}{A character vector.}
 
-\item{collapse}{an optional character string to separate the results. Not
-\code{\link{NA_character_}}. When \code{collapse} is a string, the result is always a string
-(\code{\link{character}} of length 1). default "|"}
+\item{collapse}{A single string used to separate matches (not \code{NA_character_}).
+Default: \code{"|"}.}
 
-\item{ignore.case}{if \code{FALSE}, the pattern matching is case sensitive and if \code{TRUE}, case is ignored during matching.}
+\item{ignore.case}{Logical; if \code{TRUE}, case is ignored. Default: \code{TRUE}.}
 }
 \value{
-a string vector
+A character vector of the same length as \code{x}
+(empty string for elements with no matches).
 }
 \description{
-Get all patterns from a string vector.
+Extract all regex matches from each string and collapse them with a separator.
 }
 \examples{
-# get all patterns from a string vector
 \donttest{get_pattern_all(pattern = "c", c("a|b|c", "a|c|c"))}
 
 }

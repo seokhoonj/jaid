@@ -2,42 +2,22 @@
 % Please edit documentation in R/excel.R
 \name{plot_xlsx}
 \alias{plot_xlsx}
-\title{Draw plots in an excel file}
+\title{Deprecated: plot_xlsx()}
 \usage{
-plot_xlsx(
-  plots,
-  file,
-  rc = c(1L, 1L),
-  width = 12,
-  height = 6,
-  dpi = 300,
-  overwrite = FALSE
-)
+plot_xlsx(...)
 }
 \arguments{
-\item{plots}{ggplot files}
-
-\item{file}{a file path}
-
-\item{rc}{a vector of starting point row and column, default c(1L, 1L)}
-
-\item{width}{image width}
-
-\item{height}{image height}
-
-\item{dpi}{image resolution}
-
-\item{overwrite}{A boolean value that overwrite or not}
+\item{...}{Additional arguments passed to \code{\link[=save_plot_xlsx]{save_plot_xlsx()}}.}
 }
 \value{
-no return
+No return value, called for side effects.
 }
 \description{
-Draw plots in an excel file.
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}
 }
-\examples{
-# draw ggplot objects in an excel file
-\dontrun{
-draw_xlsx(list(image1, image2), "image.xlsx")}
-
+\details{
+Use \code{\link[=save_plot_xlsx]{save_plot_xlsx()}} instead.
+}
+\seealso{
+\code{\link[=save_plot_xlsx]{save_plot_xlsx()}}
 }

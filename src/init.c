@@ -3,25 +3,20 @@
 #include <stdlib.h> // for NULL
 #include <R_ext/Rdynload.h>
 
-/* .Call calls */
+// .Call calls
 extern SEXP _jaid_fastMode(SEXP, SEXP);
 extern SEXP _jaid_fastModeX(SEXP, SEXP);
-extern SEXP AsLogical(SEXP);
-extern SEXP AsInteger(SEXP);
-extern SEXP AsDouble(SEXP);
-extern SEXP AsNumeric(SEXP);
-extern SEXP AsCharacter(SEXP);
 extern SEXP BeforeChangeIndex(SEXP);
 extern SEXP IsNullExternalPtr(SEXP);
 extern SEXP IndexOverlappingDateRange(SEXP, SEXP, SEXP, SEXP);
 extern SEXP SortGroupBy(SEXP);
 extern SEXP Unilen(SEXP);
 extern SEXP Reverse(SEXP);
-extern SEXP Traverse(SEXP, SEXP);
+extern SEXP Interleave(SEXP, SEXP);
 extern SEXP Rotate(SEXP, SEXP);
-extern SEXP SetDimNames(SEXP, SEXP);
-extern SEXP SetColNames(SEXP, SEXP);
-extern SEXP SetRowNames(SEXP, SEXP);
+extern SEXP SetMatDimNames(SEXP, SEXP);
+extern SEXP SetMatColNames(SEXP, SEXP);
+extern SEXP SetMatRowNames(SEXP, SEXP);
 extern SEXP MaxByColNames(SEXP, SEXP, SEXP, SEXP, SEXP);
 extern SEXP MaxByRowNames(SEXP, SEXP, SEXP, SEXP, SEXP);
 extern SEXP MinByColNames(SEXP, SEXP, SEXP, SEXP, SEXP);
@@ -50,22 +45,17 @@ extern SEXP SetOneBeforeFirstOne(SEXP, SEXP);
 static const R_CallMethodDef CallEntries[] = {
     {"_jaid_fastMode",              (DL_FUNC) &_jaid_fastMode,              2},
     {"_jaid_fastModeX",             (DL_FUNC) &_jaid_fastModeX,             2},
-    {"AsLogical",                   (DL_FUNC) &AsLogical,                   1},
-    {"AsInteger",                   (DL_FUNC) &AsInteger,                   1},
-    {"AsDouble",                    (DL_FUNC) &AsDouble,                    1},
-    {"AsNumeric",                   (DL_FUNC) &AsNumeric,                   1},
-    {"AsCharacter",                 (DL_FUNC) &AsCharacter,                 1},
     {"BeforeChangeIndex",           (DL_FUNC) &BeforeChangeIndex,           1},
     {"IsNullExternalPtr",           (DL_FUNC) &IsNullExternalPtr,           1},
     {"IndexOverlappingDateRange",   (DL_FUNC) &IndexOverlappingDateRange,   4},
     {"SortGroupBy",                 (DL_FUNC) &SortGroupBy,                 1},
     {"Unilen",                      (DL_FUNC) &Unilen,                      1},
     {"Reverse",                     (DL_FUNC) &Reverse,                     1},
-    {"Traverse",                    (DL_FUNC) &Traverse,                    2},
+    {"Interleave",                  (DL_FUNC) &Interleave,                  2},
     {"Rotate",                      (DL_FUNC) &Rotate,                      2},
-    {"SetDimNames",                 (DL_FUNC) &SetDimNames,                 2},
-    {"SetColNames",                 (DL_FUNC) &SetColNames,                 2},
-    {"SetRowNames",                 (DL_FUNC) &SetRowNames,                 2},
+    {"SetMatDimNames",              (DL_FUNC) &SetMatDimNames,              2},
+    {"SetMatColNames",              (DL_FUNC) &SetMatColNames,              2},
+    {"SetMatRowNames",              (DL_FUNC) &SetMatRowNames,              2},
     {"MaxByColNames",               (DL_FUNC) &MaxByColNames,               5},
     {"MaxByRowNames",               (DL_FUNC) &MaxByRowNames,               5},
     {"MinByColNames",               (DL_FUNC) &MinByColNames,               5},

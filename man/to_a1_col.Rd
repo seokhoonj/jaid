@@ -2,24 +2,26 @@
 % Please edit documentation in R/excel.R
 \name{to_a1_col}
 \alias{to_a1_col}
-\title{To a A1 format column}
+\title{Convert column numbers to Excel letters}
 \usage{
 to_a1_col(x)
 }
 \arguments{
-\item{x}{A string specifying a cell or a column}
+\item{x}{Numeric column number.}
 }
 \value{
-A string
+String with Excel column letters.
 }
 \description{
-Convert a cell or column numeric from R1C1 to A1 format.
+Converts column numbers to Excel column letters (1=A, 2=B, 27=AA, etc.).
 }
 \examples{
-# convert a cell or column numeric from R1C1 to A1 format.
 \donttest{
-to_a1_col(1)
-to_a1_col(3)
-to_a1_col(26)}
+# Convert column numbers to letters
+to_a1_col(1)   # Returns "A" (1st column)
+to_a1_col(3)   # Returns "C" (3rd column)
+to_a1_col(26)  # Returns "Z" (26th column)
+to_a1_col(27)  # Returns "AA" (27th column)
+}
 
 }

@@ -2,24 +2,25 @@
 % Please edit documentation in R/excel.R
 \name{to_r1c1_col}
 \alias{to_r1c1_col}
-\title{To a R1C1 format column}
+\title{Convert Excel column letters to numbers}
 \usage{
 to_r1c1_col(x)
 }
 \arguments{
-\item{x}{A string specifying a cell or a column}
+\item{x}{String containing Excel cell reference or column letters.}
 }
 \value{
-A numeric
+Numeric column number (A=1, B=2, ..., Z=26, AA=27, etc.)
 }
 \description{
-Convert a cell or column string from A1 to R1C1 format.
+Converts Excel column letters (A, B, C, ..., AA, AB, etc.) to column numbers.
 }
 \examples{
-# convert a cell or column string from A1 to R1C1 format
 \donttest{
-to_r1c1_col("C33")
-to_r1c1_col("ABC")
-to_r1c1_col("ABC123")}
+# Convert column letters to numbers
+to_r1c1_col("C33")    # Returns 3 (C = 3rd column)
+to_r1c1_col("ABC")    # Returns 731 (ABC = 731st column)
+to_r1c1_col("ABC123") # Returns 731 (extracts ABC only)
+}
 
 }

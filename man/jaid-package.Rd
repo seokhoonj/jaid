@@ -9,7 +9,7 @@
 Joo's functional aid toolkit for efficient programming.
 }
 \author{
-\strong{Maintainer}: seokhoon Joo \email{seokhoonj@gmail.com}
+\strong{Maintainer}: Seokhoon Joo \email{seokhoonj@gmail.com}
 
 }
 \keyword{internal}

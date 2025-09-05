@@ -2,30 +2,31 @@
 % Please edit documentation in R/utils.R
 \name{has_rows}
 \alias{has_rows}
-\title{Has rows}
+\title{Check if a data frame has rows}
 \usage{
 has_rows(df, error_raise = FALSE)
 }
 \arguments{
-\item{df}{a data.frame}
+\item{df}{A data.frame.}
 
-\item{error_raise}{a logcial whether to raise an error or not}
+\item{error_raise}{Logical; if \code{TRUE}, raise an error if the data frame has no rows.}
 }
 \value{
-a logical value
+A logical scalar (\code{TRUE} if the data frame has rows, otherwise \code{FALSE}).
 }
 \description{
-Whether the data has rows
+Test whether a data frame has at least one row. Can return a logical value
+or raise an error if \code{error_raise = TRUE}.
 }
 \examples{
-# has rows
 \dontrun{
 df <- data.frame()
-has_rows(df)}
 
-# raise an error
-\dontrun{
-df <- data.frame()
-has_rows(df, error_raise = TRUE)}
+# Has columns
+has_rows(df) # FALSE
+
+# Raises an error
+has_rows(df, error_raise = TRUE)
+}
 
 }

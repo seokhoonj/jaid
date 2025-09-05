@@ -3,25 +3,33 @@
 \name{set_col_lower}
 \alias{set_col_lower}
 \alias{set_col_upper}
-\title{Change columns from uppercase to lowercase or from lowercase to uppercase}
+\title{Convert column names to lower or upper case}
 \usage{
 set_col_lower(df)
 
 set_col_upper(df)
 }
 \arguments{
-\item{df}{a data.frame}
+\item{df}{A data.frame.}
 }
 \value{
-no return values
+The input data frame with column names modified in place.
+Called for side effects.
 }
 \description{
-Change columns from uppercase to lowercase or from lowercase to uppercase
+Convenience functions to modify the case of all column names in a data frame.
+These functions update the names \strong{in place} (using \code{data.table}).
 }
 \examples{
-# Change columns case
-\donttest{df <- mtcars
+\donttest{
+df <- mtcars
+
+# Convert to upper case
 set_col_upper(df)
-set_col_lower(df)}
+
+# Convert to lower case
+set_col_lower(df)
+
+}
 
 }

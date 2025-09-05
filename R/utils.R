@@ -1,143 +1,44 @@
-#' @title Desub
+#' Assert object class
 #'
-#' @description
-#' This function operates like `deparse(substitute(x))` inside the functions.
+#' Check that an object inherits from the expected class.
+#' Throws an error if the assertion fails.
 #'
-#' @param x an expression that can be a string vector
-#' @return a string vector
+#' @param x An R object.
+#' @param class A character vector of class names to check against.
 #'
-#' @examples
-#' # desub
-#' \donttest{f1 <- function(a) desub(a)
-#' f2 <- function(b) f1(b)
-#' f3 <- function(c) f2(c)
-#' f4 <- function(d) f3(d)
-#' f5 <- function(e) f4(e)
-#' desub(iris) # iris
-#' f1(iris) # iris
-#' f2(iris) # iris
-#' f3(iris) # iris
-#' f4(iris) # iris
-#' f5(iris) # iris}
-#'
-#' # desubs
-#' \donttest{f1 <- function(a) desubs(a)
-#' f2 <- function(b) f1(b)
-#' f3 <- function(c) f2(c)
-#' f4 <- function(d) f3(d)
-#' f5 <- function(e) f4(e)
-#' desubs(c(iris, cars)) # "c" "iris" "cars"
-#' f1(c(iris, cars)) # "c" "iris" "cars"
-#' f2(c(iris, cars)) # "c" "iris" "cars"
-#' f3(c(iris, cars)) # "c" "iris" "cars"
-#' f4(c(iris, cars)) # "c" "iris" "cars"
-#' f5(c(iris, cars)) # "c" "iris" "cars"}
-#'
-#' @export
-desub <- function(x) {
-  substitute(x) |>
-    substitute() |>
-    substitute() |>
-    substitute() |>
-    substitute() |>
-    substitute() |>
-    substitute() |>
-    substitute() |>
-    substitute() |>
-    substitute() |>
-    substitute() |>
-    substitute() |>
-    substitute() |>
-    substitute() |>
-    eval(envir = parent.frame(n =  1)) |>
-    eval(envir = parent.frame(n =  2)) |>
-    eval(envir = parent.frame(n =  3)) |>
-    eval(envir = parent.frame(n =  4)) |>
-    eval(envir = parent.frame(n =  5)) |>
-    eval(envir = parent.frame(n =  6)) |>
-    eval(envir = parent.frame(n =  7)) |>
-    eval(envir = parent.frame(n =  8)) |>
-    eval(envir = parent.frame(n =  9)) |>
-    eval(envir = parent.frame(n = 10)) |>
-    eval(envir = parent.frame(n = 11)) |>
-    eval(envir = parent.frame(n = 12)) |>
-    eval(envir = parent.frame(n = 13)) |>
-    deparse()
-}
-
-#' @rdname desub
-#' @export
-desubs <- function(x) {
-  substitute(x) |>
-    substitute() |>
-    substitute() |>
-    substitute() |>
-    substitute() |>
-    substitute() |>
-    substitute() |>
-    substitute() |>
-    substitute() |>
-    substitute() |>
-    substitute() |>
-    substitute() |>
-    substitute() |>
-    substitute() |>
-    eval(envir = parent.frame(n =  1)) |>
-    eval(envir = parent.frame(n =  2)) |>
-    eval(envir = parent.frame(n =  3)) |>
-    eval(envir = parent.frame(n =  4)) |>
-    eval(envir = parent.frame(n =  5)) |>
-    eval(envir = parent.frame(n =  6)) |>
-    eval(envir = parent.frame(n =  7)) |>
-    eval(envir = parent.frame(n =  8)) |>
-    eval(envir = parent.frame(n =  9)) |>
-    eval(envir = parent.frame(n = 10)) |>
-    eval(envir = parent.frame(n = 11)) |>
-    eval(envir = parent.frame(n = 12)) |>
-    eval(envir = parent.frame(n = 13)) |>
-    vapply(FUN = deparse, FUN.VALUE = "character")
-}
-
-#' Assert class
-#'
-#' Assert object class.
-#'
-#' @param obj an object
-#' @param class an object class
-#' @return No return value
+#' @return No return value. Called for side effects.
 #'
 #' @examples
-#' # assert object class
 #' \donttest{assert_class(cars, "data.frame")}
 #'
 #' @export
-assert_class <- function(obj, class) {
-  if (!inherits(obj, class)) {
-    stop("Not an object of class: '",
-         paste(class, collapse = ", "), "'",
+assert_class <- function(x, class) {
+  x_name <- if (is.character(x) && length(x) == 1L) {
+    sprintf('"%s"', x) # if literal
+  } else {
+    trace_arg_expr(x, verbose = FALSE, skip_shiny = TRUE)
+  }
+  if (!inherits(x, class)) {
+    stop("'", x_name, "' is not an object of class: '",
+         paste(class, collapse = "', '"), "'",
          call. = FALSE)
   }
 }
-# assert_class <- function(obj, class) {
-#   obj_name <- desub(obj)
-#   if (!inherits(obj, class)) {
-#     stop(obj_name, " is not an object of class: '",
-#          paste(class, collapse = ", "), "'",
-#          call. = FALSE)
-#   }
-# }
 
-#' order numbers of columns
+#' Get column indices
 #'
-#' Get order numbers of columns
+#' Return the column numbers corresponding to given column names.
 #'
-#' @param x a data.frame
-#' @param cols string names of columns
-#' @return order numbers of columns
+#' @param x A data.frame.
+#' @param cols A character vector of column names.
+#'
+#' @return An integer vector of column indices.
 #'
 #' @examples
-#' # order numbers of columns
+#' \donttest{
+#' # Column numbers for selected names
 #' icol(mtcars, c("disp", "drat", "qsec", "am", "carb"))
+#' }
 #'
 #' @export
 icol <- function(x, cols) {
@@ -146,16 +47,18 @@ icol <- function(x, cols) {
 
 #' Match columns
 #'
-#' Get matched columns from a data frame.
+#' Return column names from a data frame that match a specified set.
 #'
-#' @param df a data frame
-#' @param cols a string vector specifying columns
-#' @return a string vector
+#' @param df A data.frame.
+#' @param cols A character vector of column names.
+#'
+#' @return A character vector of matched column names (non-matching entries are dropped).
 #'
 #' @examples
-#' # match columns
-#' \donttest{df <- data.frame(x = c(1, 2, 3), y = c("A", "B", "C"), z = c(4, 5, 6))
-#' match_cols(df, c("x", "z"))}
+#' \donttest{
+#' df <- data.frame(x = c(1, 2, 3), y = c("A", "B", "C"), z = c(4, 5, 6))
+#' match_cols(df, c("x", "z"))
+#' }
 #'
 #' @export
 match_cols <- function(df, cols) {
@@ -163,18 +66,20 @@ match_cols <- function(df, cols) {
   colnames(df)[match(cols, colnames(df), 0L)]
 }
 
-#' Find columns using regular expression pattern
+#' Find columns by regular expression
 #'
-#' Find columns using regular expression pattern
+#' Return column names that match a regular expression.
 #'
-#' @param df a data.frame
-#' @param pattern a string vector specifying columns
-#' @return a string vector
+#' @param df A data.frame.
+#' @param pattern A character string containing a regular expression.
+#'
+#' @return A character vector of matching column names.
 #'
 #' @examples
-#' # find columns using regular expression pattern
-#' \donttest{df <- data.frame(col_a = c(1, 2, 3), col_b = c("A", "B", "C"), col_c = c(4, 5, 6))
-#' regex_cols(df, pattern = c("a|c"))}
+#' \donttest{
+#' df <- data.frame(col_a = c(1, 2, 3), col_b = c("A", "B", "C"), col_c = c(4, 5, 6))
+#' regex_cols(df, pattern = c("a|c"))
+#' }
 #'
 #' @export
 regex_cols <- function(df, pattern) {
@@ -182,32 +87,33 @@ regex_cols <- function(df, pattern) {
   colnames(df)[grepl(pattern, names(df), perl = TRUE)]
 }
 
-#' Different columns
+#' Columns not in a set
 #'
-#' Columns that the data frame does not contain
+#' Return the columns of a data frame that are **not** in a specified list.
 #'
-#' @param df a data.frame
-#' @param cols a string vector specifying columns
-#' @return a string vector
+#' @param df A data frame.
+#' @param cols A character vector of column names.
+#'
+#' @return A character vector of column names in `df` but not in `cols`.
 #'
 #' @examples
-#' # different columns
 #' \donttest{diff_cols(mtcars, c("mpg", "cyl", "disp", "hp", "drat"))}
 #'
 #' @export
 diff_cols <- function(df, cols)
   setdiff(colnames(df), cols)
 
-#' Validate columns
+#' Validate that columns exist
 #'
-#' Does the data frame contain all columns?
+#' Check whether a data frame contains all of the specified columns.
+#' Throws an error if any are missing.
 #'
-#' @param df a data.frame
-#' @param cols a string vector specifying columns
-#' @return no return value
+#' @param df A data frame.
+#' @param cols A character vector of column names to validate.
+#'
+#' @return No return value. Called for side effects.
 #'
 #' @examples
-#' # different columns
 #' \dontrun{valid_cols(mtcars, c("mpg", "cyl", "disp", "hp", "drat"))}
 #'
 #' @export
@@ -222,24 +128,24 @@ valid_cols <- function(df, cols) {
 #'
 #' Validates whether the columns in a given data frame match an expected
 #' column specification. The specification includes expected column names
-#' and their corresponding classes. The function returns a `data.table`
+#' and their corresponding classes. The function returns a data.table
 #' with the actual and expected classes, along with a status indicating
 #' whether each column matches, is missing, or is extra.
 #'
-#' @param df A `data.frame` or `data.table` containing the data to be checked.
-#' @param col_spec A named `list` defining the expected specification.
+#' @param df A data.frame or data.table containing the data to be checked.
+#' @param col_spec A named list defining the expected specification.
 #'   Each name corresponds to a column, and each value is the expected class.
 #'
-#' @return A `data.table` with the following columns:
+#' @return A data.table with the following columns:
 #'   \itemize{
-#'     \item \code{column}: Column name
-#'     \item \code{actual}: Actual class of the column (NA if missing)
-#'     \item \code{expected}: Expected class of the column (NA if not specified)
-#'     \item \code{status}: Comparison result: "match", "mismatch", "missing", or "extra"
+#'     \item `column`: Column name
+#'     \item `actual`: Actual class of the column (NA if missing)
+#'     \item `expected`: Expected class of the column (NA if not specified)
+#'     \item `status`: Comparison result: "match", "mismatch", "missing", or "extra"
 #'   }
 #'
 #' @examples
-#'
+#' \donttest{
 #' df <- data.frame(
 #'   id = 1:3,
 #'   name = c("Alice", "Bob", "Charlie"),
@@ -255,6 +161,7 @@ valid_cols <- function(df, cols) {
 #' )
 #'
 #' check_col_spec(df, col_spec)
+#' }
 #'
 #' @export
 check_col_spec <- function(df, col_spec) {
@@ -289,7 +196,7 @@ check_col_spec <- function(df, col_spec) {
     ), "compatible", NA_character_
   )]
 
-  # --- Column Check Summary ---
+  # Column Check Summary
   if (requireNamespace("cli", quietly = TRUE)) {
     cli::cli_h2("Column Check Summary")
     for (stat in c("match", "mismatch", "missing", "extra")) {
@@ -321,116 +228,131 @@ check_col_spec <- function(df, col_spec) {
   return(dt)
 }
 
-#' Has rows
+#' Check if a data frame has rows
 #'
-#' Whether the data has rows
+#' Test whether a data frame has at least one row. Can return a logical value
+#' or raise an error if `error_raise = TRUE`.
 #'
-#' @param df a data.frame
-#' @param error_raise a logcial whether to raise an error or not
-#' @return a logical value
+#' @param df A data.frame.
+#' @param error_raise Logical; if `TRUE`, raise an error if the data frame has no rows.
+#'
+#' @return A logical scalar (`TRUE` if the data frame has rows, otherwise `FALSE`).
 #'
 #' @examples
-#' # has rows
 #' \dontrun{
 #' df <- data.frame()
-#' has_rows(df)}
 #'
-#' # raise an error
-#' \dontrun{
-#' df <- data.frame()
-#' has_rows(df, error_raise = TRUE)}
+#' # Has columns
+#' has_rows(df) # FALSE
+#'
+#' # Raises an error
+#' has_rows(df, error_raise = TRUE)
+#' }
 #'
 #' @export
 has_rows <- function(df, error_raise = FALSE) {
   assert_class(df, "data.frame")
-  # df_name <- desub(df)
+  df_name <- trace_arg_expr(df)
   nrows <- nrow(df)
   rt <- nrows != 0
   if (!error_raise)
     return(rt)
   if (!rt) {
-    # stop("'", df_name, "' doesn't have row(s): ",
-    #      call. = FALSE)
-    stop("No rows", call. = FALSE)
+    stop("'", df_name, "' doesn't have any rows: ", call. = FALSE)
   }
+  rt
 }
 
-#' Has columns
+#' Check if a data frame has specific columns
 #'
-#' Whether the data has specific columns
+#' Test whether a data frame contains all of the specified columns.
+#' Can return a logical value or raise an error if `error_raise = TRUE`.
 #'
-#' @param df a data.frame
-#' @param cols column names
-#' @param error_raise a logical whether to raise an error or not
-#' @return a logical value
+#' @param df A `data.frame`.
+#' @param cols A character vector of column names to check.
+#' @param error_raise Logical; if `TRUE`, raise an error when columns are missing.
+#'
+#' @return A logical scalar (`TRUE` if all specified columns exist, otherwise `FALSE`).
 #'
 #' @examples
-#' # has columns
-#' \donttest{has_cols(mtcars, c("cyl", "disp"))}
-#'
-#' # raise an error
 #' \dontrun{
-#' has_cols(mtcars, c("cyl", "iris"), error_raise = TRUE)}
+#' # Has columns
+#' has_cols(mtcars, c("cyl", "disp"))
+#'
+#' # Raise an error
+#' has_cols(mtcars, c("cyl", "iris"), error_raise = TRUE)
+#' }
 #'
 #' @export
 has_cols <- function(df, cols, error_raise = FALSE) {
   assert_class(df, "data.frame")
-  df_name <- desub(df)
-  df_cols <- colnames(df)
-  diff_cols <- setdiff(cols, df_cols)
+  df_name <- trace_arg_expr(df)
+  diff_cols <- setdiff(cols, colnames(df))
   rt <- length(diff_cols) == 0
   if (!error_raise)
     return(rt)
   if (!rt) {
-    # stop("'", df_name, "' doesn't have column(s): ",
-    #      paste0(diff_cols, collapse = ", "), ".",
-    #      call. = FALSE)
-    stop("No columns: ",
+    stop("'", df_name, "' doesn't have column(s): ",
          paste0(diff_cols, collapse = ", "), ".",
          call. = FALSE)
   }
+  rt
 }
 
-#' Has a length
+#' Check if an object has nonzero length
 #'
-#' Whether the object has a length or not
+#' Test whether an object has nonzero length. Can return a logical value
+#' or raise an error if `error_raise = TRUE`.
 #'
-#' @param x a
-#' @param error_raise a logical whether to raise an error or not
-#' @return a logical value
+#' @param x An object of class `character`, `integer`, `numeric`, `Date`, or `POSIXt`.
+#' @param error_raise Logical; if `TRUE`, raise an error if the object has zero length.
+#'
+#' @return A logical scalar (`TRUE` if `x` has nonzero length, otherwise `FALSE`).
 #'
 #' @examples
-#' # has a length
-#' \donttest{has_len(c(numeric(), character()))}
-#'
-#' # raise an error
 #' \dontrun{
-#' has_len(c(numeric(), character()), error_raise = TRUE)}
+#' # Has a length
+#' has_len(c(numeric(), character()))
+#'
+#' # Raise an error
+#' has_len(c(numeric(), character()), error_raise = TRUE)
+#' }
+#'
+#' @seealso [rlang::has_length()]
 #'
 #' @export
 has_len <- function(x, error_raise = FALSE) {
   assert_class(x, c("character", "integer", "numeric", "Date", "POSIXt"))
-  # x_name <- desub(x)
+  x_name <- trace_arg_expr(x)
   rt <- rlang::has_length(x)
   if (!error_raise)
     return(rt)
   if (!rt)
-    # stop("'", x_name, "' doesn't have a length.", call. = FALSE)
-    stop("No length.", call. = FALSE)
+      stop("'", x_name, "' doesn't have a length.", call. = FALSE)
+  rt
 }
 
-#' Change columns from uppercase to lowercase or from lowercase to uppercase
+#' Convert column names to lower or upper case
 #'
-#' Change columns from uppercase to lowercase or from lowercase to uppercase
+#' Convenience functions to modify the case of all column names in a data frame.
+#' These functions update the names **in place** (using `data.table`).
 #'
-#' @param df a data.frame
-#' @return no return values
+#' @param df A data.frame.
+#'
+#' @return The input data frame with column names modified in place.
+#'   Called for side effects.
 #'
 #' @examples
-#' # Change columns case
-#' \donttest{df <- mtcars
+#' \donttest{
+#' df <- mtcars
+#'
+#' # Convert to upper case
 #' set_col_upper(df)
-#' set_col_lower(df)}
+#'
+#' # Convert to lower case
+#' set_col_lower(df)
+#'
+#' }
 #'
 #' @export
 set_col_lower <- function(df)
@@ -441,21 +363,30 @@ set_col_lower <- function(df)
 set_col_upper <- function(df)
   data.table::setnames(df, colnames(df), toupper(colnames(df)))
 
-#' Fast column reordering of data.table by reference
+#' Reorder columns of a data.frame or data.table by reference
 #'
-#' set_col_order reorders the columns of data.table, by reference, to the new order provided.
+#' A convenience wrapper around [data.table::setcolorder()] that allows
+#' column reordering with tidy-eval expressions. The function modifies
+#' the input object **in place**.
 #'
-#' @param df a data.table
-#' @param neworder names of columns of the new column name ordering
-#' @param before,after If one of them (not both) was provided with a column name or number, neworder will be inserted before or after that column.
-#' @return no return value
+#' @param df A data.frame or data.table.
+#' @param neworder Columns to move, specified as bare names inside `.(...)`.
+#'   For example, `.(gear, carb)`.
+#' @param before,after Optionally, a column (name or position) before/after which
+#'   `neworder` should be inserted. Only one of `before` or `after` may be used.
+#'
+#' @return No return value, called for side effects (the column order of `df` is changed).
 #'
 #' @examples
 #' \dontrun{
-#' # set_col_order
-#' df <- mtcars
-#' set_col_order(df, .(gear, carb), after = mpg)
-#' set_col_order(df, .(gear, carb), after = am)}
+#' # With data.frame
+#' df1 <- mtcars
+#' set_col_order(df1, .(gear, carb), after = mpg)
+#'
+#' # With data.table
+#' df2 <- data.table::as.data.table(mtcars)
+#' set_col_order(df2, .(gear, carb), before = am)
+#' }
 #'
 #' @export
 set_col_order <- function(df, neworder, before = NULL, after = NULL) {
@@ -467,26 +398,43 @@ set_col_order <- function(df, neworder, before = NULL, after = NULL) {
   data.table::setcolorder(x = df, neworder = neworder, before = before, after = after)
 }
 
-#' Set labels
+#' Set or get column labels for a data frame
 #'
-#' Set column labels for a data frame.
+#' Functions to attach or retrieve descriptive labels on columns
+#' of a data.frame. Labels are stored as the `"label"` attribute
+#' of each column.
 #'
-#' @param df a data.frame
-#' @param labels a string vector specifying labels to describe columns
-#' @param cols a string vector specifying columns
+#' @param df A data.frame.
+#' @param labels A character vector of labels to assign. Must be the same
+#'   length as `cols`.
+#' @param cols A character vector of column names to set or get labels for.
+#'   Defaults to all columns in `df`.
+#'
+#' @return
+#' * `set_labels()` returns the modified data frame, invisibly (labels
+#'   are added as side effects).
+#' * `get_labels()` returns a character vector of labels corresponding
+#'   to the requested columns.
 #'
 #' @examples
+#' \dontrun{
+#' df <- data.frame(Q1 = c(0, 1, 1), Q2 = c(1, 0, 1))
+#'
 #' # set labels
-#' \dontrun{df <- data.frame(Q1 = c(0, 1, 1), Q2 = c(1, 0, 1))
 #' set_labels(df, labels = c("Rainy?", "Umbrella?"))
-#' View(df)}
+#'
+#' # get labels
+#' get_labels(df)
+#'
+#' View(df)
+#' }
 #'
 #' @export
 set_labels <- function(df, labels, cols) {
   if (missing(cols))
     cols <- names(df)
   if (length(cols) != length(labels))
-    stop("the length of columns and the length of labels are different.")
+    stop("The number of columns and the number of labels are different.")
   lapply(seq_along(cols),
          function(x) data.table::setattr(df[[cols[[x]]]], "label", labels[[x]]))
   invisible(df)
@@ -500,62 +448,77 @@ get_labels <- function(df, cols) {
   sapply(cols, function(x) attr(df[[x]], "label"), USE.NAMES = FALSE)
 }
 
-#' Get a copied data.table
+#' Convert a data.frame to data.table (experimental)
 #'
-#' Get a copied data.table.
+#' @description
+#' `r lifecycle::badge("experimental")`
 #'
-#' @param df a data.frame
-#' @return a copied data.table
+#' A wrapper around [data.table::setDT()] that converts a `data.frame` to a
+#' `data.table` **by reference**. This version adds extra safety checks and
+#' preserves naming in the calling environment.
 #'
-#' @examples
-#' # get copied data.table
-#' \donttest{df <- data.frame(x = 1:3, y = c("a", "b", "c"))
-#' get_copied_dt(df)}
+#' @param df A data.frame.
 #'
-#' @export
-get_copied_dt <- function(df)
-  return(data.table::setDT(data.table::copy(df))[])
-
-#' Set data.table function
-#'
-#' setDT function re-exported from `data.table`.
-#'
-#' @param df a data.frame
-#' @return no return values.
+#' @return The input `df`, converted to a data.table, returned invisibly.
+#'   The object is modified in place (by reference).
 #'
 #' @seealso [data.table::setDT()]
 #'
+#' @examples
+#' \dontrun{
+#' df <- data.frame(x = 1:3, y = 4:6)
+#' set_dt(df)
+#' class(df)  # now includes "data.table"
+#' }
+#'
 #' @export
 set_dt <- function(df) {
+  lifecycle::signal_stage("experimental", "set_dt()")
   assert_class(df, "data.frame")
   if (!has_ptr(df)) {
     n <- sys.nframe()
-    df_name <- desub(df)
+    df_name <- trace_arg_expr(df)
     old_class <- class(df)
     data.table::setDT(df)
     assign(df_name, df, envir = parent.frame(n))
-    invisible()
+    invisible(df)
   }
   if (!inherits(df, "data.table")) {
     data.table::setattr(df, "class", c("data.table", "data.frame"))
   }
 }
 
-#' Set tibble function
+#' Convert a data.frame to tibble (experimental)
 #'
-#' as_tibble function re-exported from `tibble`.
+#' @description
+#' `r lifecycle::badge("experimental")`
 #'
-#' @param df a data.frame
-#' @return no return values.
+#' A wrapper that converts a `data.frame` to have tibble classes
+#' (`tbl_df`, `tbl`, `data.frame`). Internally it ensures reference
+#' semantics similar to [data.table::setDT()], then adjusts the
+#' class attribute.
+#'
+#' @param df A data.frame.
+#'
+#' @return The input `df`, with tibble classes added, returned invisibly.
+#'   The object is modified in place (by reference).
 #'
 #' @seealso [tibble::as_tibble()]
 #'
+#' @examples
+#' \dontrun{
+#' df <- data.frame(x = 1:3, y = 4:6)
+#' set_tibble(df)
+#' class(df)  # "tbl_df" "tbl" "data.frame"
+#' }
+#'
 #' @export
 set_tibble <- function(df) {
+  lifecycle::signal_stage("experimental", "set_tibble()")
   assert_class(df, "data.frame")
   if (!has_ptr(df)) {
     n <- sys.nframe()
-    df_name <- desub(df)
+    df_name <- trace_arg_expr(df)
     old_class <- class(df)
     data.table::setDT(df)
     data.table::setattr(df, "class", c("tbl_df", "tbl", "data.frame"))
@@ -567,51 +530,96 @@ set_tibble <- function(df) {
   }
 }
 
-#' Equal columns of two data frames.
+#' Check equality of columns between two data frames
 #'
-#' Whether the columns of two data frames are equal.
+#' Validates that two data frames have the same shape (same columns and row count),
+#' then compares each column to determine whether all values match. The result is
+#' a named logical vector, one element per column.
 #'
-#' @param x,y two data frames
-#' @return a logical vector
+#' If the number of rows, number of columns, or column names differ, an error is raised.
+#' For value comparison, pairs of missing values (`NA` vs `NA`) are treated as equal.
+#'
+#' @param x,y Two data.frame objects.
+#'
+#' @return A named logical vector of length `ncol(x)`, where each element indicates
+#'   whether all values in the corresponding column are equal across the two data frames.
 #'
 #' @examples
-#' # Are the columns of two data frames equal?
-#' \donttest{equal(mtcars, mtcars)}
+#' \donttest{
+#' # All columns equal
+#' check_col_equal(mtcars, mtcars)
+#'
+#' # One column differs
+#' df1 <- head(mtcars)
+#' df2 <- df1; df2$cyl[1] <- df2$cyl[1] + 1
+#' check_col_equal(df1, df2)
+#'
+#' # NA handling: NA vs NA is considered equal
+#' a <- data.frame(x = c(1, NA, 3))
+#' b <- data.frame(x = c(1, NA, 3))
+#' check_col_equal(a, b)  # TRUE for column x
+#' }
 #'
 #' @export
-equal <- function(x, y) {
+check_col_equal <- function(x, y) {
   assert_class(x, "data.frame")
   assert_class(y, "data.frame")
-  x_name <- deparse(substitute(x))
-  y_name <- deparse(substitute(y))
+
+  x_name <- trace_arg_expr(x)
+  y_name <- trace_arg_expr(y)
+
   x_cols <- colnames(x); x_nrow <- nrow(x); x_ncol <- ncol(x)
   y_cols <- colnames(y); y_nrow <- nrow(y); y_ncol <- ncol(y)
+
   if (length(x_cols) != length(y_cols)) {
-    stop(sprintf("different number of cols. (%s: %s, %s: %s)",
-                 x_name, x_ncol, y_name, y_ncol))
+    stop(sprintf("Different number of cols. (%s: %s, %s: %s)",
+                 x_name, x_ncol, y_name, y_ncol), call. = FALSE)
   } else {
-    if (any(sort(x_cols) != sort(y_cols))) {
-      stop(sprintf("different column names.\n%s: %s\n%s: %s",
+    if (!identical(sort(x_cols), sort(y_cols))) {
+      stop(sprintf("Different column names.\n%s: %s\n%s: %s",
                    x_name, paste(x_cols, collapse = ", "),
-                   y_name, paste(y_cols, collapse = ", ")))
+                   y_name, paste(y_cols, collapse = ", ")), call. = FALSE)
     }
   }
+
   if (x_nrow != y_nrow)
-    stop(sprintf("different number of rows. (%s: %s, %s: %s).",
+    stop(sprintf("Different number of rows. (%s: %s, %s: %s).",
                  x_name, x_nrow, y_name, y_nrow))
-  return(sapply(x_cols, function(s) all(x[[s]] == y[[s]])))
+
+  # column-wise comparison
+  col_equal <- function(a, b) {
+    if (length(a) != length(b))
+      return(FALSE)
+    if (is.list(a) || is.list(b)) {
+      all(mapply(function(u, v) {
+        (isTRUE(is.na(u)) && isTRUE(is.na(v))) || identical(u, v)
+      }, a, b))
+    } else {
+      eq <- a == b
+      same_na <- is.na(a) & is.na(b)
+      eq[same_na] <- TRUE
+      eq[is.na(eq)] <- FALSE
+      all(eq)
+    }
+  }
+
+  rt <- vapply(x_cols, function(s) col_equal(x[[s]], y[[s]]), logical(1L))
+  names(rt) <- x_cols
+  rt
 }
 
 
-#' As comma applied label
+#' Format numbers with commas
 #'
-#' Convert a numeric vector to a comma applied string vector.
+#' Convert a numeric or integer vector into a character vector
+#' formatted with commas as thousands separators.
 #'
-#' @param x a numeric vector
-#' @return a string vector
+#' @param x A numeric or integer vector.
+#'
+#' @return A character vector of formatted numbers.
 #'
 #' @examples
-#' # convert to a comma applied string vector
+#' # format numbers with commas
 #' \donttest{as_comma(c(123456, 234567))}
 #'
 #' @export
@@ -620,15 +628,18 @@ as_comma <- function(x) {
   format(round(x), big.mark = ",")
 }
 
-#' Paste comma
+#' Paste vector elements with commas
 #'
-#' Paste vector elements with commas.
+#' Combine elements of a vector into a string with commas.
+#' Optionally insert newlines between elements for readability.
 #'
-#' @param x a vector
-#' @param newline a logical whether to add newlines by each element
+#' @param x A vector.
+#' @param newline Logical; if `TRUE`, each element is placed on a new line.
+#'
+#' @return No return value, prints to the console.
 #'
 #' @examples
-#' # paste comma
+#' # paste elements with commas
 #' \donttest{paste_comma(names(mtcars))}
 #'
 #' @export
@@ -641,16 +652,18 @@ paste_comma <- function(x, newline = FALSE) {
   }
 }
 
-#' Quote and paste comma
+#' Quote and paste symbols with commas
 #'
-#' Quote vector elements and paste it with commas.
+#' Capture unquoted symbols, wrap them in quotes, and print them
+#' as a comma-separated character vector.
 #'
-#' @param ... an expressions with no quotations
-#' @param newline a logical whether to add newlines by each element
+#' @param ... Unquoted variable names or expressions.
+#' @param newline Logical; if `TRUE`, print each element on a new line.
+#'
+#' @return No return value, prints to the console.
 #'
 #' @examples
-#' # quote comma
-#' \donttest{quote_comma(mpg, cyl, disp, hp, drat)}
+#' \donttest{quote_comma(mpg, cyl, disp, hp, drat)} # c("mpg", "cyl", "disp", "hp", "drat")
 #'
 #' @export
 quote_comma <- function(..., newline = FALSE) {
@@ -667,20 +680,32 @@ quote_comma <- function(..., newline = FALSE) {
   cat("\n")
 }
 
-#' Integer64 to numeric
+#' Convert integer64 columns in a data.table to numeric (in-place)
 #'
-#' Change class from `integer64` to `numeric` for a `data.frame`
+#' Modifies a data.table by converting all `integer64` columns to `numeric`.
+#' This function operates **by reference**, so the input data.table
+#' is changed directly without creating a copy.
 #'
-#' @param df a `data.frame`
+#' @param df A data.table.
+#'
+#' @return No return value. The input data.table is modified in-place.
+#'
+#' @examples
+#' \dontrun{
+#' dt <- data.table::data.table(a = bit64::as.integer64(1:3), b = c("x", "y", "z"))
+#' str(dt)
+#' set_i64_to_num(dt)
+#' str(dt) # column 'a' converted to numeric
+#' }
 #'
 #' @export
-i64_to_num <- function(df) {
+set_i64_to_num <- function(df) {
   cols <- jaid::type(df)[class == "integer64"]$column
   df[, (cols) := lapply(.SD, as.numeric), .SDcols = cols]
   return(df)
 }
 
-# to be updated -----------------------------------------------------------
+# To be updated -----------------------------------------------------------
 
 sort_group_by <- function(x) {
   .Call(SortGroupBy, x)

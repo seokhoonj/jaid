@@ -1,8 +1,8 @@
 Package: jaid
 Title: Joo's functional aid toolkit
-Version: 0.0.0.9000
+Version: 0.0.0.9001
 Authors@R: 
-    person(given = "seokhoon", family = "Joo", role = c("aut", "cre"),
+    person(given = "Seokhoon", family = "Joo", role = c("aut", "cre"),
            email = "seokhoonj@gmail.com")
 Description: Joo's functional aid toolkit for efficient and productive programming.
 License: MIT + file LICENSE
@@ -10,12 +10,12 @@ Encoding: UTF-8
 Depends: R (>= 4.1.0)
 Imports:
     Rcpp (>= 0.12.10),
-    cli (>= 3.6.3),
+    cli (>= 3.6.2),
     data.table (>= 1.13.0),
-    grDevices (>= 4.2.3),
-    grid (>= 4.2.3),
+    grDevices,
+    grid,
     kableExtra (>= 1.4.0),
-    methods (>= 4.2.3),
+    lifecycle (>= 1.0.3),
     openssl (>= 1.4.1),
     openxlsx (>= 4.2.3),
     png (>= 0.1.8),
@@ -26,11 +26,37 @@ Imports:
     stringi (>= 1.7.6),
     stringr (>= 1.4.0),
     tibble (>= 3.2.1),
-    usethis (>= 2.1.6)
-Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.3.2
+    usethis (>= 2.1.6),
+    utils
+Suggests: 
+    magick (>= 2.8.7),
+    shiny (>= 1.9.1),
+    webshot2 (>= 0.1.2)
 LinkingTo: 
     Rcpp
-Suggests: 
-    pryr (>= 0.1.6)
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.2
 Config/testthat/edition: 3
+X-ImportsPackageLicense:
+    Rcpp (GPL (>= 2)),
+    cli (MIT + file LICENSE),
+    data.table (MPL-2.0 | file LICENSE),
+    grDevices (GPL-2 | GPL-3),
+    grid (GPL-2 | GPL-3),
+    kableExtra (MIT + file LICENSE),
+    lifecycle (MIT + file LICENSE),
+    openssl (MIT + file LICENSE),
+    openxlsx (MIT + file LICENSE),
+    png (GPL-2 | GPL-3),
+    readxl (MIT + file LICENSE),
+    reticulate (Apache License 2.0),
+    rlang (MIT + file LICENSE),
+    scales (MIT + file LICENSE),
+    stringi (file LICENSE - BSD-3-Clause + Unicode License v3 (partially GPL like stri_stats_latex),
+    stringr (MIT + file LICENSE),
+    tibble (MIT + file LICENSE),
+    usethis (MIT + file LICENSE),
+X-SuggestsPackageLicense:
+    magick (MIT + file LICENSE),
+    shiny (GPL-3 + LICENSE),
+    webshot2 (MIT + file LICENSE)

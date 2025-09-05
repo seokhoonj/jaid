@@ -3,25 +3,32 @@
 \name{dolock}
 \alias{dolock}
 \alias{unlock}
-\title{dolock, unlock}
+\title{Lock and unlock data objects}
 \usage{
 dolock(obj, key)
 
 unlock(obj, key)
 }
 \arguments{
-\item{obj}{An object to save}
+\item{obj}{An R object to be locked or unlocked.}
 
-\item{key}{A string specifying password}
+\item{key}{A character string specifying the password used for locking/unlocking.}
+}
+\value{
+The locked (encrypted) object for \code{dolock()}, or the unlocked
+(decrypted) object for \code{unlock()}.
 }
 \description{
-lock and unlock data files for security.
+\code{dolock()} encrypts and locks an object using a password key.
+\code{unlock()} decrypts and restores a locked object with the same key.
 }
 \examples{
-## dolock
-\dontrun{dolock("your data", "your password")}
+\dontrun{
+## Lock an object
+locked <- dolock("secret", "password")
 
-## unlock
-\dontrun{unlock("your data", "your password")}
+## Unlock it
+original <- unlock(locked, "password")
+}
 
 }

@@ -7,15 +7,15 @@
 split_str(x, split = "|")
 }
 \arguments{
-\item{x}{a string vector}
+\item{x}{A character vector.}
 
-\item{split}{a string to use for splitting}
+\item{split}{A single string delimiter.}
 }
 \value{
-a string vector
+A list of character vectors (one element per input string).
 }
 \description{
-Split strings
+Split each input string on a delimiter.
 }
 \examples{
 # split strings

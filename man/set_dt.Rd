@@ -2,18 +2,31 @@
 % Please edit documentation in R/utils.R
 \name{set_dt}
 \alias{set_dt}
-\title{Set data.table function}
+\title{Convert a data.frame to data.table (experimental)}
 \usage{
 set_dt(df)
 }
 \arguments{
-\item{df}{a data.frame}
+\item{df}{A data.frame.}
 }
 \value{
-no return values.
+The input \code{df}, converted to a data.table, returned invisibly.
+The object is modified in place (by reference).
 }
 \description{
-setDT function re-exported from \code{data.table}.
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
+
+A wrapper around \code{\link[data.table:setDT]{data.table::setDT()}} that converts a \code{data.frame} to a
+\code{data.table} \strong{by reference}. This version adds extra safety checks and
+preserves naming in the calling environment.
+}
+\examples{
+\dontrun{
+df <- data.frame(x = 1:3, y = 4:6)
+set_dt(df)
+class(df)  # now includes "data.table"
+}
+
 }
 \seealso{
 \code{\link[data.table:setDT]{data.table::setDT()}}

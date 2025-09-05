@@ -2,32 +2,38 @@
 % Please edit documentation in R/matrix.R
 \name{rotate}
 \alias{rotate}
-\title{rotate a matrix}
+\title{Rotate a matrix by 90, 180, or 270 degrees}
 \usage{
 rotate(x, angle = c(90, 180, 270))
 }
 \arguments{
-\item{x}{A matrix}
+\item{x}{A matrix.}
 
-\item{angle}{A numeric value specifying rotation angle (90, 180, 270)}
+\item{angle}{Integer. The rotation angle in degrees. Must be one of
+\code{90}, \code{180}, or \code{270}. Values are taken modulo 360.}
 }
 \value{
-A rotation matrix
+A matrix of the same mode as \code{x}, rotated by the specified angle,
+with appropriately reordered dimension names.
 }
 \description{
-Rotate a matrix.
+Rotate a numeric or character matrix clockwise by a specified angle.
+Only 90, 180, and 270 degree rotations are supported. Dimension names
+(row and column names) are preserved and reordered appropriately.
 }
 \examples{
-# 90 degree rotation
-\donttest{x <- matrix(1:9, nrow = 3)
-rotate(x, 90)}
+\donttest{
+# Rotate a matrix by 90 degrees
+x <- matrix(1:9, nrow = 3)
+rotate(x, 90)
 
-# 180 degree rotation
-\donttest{x <- matrix(1:9, nrow = 3)
-rotate(x, 180)}
+# Rotate a matrix by 180 degrees
+x <- matrix(1:9, nrow = 3)
+rotate(x, 180)
 
-# 270 degree rotation
-\donttest{x <- matrix(1:9, nrow = 3)
-rotate(x, 270)}
+# Rotate a matrix by 270 degrees
+x <- matrix(1:9, nrow = 3)
+rotate(x, 270)
+}
 
 }

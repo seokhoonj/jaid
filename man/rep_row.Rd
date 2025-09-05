@@ -2,32 +2,36 @@
 % Please edit documentation in R/rep.R
 \name{rep_row}
 \alias{rep_row}
-\alias{rep_row.matrix}
 \alias{rep_row.data.frame}
 \alias{rep_row.data.table}
-\title{Data replication function}
+\alias{rep_row.matrix}
+\title{Replicate rows of a matrix/data.frame/data.table}
 \usage{
 rep_row(x, ...)
-
-\method{rep_row}{matrix}(x, ...)
 
 \method{rep_row}{data.frame}(x, ...)
 
 \method{rep_row}{data.table}(x, ...)
+
+\method{rep_row}{matrix}(x, ...)
 }
 \arguments{
-\item{x}{matrix, data.frame, data.table}
+\item{x}{A \code{matrix}, \code{data.frame}, or \code{data.table}.}
 
-\item{...}{times, each}
+\item{...}{Arguments passed to \code{\link[base:rep]{base::rep()}} such as \code{times} and \code{each}.}
 }
 \value{
-matrix, data.frame, data.table.
+An object of the same general type as \code{x} with rows replicated.
 }
 \description{
-This function is for replicating data rows
+Convenience S3 generic to replicate rows of tabular objects. For
+each column, values are replicated according to arguments passed to
+\code{\link[base:rep]{base::rep()}} (e.g., \code{times}, \code{each}).
 }
 \examples{
+\donttest{
 rep_row(iris, times = 3)
 rep_row(iris, each  = 3)
+}
 
 }

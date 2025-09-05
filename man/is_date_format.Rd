@@ -2,16 +2,18 @@
 % Please edit documentation in R/date.R
 \name{is_date_format}
 \alias{is_date_format}
-\title{Is a date format?}
+\title{Check if input is in a recognizable date format}
 \usage{
 is_date_format(x)
 }
 \arguments{
-\item{x}{value to check}
+\item{x}{Object to test (Date, POSIXt, character, or factor).}
 }
 \value{
-a logical whether it's a date format or not.
+Logical scalar: \code{TRUE} if \code{x} is Date/POSIXt or all elements of \code{x}
+match the configured date format; \code{FALSE} otherwise.
 }
 \description{
-Is a date or date format vector?
+Test whether an object is a date or can be interpreted as a date according to
+package-configured formats.
 }

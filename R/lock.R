@@ -1,17 +1,22 @@
-#' @title dolock, unlock
+#' Lock and unlock data objects
 #'
-#' @description
-#' lock and unlock data files for security.
+#' `dolock()` encrypts and locks an object using a password key.
+#' `unlock()` decrypts and restores a locked object with the same key.
 #'
-#' @param obj An object to save
-#' @param key A string specifying password
+#' @param obj An R object to be locked or unlocked.
+#' @param key A character string specifying the password used for locking/unlocking.
+#'
+#' @return The locked (encrypted) object for `dolock()`, or the unlocked
+#'   (decrypted) object for `unlock()`.
 #'
 #' @examples
-#' ## dolock
-#' \dontrun{dolock("your data", "your password")}
+#' \dontrun{
+#' ## Lock an object
+#' locked <- dolock("secret", "password")
 #'
-#' ## unlock
-#' \dontrun{unlock("your data", "your password")}
+#' ## Unlock it
+#' original <- unlock(locked, "password")
+#' }
 #'
 #' @export
 dolock <- function(obj, key) UseMethod("dolock")

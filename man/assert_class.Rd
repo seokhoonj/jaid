@@ -2,23 +2,23 @@
 % Please edit documentation in R/utils.R
 \name{assert_class}
 \alias{assert_class}
-\title{Assert class}
+\title{Assert object class}
 \usage{
-assert_class(obj, class)
+assert_class(x, class)
 }
 \arguments{
-\item{obj}{an object}
+\item{x}{An R object.}
 
-\item{class}{an object class}
+\item{class}{A character vector of class names to check against.}
 }
 \value{
-No return value
+No return value. Called for side effects.
 }
 \description{
-Assert object class.
+Check that an object inherits from the expected class.
+Throws an error if the assertion fails.
 }
 \examples{
-# assert object class
 \donttest{assert_class(cars, "data.frame")}
 
 }

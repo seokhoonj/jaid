@@ -4,7 +4,7 @@
 \alias{max_by_dimnames}
 \alias{min_by_dimnames}
 \alias{sum_by_dimnames}
-\title{max, min, sum by dim (row and column) names}
+\title{Aggregate by both row and column names (max, min, sum)}
 \usage{
 max_by_dimnames(x, na.rm = TRUE)
 
@@ -13,30 +13,42 @@ min_by_dimnames(x, na.rm = TRUE)
 sum_by_dimnames(x, na.rm = TRUE)
 }
 \arguments{
-\item{x}{A numeric matrix}
+\item{x}{A numeric matrix with non-\code{NULL} row and column names.}
 
-\item{na.rm}{a boolean value removing NA or not}
+\item{na.rm}{Logical; if \code{TRUE}, missing values are removed before
+aggregation.}
 }
 \value{
-A matrix of minimum values shrinked by dim (row and column) names
+A numeric matrix with one row per unique row name and one column
+per unique column name of \code{x}:
+\itemize{
+\item \code{max_by_dimnames()} returns element-wise maxima within each (row-name, col-name) group.
+\item \code{min_by_dimnames()} returns element-wise minima within each group.
+\item \code{sum_by_dimnames()} returns element-wise sums within each group.
+}
 }
 \description{
-max, min, sum of values on each dim (row and column) name of a matrix.
+Compute element-wise aggregates of a numeric matrix after grouping
+simultaneously by identical \strong{row names} and \strong{column names}. That is,
+rows with the same name are reduced to one row, and columns with the same
+name are reduced to one column, using the chosen summary (max/min/sum).
 }
 \examples{
-# max by dim names
-\donttest{x <- matrix(c(1:9), ncol = 3)
-set_dimnames(x, list(c("a", "a", "b"), c("a", "b", "b")))
-max_by_dimnames(x)}
+\donttest{
+# Maximum values grouped by row names and column names
+x <- matrix(c(1:9), ncol = 3)
+set_mat_dimnames(x, list(c("a", "a", "b"), c("a", "b", "b")))
+max_by_dimnames(x)
 
-# min by dim names
-\donttest{x <- matrix(c(1:9), ncol = 3)
-set_dimnames(x, list(c("a", "a", "b"), c("a", "b", "b")))
-min_by_dimnames(x)}
+# Minimum values grouped by row names and column names
+x <- matrix(c(1:9), ncol = 3)
+set_mat_dimnames(x, list(c("a", "a", "b"), c("a", "b", "b")))
+min_by_dimnames(x)
 
-# sum by dim names
-\donttest{x <- matrix(c(1:9), ncol = 3)
-set_dimnames(x, list(c("a", "a", "b"), c("a", "b", "b")))
-sum_by_dimnames(x)}
+# Sum of values grouped by row names and column names
+x <- matrix(c(1:9), ncol = 3)
+set_mat_dimnames(x, list(c("a", "a", "b"), c("a", "b", "b")))
+sum_by_dimnames(x)
+}
 
 }

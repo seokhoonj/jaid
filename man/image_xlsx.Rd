@@ -2,42 +2,22 @@
 % Please edit documentation in R/excel.R
 \name{image_xlsx}
 \alias{image_xlsx}
-\title{Insert images in an excel file}
+\title{Deprecated: image_xlsx()}
 \usage{
-image_xlsx(
-  images,
-  file,
-  rc = c(1L, 1L),
-  width = 12,
-  height = 6,
-  dpi = 300,
-  overwrite = FALSE
-)
+image_xlsx(...)
 }
 \arguments{
-\item{images}{image file paths}
-
-\item{file}{a file path}
-
-\item{rc}{a vector of starting point row and column, default c(1L, 1L)}
-
-\item{width}{image width}
-
-\item{height}{image height}
-
-\item{dpi}{image resolution}
-
-\item{overwrite}{A boolean value that overwrite or not}
+\item{...}{Additional arguments passed to \code{\link[=save_image_xlsx]{save_image_xlsx()}}.}
 }
 \value{
-no return
+No return value, called for side effects.
 }
 \description{
-Insert images in an excel file.
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}
 }
-\examples{
-# insert images in an excel file
-\dontrun{
-image_xlsx(list(image1, image2), "image.xlsx")}
-
+\details{
+Use \code{\link[=save_image_xlsx]{save_image_xlsx()}} instead.
+}
+\seealso{
+\code{\link[=save_image_xlsx]{save_image_xlsx()}}
 }

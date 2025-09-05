@@ -2,21 +2,22 @@
 % Please edit documentation in R/utils.R
 \name{as_comma}
 \alias{as_comma}
-\title{As comma applied label}
+\title{Format numbers with commas}
 \usage{
 as_comma(x)
 }
 \arguments{
-\item{x}{a numeric vector}
+\item{x}{A numeric or integer vector.}
 }
 \value{
-a string vector
+A character vector of formatted numbers.
 }
 \description{
-Convert a numeric vector to a comma applied string vector.
+Convert a numeric or integer vector into a character vector
+formatted with commas as thousands separators.
 }
 \examples{
-# convert to a comma applied string vector
+# format numbers with commas
 \donttest{as_comma(c(123456, 234567))}
 
 }

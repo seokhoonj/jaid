@@ -31,21 +31,23 @@
 #' @return No return value. The function creates and configures the Python or Miniconda environment.
 #'
 #' @examples
+#' \dontrun{
 #' # Create a virtual environment and install packages
-#' \dontrun{setup_python_env(
+#' setup_python_env(
 #'   env_name = "r-reticulate",
 #'   packages = c("numpy", "pandas", "git+https://github.com/seokhoonj/underwriter"),
 #'   use_miniconda = FALSE,
 #'   force_reinstall = FALSE
-#' )}
+#' )
 #'
 #' # Create a Conda environment and force reinstall packages
-#' \dontrun{setup_python_env(
+#' setup_python_env(
 #'   env_name = "r-reticulate",
 #'   packages = c("numpy", "pandas", "git+https://github.com/seokhoonj/underwriter"),
 #'   use_miniconda = TRUE,
 #'   force_reinstall = TRUE
-#' )}
+#' )
+#' }
 #'
 #' @export
 setup_python_env <- function(

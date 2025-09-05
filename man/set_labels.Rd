@@ -3,26 +3,45 @@
 \name{set_labels}
 \alias{set_labels}
 \alias{get_labels}
-\title{Set labels}
+\title{Set or get column labels for a data frame}
 \usage{
 set_labels(df, labels, cols)
 
 get_labels(df, cols)
 }
 \arguments{
-\item{df}{a data.frame}
+\item{df}{A data.frame.}
 
-\item{labels}{a string vector specifying labels to describe columns}
+\item{labels}{A character vector of labels to assign. Must be the same
+length as \code{cols}.}
 
-\item{cols}{a string vector specifying columns}
+\item{cols}{A character vector of column names to set or get labels for.
+Defaults to all columns in \code{df}.}
+}
+\value{
+\itemize{
+\item \code{set_labels()} returns the modified data frame, invisibly (labels
+are added as side effects).
+\item \code{get_labels()} returns a character vector of labels corresponding
+to the requested columns.
+}
 }
 \description{
-Set column labels for a data frame.
+Functions to attach or retrieve descriptive labels on columns
+of a data.frame. Labels are stored as the \code{"label"} attribute
+of each column.
 }
 \examples{
+\dontrun{
+df <- data.frame(Q1 = c(0, 1, 1), Q2 = c(1, 0, 1))
+
 # set labels
-\dontrun{df <- data.frame(Q1 = c(0, 1, 1), Q2 = c(1, 0, 1))
 set_labels(df, labels = c("Rainy?", "Umbrella?"))
-View(df)}
+
+# get labels
+get_labels(df)
+
+View(df)
+}
 
 }

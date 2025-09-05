@@ -2,20 +2,23 @@
 % Please edit documentation in R/utils.R
 \name{quote_comma}
 \alias{quote_comma}
-\title{Quote and paste comma}
+\title{Quote and paste symbols with commas}
 \usage{
 quote_comma(..., newline = FALSE)
 }
 \arguments{
-\item{...}{an expressions with no quotations}
+\item{...}{Unquoted variable names or expressions.}
 
-\item{newline}{a logical whether to add newlines by each element}
+\item{newline}{Logical; if \code{TRUE}, print each element on a new line.}
+}
+\value{
+No return value, prints to the console.
 }
 \description{
-Quote vector elements and paste it with commas.
+Capture unquoted symbols, wrap them in quotes, and print them
+as a comma-separated character vector.
 }
 \examples{
-# quote comma
-\donttest{quote_comma(mpg, cyl, disp, hp, drat)}
+\donttest{quote_comma(mpg, cyl, disp, hp, drat)} # c("mpg", "cyl", "disp", "hp", "drat")
 
 }

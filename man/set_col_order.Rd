@@ -2,28 +2,36 @@
 % Please edit documentation in R/utils.R
 \name{set_col_order}
 \alias{set_col_order}
-\title{Fast column reordering of data.table by reference}
+\title{Reorder columns of a data.frame or data.table by reference}
 \usage{
 set_col_order(df, neworder, before = NULL, after = NULL)
 }
 \arguments{
-\item{df}{a data.table}
+\item{df}{A data.frame or data.table.}
 
-\item{neworder}{names of columns of the new column name ordering}
+\item{neworder}{Columns to move, specified as bare names inside \code{.(...)}.
+For example, \code{.(gear, carb)}.}
 
-\item{before, after}{If one of them (not both) was provided with a column name or number, neworder will be inserted before or after that column.}
+\item{before, after}{Optionally, a column (name or position) before/after which
+\code{neworder} should be inserted. Only one of \code{before} or \code{after} may be used.}
 }
 \value{
-no return value
+No return value, called for side effects (the column order of \code{df} is changed).
 }
 \description{
-set_col_order reorders the columns of data.table, by reference, to the new order provided.
+A convenience wrapper around \code{\link[data.table:setcolorder]{data.table::setcolorder()}} that allows
+column reordering with tidy-eval expressions. The function modifies
+the input object \strong{in place}.
 }
 \examples{
 \dontrun{
-# set_col_order
-df <- mtcars
-set_col_order(df, .(gear, carb), after = mpg)
-set_col_order(df, .(gear, carb), after = am)}
+# With data.frame
+df1 <- mtcars
+set_col_order(df1, .(gear, carb), after = mpg)
+
+# With data.table
+df2 <- data.table::as.data.table(mtcars)
+set_col_order(df2, .(gear, carb), before = am)
+}
 
 }

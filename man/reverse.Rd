@@ -2,22 +2,24 @@
 % Please edit documentation in R/vector.R
 \name{reverse}
 \alias{reverse}
-\title{Reverse a vector}
+\title{Reverse the order of elements in a vector}
 \usage{
 reverse(x)
 }
 \arguments{
-\item{x}{A vector}
+\item{x}{A vector.}
 }
 \value{
-A reversed vector
+A vector of the same type as \code{x}, with elements in reverse order.
 }
 \description{
-Reverse a vector directly.
+Returns the input vector with its elements in reverse order.
 }
 \examples{
-# reverse a vector
-\donttest{x <- c(1:10)
-reverse(x)}
+\donttest{
+# Reverse a numeric vector
+x <- c(1:10)
+reverse(x)
+}
 
 }

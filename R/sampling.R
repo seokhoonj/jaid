@@ -1,28 +1,72 @@
-#' Stratified Sampling
+#' Stratified sampling (by data.table groups)
 #'
-#' Stratified Sampling
+#' @description
+#' `r lifecycle::badge("experimental")`
 #'
-#' @param df data.table object
-#' @param group_var names of group variables
-#' @param size a positive numeric sampling size. if the size < 0, it's proportion.
-#' @param replace should sampling be with replacement?
-#' @param contain0 whether to include a specific group if the group proportion is 0
-#' @param method a rounding method c('round', 'floor', 'ceiling')
-#' @param verbose if `TRUE`sampling summary will be shown.
-#' @param seed a single value, interpreted as integer, or NULL
-#' @return a data.table
+#' Perform stratified sampling on a data.table, drawing a specified number
+#' of rows **within each group**.
+#'
+#' @details
+#' Let *n<sub>g</sub>* be the size of group *g*.
+#'
+#' * If `0 < size < 1`, the target sample size per group is computed as
+#'   `method(`*n<sub>g</sub>*` * size)` where `method` is one of `"round"`, `"floor"`,
+#'   or `"ceiling"`.
+#' * If `size >= 1`, the target sample size per group is the same constant
+#'   `size` for all groups.
+#' * If `contain0 = FALSE` (default), any group whose target becomes 0 is
+#'   bumped up to 1 so that **every group contributes at least one row**.
+#' * Sampling is done independently within each group using
+#'   `base::sample.int()` with `replace` as specified.
+#'
+#' The result carries an attribute `"group"` (a data.table of
+#' group counts and final per-group sample sizes) for auditing.
+#'
+#' @param df A data.table.
+#' @param group_var Grouping columns. Supply bare names in a tidy style,
+#'   e.g. `.(Species)` or `.(g1, g2)`.
+#' @param size A positive number controlling per-group sample size:
+#'   a proportion if `0 < size < 1`, otherwise an absolute count
+#'   (same for all groups).
+#' @param replace Logical; sample with replacement? Default `TRUE`.
+#' @param contain0 Logical; if `TRUE`, groups with computed target 0 are
+#'   allowed to contribute 0 rows. If `FALSE` (default), such groups are
+#'   forced to contribute 1 row.
+#' @param method Rounding method used when `0 < size < 1`.
+#'   One of `"round"`, `"floor"`, or `"ceiling"`. Ignored when `size >= 1`.
+#' @param verbose Logical; if `TRUE`, print a sampling summary table.
+#'   Default `TRUE`.
+#' @param seed Optional integer; if supplied, sets the RNG seed for
+#'   reproducibility. If `NULL`, no seed is set. (Default `123`.)
+#'
+#' @return A data.table consisting of the sampled rows. An attribute
+#'   `"group"` is attached describing per-group population size, target
+#'   sample size, and realized proportion.
 #'
 #' @examples
-#' \dontrun{
-#' dt <- iris
-#' data.table::setDT(dt)
-#' strati_sampling(dt, size = 0.1)
-#' strati_sampling(dt, group_var = Species, size = 0.1)}
+#' \donttest{
+#' dt <- data.table::as.data.table(iris)
+#'
+#' # 10% per-group sample (rounded), with replacement
+#' stratified_sampling(dt, group_var = .(Species), size = 0.1, method = "round")
+#'
+#' # Fixed 5 rows per group (same count for all groups)
+#' stratified_sampling(dt, group_var = .(Species), size = 5, replace = FALSE)
+#'
+#' # Allow groups to contribute zero when proportion rounds to 0
+#' stratified_sampling(dt, group_var = .(Species), size = 0.01,
+#'                     method = "floor", contain0 = TRUE)
+#'
+#' # Reproducible result with a fixed seed
+#' stratified_sampling(dt, group_var = .(Species), size = 0.2, seed = 42)
+#' }
 #'
 #' @export
-strati_sampling <- function(df, group_var, size, replace = TRUE, contain0 = FALSE,
-                            method = c("round", "floor", "ceiling"), verbose = TRUE,
-                            seed = 123) {
+stratified_sampling <- function(df, group_var, size, replace = TRUE,
+                                contain0 = FALSE,
+                                method = c("round", "floor", "ceiling"),
+                                verbose = TRUE, seed = 123) {
+  lifecycle::signal_stage("experimental", "stratified_sampling()")
   assert_class(df, "data.table")
   # group_var <- match_cols(df, vapply(substitute(group_var), deparse, "character"))
   group_var <- match_cols(df, sapply(rlang::enexpr(group_var), rlang::as_name))
@@ -40,19 +84,19 @@ strati_sampling <- function(df, group_var, size, replace = TRUE, contain0 = FALS
     data.table::set(group, i = which(group$s == 0), j = "s", value = 1)
   data.table::set(group, j = "p", value = group$s / group$n)
   if (verbose) {
-    cat(draw_line(), "\n")
+    cli::cat_rule(line = 2)
     cat(sprintf("Target prop: %.2f %% (method = %s, replace = %s)\n",
                 size * 100, method, replace))
     cat(sprintf("Population : %s unit\n",
-                stringr::str_pad(scales::comma(sum(group$n)), widfh = 14,
+                stringr::str_pad(scales::comma(sum(group$n)), width = 14,
                                  pad = " ")))
     cat(sprintf("Sample     : %s unit\n",
-                stringr::str_pad(scales::comma(sum(group$s)), widfh = 14,
+                stringr::str_pad(scales::comma(sum(group$s)), width = 14,
                                  pad = " ")))
     cat(sprintf("Actual prop: %.2f %%\n", sum(group$s)/sum(group$n) * 100))
-    cat(draw_line(), "\n")
+    cli::cat_rule(line = 2)
     print(cbind(group, prop = sprintf("%.2f %%", group$p * 100)))
-    cat(draw_line(), "\n")
+    cli::cat_rule(line = 2)
   }
   if (nrow(group) > 1) {
     g <- NULL
@@ -78,29 +122,57 @@ strati_sampling <- function(df, group_var, size, replace = TRUE, contain0 = FALS
   data.table::setorder(z, g)
   data.table::setattr(z, "group", group)
   rm_cols(z, g)
-  return(z[])
+  z[]
 }
 
-#' Random sampling
+#' Randomly sample rows from a data frame
 #'
-#' Random sampling for a `data.frame` or a vector
+#' @description
+#' `r lifecycle::badge("experimental")`
 #'
-#' @param x either a `data.frame` or a vector
-#' @param size a non-negative integer giving the number of items to choose.
-#' @param replace should sampling be with replacement?
-#' @param prob a vector of probability weights for obtaining the elements of the vector being sampled.
-#' @param seed a single value, interpreted as an integer, or NULL.
-#' @return either a `data.frame` or a vector
+#' Draw a random sample of rows from a data frame. This is a simple wrapper
+#' around [base::sample.int()] that preserves the data frame structure.
+#'
+#' @param x A data.frame.
+#' @param size A non-negative integer giving the number of rows to sample.
+#' @param replace Logical. Should sampling be with replacement? Defaults to `TRUE`.
+#' @param prob A numeric vector of probability weights for sampling. Its length
+#'   must equal `nrow(x)`.
+#' @param seed An optional integer. If supplied, sets the random seed for
+#'   reproducibility. If `NULL` (default), no seed is set.
+#'
+#' @return A data.frame containing the sampled rows.
 #'
 #' @examples
-#' \dontrun{
-#' random_sampling(iris)}
+#' \donttest{
+#' # Sample 5 rows with replacement
+#' random_sampling(iris, size = 5)
+#'
+#' # Sample rows without replacement
+#' random_sampling(iris, size = 5, replace = FALSE)
+#'
+#' # Weighted sampling
+#' w <- runif(nrow(iris))
+#' random_sampling(iris, size = 5, prob = w)
+#'
+#' # Reproducible sampling
+#' random_sampling(iris, size = 5, seed = 42)
+#' }
 #'
 #' @export
-random_sampling <- function(x, size, replace = TRUE, prob = NULL, seed = 123) {
-  if (is.vector(x))
-    return(x[sample.int(NROW(x), size, replace, prob)])
-  if (is.data.frame(x))
-    return(x[sample.int(NROW(x), size, replace, prob),])
-  stop("Not an object of class: ", class(x), call. = FALSE)
+random_sampling <- function(x, size, replace = TRUE, prob = NULL, seed = NULL) {
+  lifecycle::signal_stage("experimental", "random_sampling()")
+  if (!is.data.frame(x))
+    stop("`x` must be a data frame.", call. = FALSE)
+
+  if (!is.null(seed)) {
+    old_seed <- .Random.seed
+    on.exit({
+      if (exists("old_seed", inherits = FALSE)) .Random.seed <<- old_seed
+    }, add = TRUE)
+    set.seed(seed)
+  }
+
+  idx <- sample.int(nrow(x), size, replace, prob)
+  x[idx, , drop = FALSE]
 }

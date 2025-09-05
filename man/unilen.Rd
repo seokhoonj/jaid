@@ -2,22 +2,25 @@
 % Please edit documentation in R/vector.R
 \name{unilen}
 \alias{unilen}
-\title{Length of a unique vector}
+\title{Count unique elements}
 \usage{
 unilen(x)
 }
 \arguments{
-\item{x}{A vector}
+\item{x}{A vector.}
 }
 \value{
-A length of a unique vector
+An integer scalar: the count of distinct values in \code{x}.
 }
 \description{
-Calculate length of a unique vector.
+Returns the number of distinct values in a vector. This is a lightweight,
+fast alternative to \code{length(unique(x))}, implemented in C for performance.
 }
 \examples{
-# length of unique vector
-\donttest{x <- c(1, 1, 2, 3, 4, 5, 5)
-unilen(x)}
+\donttest{
+# Length of unique vector
+x <- c(1, 1, 2, 3, 4, 5, 5)
+unilen(x)
+}
 
 }

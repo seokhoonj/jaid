@@ -2,25 +2,24 @@
 % Please edit documentation in R/str.R
 \name{count_pattern}
 \alias{count_pattern}
-\title{Count pattern matched strings}
+\title{Count pattern matches}
 \usage{
 count_pattern(pattern, x, ignore.case = FALSE)
 }
 \arguments{
-\item{pattern}{a string containing a \link{regular expression}}
+\item{pattern}{A string containing a regular expression.}
 
-\item{x}{a string}
+\item{x}{A character vector.}
 
-\item{ignore.case}{if \code{FALSE}, the pattern matching is case sensitive and if \code{TRUE}, case is ignored during matching.}
+\item{ignore.case}{Logical; if \code{TRUE}, case is ignored. Default: \code{FALSE}.}
 }
 \value{
-a string vector
+An integer vector of match counts (same length as \code{x}).
 }
 \description{
-Count pattern matched strings from a string vector.
+Count regex matches in each string.
 }
 \examples{
-# count pattern matched strings from a string vector
 \donttest{count_pattern(pattern = "c", c("a|b|c", "a|c|c"))}
 
 }

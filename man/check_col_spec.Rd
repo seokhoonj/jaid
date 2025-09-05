@@ -7,13 +7,13 @@
 check_col_spec(df, col_spec)
 }
 \arguments{
-\item{df}{A \code{data.frame} or \code{data.table} containing the data to be checked.}
+\item{df}{A data.frame or data.table containing the data to be checked.}
 
-\item{col_spec}{A named \code{list} defining the expected specification.
+\item{col_spec}{A named list defining the expected specification.
 Each name corresponds to a column, and each value is the expected class.}
 }
 \value{
-A \code{data.table} with the following columns:
+A data.table with the following columns:
 \itemize{
 \item \code{column}: Column name
 \item \code{actual}: Actual class of the column (NA if missing)
@@ -24,12 +24,12 @@ A \code{data.table} with the following columns:
 \description{
 Validates whether the columns in a given data frame match an expected
 column specification. The specification includes expected column names
-and their corresponding classes. The function returns a \code{data.table}
+and their corresponding classes. The function returns a data.table
 with the actual and expected classes, along with a status indicating
 whether each column matches, is missing, or is extra.
 }
 \examples{
-
+\donttest{
 df <- data.frame(
   id = 1:3,
   name = c("Alice", "Bob", "Charlie"),
@@ -45,5 +45,6 @@ col_spec <- list(
 )
 
 check_col_spec(df, col_spec)
+}
 
 }

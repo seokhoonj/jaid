@@ -1,22 +1,31 @@
-#' read_rds
+#' Read an RDS file with data.table-friendly behavior
 #'
-#' read_rds is almost same as readRDS except for a pointer.
+#' Behaves like [base::readRDS()] but, when the result is a data.frame (or a
+#' list containing data.frames), ensures a data.table-friendly internal layout
+#' by calling [data.table::setalloccol()]. This helps preserve efficient pointer
+#' semantics when working with large tables.
 #'
-#' @param file a \link{connection} or the name of the file where the R object is saved
-#'  to or read from.
-#' @param refhook a hook function for handling reference objects.
+#' @param file A [connection] or file path to the serialized R object (.rds).
+#' @param refhook A hook function for handling reference objects; passed to
+#'   [base::readRDS()].
 #'
-#' @return an \R object
+#' @return An R object. If a data.frame is read, a data.table with allocated
+#'   columns is returned. For lists, any data.frame elements are converted
+#'   similarly.
 #'
 #' @examples
-#' # compare pointer values
-#' \dontrun{data <- copy(women)
-#' data.table::setDT(data)
+#' \dontrun{
+#' # Open a file chooser dialog
+#' data <- read_rds()
+#'
+#' # Compare pointer values
+#' data <- data.table::as.data.table(iris)
 #' saveRDS(data, "data.rds")
 #' df <- readRDS("data.rds")
 #' dt <- read_rds("data.rds")
-#' attributes(df)$.internal.selfref # <pointer: (nil)>
-#' attributes(dt)$.internal.selfref}
+#' attr(df, ".internal.selfref", exact = TRUE)  # <pointer: (nil)>
+#' attr(df, ".internal.selfref", exact = TRUE)
+#' }
 #'
 #' @export
 read_rds <- function(file, refhook = NULL) {
@@ -38,13 +47,28 @@ read_rds <- function(file, refhook = NULL) {
   return(df)
 }
 
-#' read_xl
+#' Read an Excel sheet as a data.table
 #'
-#' read_xl is almost same as [readxl::read_excel()] but it's convenient when not knowing the
-#' sheet names. and the output type is a data.table not a tibble.
+#' Convenience wrapper around [readxl::read_excel()]. If `sheet` is not
+#' provided, interactively lists available sheets and prompts for a selection.
+#' The result is returned as a data.table (not a tibble).
 #'
-#' @inheritParams readxl::read_excel
-#' @return a data.table
+#' @param path Path to the Excel file.
+#' @param sheet A sheet name or 1-based index. If `NULL`, an interactive
+#'   selector is shown.
+#' @param range Cell range to read, e.g., "A1:D10". `NULL` reads the full sheet.
+#' @param col_names Whether the first row contains column names.
+#' @param col_types Column types; see [readxl::read_excel()].
+#' @param na Character vector of strings to interpret as missing values.
+#' @param trim_ws Trim leading and trailing whitespace from character fields.
+#' @param skip Number of rows to skip before reading data.
+#' @param n_max Maximum number of data rows to read.
+#' @param guess_max Maximum rows used for type guessing.
+#' @param progress Whether to show a progress bar.
+#' @param .name_repair Strategy for repairing duplicate/invalid names; see
+#'   [tibble::as_tibble()].
+#'
+#' @return A data.table
 #'
 #' @export
 read_xl <- function(path, sheet = NULL, range = NULL, col_names = TRUE,
@@ -79,27 +103,44 @@ read_xl <- function(path, sheet = NULL, range = NULL, col_names = TRUE,
   return(z)
 }
 
-#' read_wb
+#' Read an Excel sheet with openxlsx as a data.table
 #'
-#' read_wb is almost same as [openxlsx::readWorkbook()] but it's convenient when not knowing the
-#' sheet names. and the output type is a data.table not a tibble.
+#' Convenience wrapper around [openxlsx::readWorkbook()]. If `sheet` is not
+#' provided, interactively lists available sheets and prompts for a selection.
+#' The result is returned as a data.table.
 #'
-#' @inheritParams openxlsx::readWorkbook
-#' @return a data.table
+#' @param xlsx_file Path to the .xlsx file.
+#' @param sheet A sheet name or 1-based index. If `NULL`, an interactive
+#'   selector is shown.
+#' @param start_row First row to read (1-based).
+#' @param col_names Whether the first row contains column names.
+#' @param row_names Whether the first column contains row names.
+#' @param detect_dates Convert recognised date columns to Date.
+#' @param skip_empty_rows Skip empty rows while reading.
+#' @param skip_empty_cols Skip empty columns while reading.
+#' @param rows Optional integer vector of rows to read.
+#' @param cols Optional integer vector of columns to read.
+#' @param check_names Make column names syntactically valid.
+#' @param sep_names Separator to use when repairing duplicate names.
+#' @param named_region Named region to read instead of specifying `rows/cols`.
+#' @param na_strings Character vector of strings to interpret as missing values.
+#' @param fill_merged_cells Fill merged cells with their corresponding values.
+#'
+#' @return A data.table.
 #'
 #' @export
-read_wb <- function(xlsxFile, sheet = NULL, startRow = 1, colNames = TRUE,
-                    rowNames = FALSE, detectDates = FALSE, skipEmptyRows = TRUE,
-                    skipEmptyCols = TRUE, rows = NULL, cols = NULL,
-                    check.names = FALSE, sep.names = ".", namedRegion = NULL,
-                    na.strings = "NA", fillMergedCells = FALSE) {
-  if (missing(xlsxFile)) {
-    xlsxFile <- gsub(sprintf("%s/", getwd()), "", file.choose())
-    cat(sprintf("Path: %s\n", xlsxFile))
+read_wb <- function(xlsx_file, sheet = NULL, start_row = 1, col_names = TRUE,
+                    row_names = FALSE, detect_dates = FALSE, skip_empty_rows = TRUE,
+                    skip_empty_cols = TRUE, rows = NULL, cols = NULL,
+                    check_names = FALSE, sep_names = ".", named_region = NULL,
+                    na_strings = "NA", fill_merged_cells = FALSE) {
+  if (missing(xlsx_file)) {
+    xlsx_file <- gsub(sprintf("%s/", getwd()), "", file.choose())
+    cat(sprintf("Path: %s\n", xlsx_file))
   }
   if (is.null(sheet)) {
     op <- options(max.print = .Machine$integer.max)
-    sheets <- openxlsx::getSheetNames(file = xlsxFile)
+    sheets <- openxlsx::getSheetNames(file = xlsx_file)
     dsheets <- data.frame(no = seq_along(sheets), sheet = sheets)
     hprint(dsheets, hchar = 5)
     on.exit(op)
@@ -110,15 +151,15 @@ read_wb <- function(xlsxFile, sheet = NULL, startRow = 1, colNames = TRUE,
       stop(" Invalid type for a `sheet number`")
     no <- as.numeric(no)
     sheet <- dsheets[dsheets$no == no,]$sheet
-    cat(sprintf("Code: jaid::read_wb(\"%s\", sheet = \"%s\")\n", xlsxFile, sheet))
+    cat(sprintf("Code: jaid::read_wb(\"%s\", sheet = \"%s\")\n", xlsx_file, sheet))
   }
   z <- openxlsx::readWorkbook(
-    xlsxFile = xlsxFile, sheet = sheet, startRow = startRow, colNames = colNames,
-    rowNames = rowNames, detectDates = detectDates,
-    skipEmptyRows = skipEmptyRows, skipEmptyCols = skipEmptyCols,
-    rows = rows, cols = cols, check.names = check.names, sep.names = sep.names,
-    namedRegion = namedRegion, na.strings = na.strings,
-    fillMergedCells = fillMergedCells
+    xlsxFile = xlsx_file, sheet = sheet, startRow = start_row,
+    colNames = col_names, rowNames = row_names, detectDates = detect_dates,
+    skipEmptyRows = skip_empty_rows, skipEmptyCols = skip_empty_cols,
+    rows = rows, cols = cols, check.names = check_names, sep.names = sep_names,
+    namedRegion = named_region, na.strings = na_strings,
+    fillMergedCells = fill_merged_cells
   )
   data.table::setDT(z)
   return(z)

@@ -2,29 +2,31 @@
 % Please edit documentation in R/replace.R
 \name{trim_ws}
 \alias{trim_ws}
-\title{Trim white space}
+\title{Trim whitespace (in place)}
 \usage{
 trim_ws(df, cols, ws = "[ \\t\\r\\n]")
 }
 \arguments{
-\item{df}{a data.frame}
+\item{df}{A data.table (modified in place).}
 
-\item{cols}{a string vector specifying columns}
+\item{cols}{A character vector of column names. Defaults to all character columns.}
 
-\item{ws}{a white space \link{regular expression}}
+\item{ws}{A regular expression describing whitespace to trim.}
 }
 \value{
-no return values
+The modified data.table.
 }
 \description{
-Trim white space
+Remove leading and trailing whitespace from character columns in a
+data.table. If \code{cols} is missing, all character columns are targeted.
 }
 \examples{
-\dontrun{df <- data.frame(x = c(" A", "B ", " C "), y = c(1, 2, 3))
-set_ptr(df)
+\dontrun{
+# Trim whitespace
+df <- data.table(x = c(" A", "B ", " C "), y = c(1, 2, 3))
 data.table::address(df)
 trim_ws(df)
 data.table::address(df)
-df}
+}
 
 }

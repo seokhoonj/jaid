@@ -7,18 +7,17 @@
 del_pattern(pattern, x)
 }
 \arguments{
-\item{pattern}{a string containing a \link{regular expression}}
+\item{pattern}{A string containing a regular expression.}
 
-\item{x}{a string vector}
+\item{x}{A character vector.}
 }
 \value{
-a string vector
+A character vector with matches removed.
 }
 \description{
-Delete patterns from a string vector.
+Remove all regex matches from each string.
 }
 \examples{
-# delete patterns from a string vector
 \donttest{del_pattern(pattern = "c", c("abc", "acc"))}
 
 }

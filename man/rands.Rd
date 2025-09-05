@@ -2,27 +2,32 @@
 % Please edit documentation in R/matrix.R
 \name{rands}
 \alias{rands}
-\title{Rands}
+\title{Create a random matrix from specified values}
 \usage{
 rands(dim, x = c(0L, 1L), replace = TRUE, prob = NULL)
 }
 \arguments{
-\item{dim}{a numeric vector specifying dimensions}
+\item{dim}{Integer vector giving the dimensions of the result.}
 
-\item{x}{a numeric vector specifying numbers}
+\item{x}{A numeric vector of values to sample from (default is \code{c(0L, 1L)}).}
 
-\item{replace}{should sampling be with replacement?}
+\item{replace}{Logical; should sampling be with replacement? Defaults to \code{TRUE}.}
 
-\item{prob}{a vector of probability weights for obtaining the elements of the vector being sampled.}
+\item{prob}{A numeric vector of probability weights for sampling \code{x}.}
 }
 \value{
-a matrix with specific numbers
+A numeric matrix sampled from \code{x} with dimensions specified by \code{dim}.
 }
 \description{
-Generate a sample matrix with specific numbers randomly
+Generate a matrix by random sampling from a set of values.
 }
 \examples{
-# rands
+\donttest{
+# 5x5 random matrix of 0s and 1s
 rands(c(5, 5))
+
+# 3x3 matrix sampled from 1:10 without replacement
+rands(c(3, 3), x = 1:10, replace = FALSE)
+}
 
 }

@@ -2,20 +2,29 @@
 % Please edit documentation in R/matrix.R
 \name{replace_vec_in_mat}
 \alias{replace_vec_in_mat}
-\title{Replace vectors in Matrix}
+\title{Replace a column vector in a matrix (in place)}
 \usage{
 replace_vec_in_mat(mat, col, vec)
 }
 \arguments{
-\item{mat}{a matrix}
+\item{mat}{A numeric matrix (modified in place).}
 
-\item{col}{string names of columns or numeric order numbers of columns}
+\item{col}{Column(s) to replace; either character names or integer indices.}
 
-\item{vec}{a vector to be replaced}
+\item{vec}{A numeric vector to insert in place of the selected columns.}
 }
 \value{
-no return value
+No return value, called for side effects (the matrix is updated in place).
 }
 \description{
-Replace vectors in Matrix
+Replace one or more columns of a matrix with a new vector, directly
+modifying the matrix memory. This avoids reallocation and can be more
+efficient for large matrices.
+}
+\examples{
+\dontrun{
+x <- matrix(as.numeric(1:6), 3, 2)
+replace_vec_in_mat(x, 2, c(100, 200, 300)) # replace 2nd column
+}
+
 }

@@ -2,28 +2,29 @@
 % Please edit documentation in R/replace.R
 \name{replace_empty_with_na}
 \alias{replace_empty_with_na}
-\title{Replace empty with NA}
+\title{Replace empty strings with NA (in place)}
 \usage{
 replace_empty_with_na(df, cols)
 }
 \arguments{
-\item{df}{a data frame}
+\item{df}{A data.table (modified in place).}
 
-\item{cols}{a string vector specifying columns}
+\item{cols}{A character vector of column names. Defaults to all character columns.}
 }
 \value{
-no return value
+The modified data.table.
 }
 \description{
-Replace empty string like "" with NA_character_ in a memory-efficient way
+Efficiently replace \code{""} with \code{NA_character_} in character columns of a
+data.table. If \code{cols} is missing, all character columns are targeted.
 }
 \examples{
 \dontrun{
+# Replace "" with NA
 df <- data.table(x = c("A", "B", ""), y = c(1, NA, 3), z = c("", "E", ""))
-set_ptr(df)
 data.table::address(df)
 replace_empty_with_na(df)
 data.table::address(df)
-df}
+}
 
 }

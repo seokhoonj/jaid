@@ -1,79 +1,111 @@
-#' Set statistic by groups
+#' Add group-wise cumulative statistics
 #'
-#' Set statistic column by groups (mainly cumulative function like [`cumsum()`], [`cumprod()`], [`cummax()`], [`cummin()`])
+#' @description
+#' `r lifecycle::badge("experimental")`
 #'
-#' @param df a data.frame
-#' @param group_var names of columns for grouping
-#' @param value_var names of columns to be applied for statistics.
-#' @param fun a function applying to columns
-#' @param prefix a new column's perfix string (if the value_var is "loss", the new column is "closs")
-#' @return no return values.
+#' Adds statistic columns computed **within groups**, typically using
+#' cumulative functions such as [`cumsum()`], [`cumprod()`], [`cummax()`],
+#' or [`cummin()`].
+#'
+#' @param dt A data.table (or convert beforehand with `data.table::setDT()`).
+#' @param group_var Columns to group by.
+#' @param value_var Columns to apply the function to.
+#' @param fun A function to apply. Default is `cumsum`
+#' @param prefix A new column's perfix string (if the value_var is "loss",
+#'   the new column is "closs")
+#'
+#' @return No return values.
 #'
 #' @examples
-#' # set statistics by groups
-#' \dontrun{
-#' set_ptr(mtcars)
-#' set_stat_by(mtcars, .(cyl, vs), value_var = hp, fun = cumsum)
-#' mtcars[, c("cyl", "vs", "chp")]}
+#' \donttest{
+#' # Cumulative sum within groups
+#' dt <- data.table::as.data.table(mtcars)
+#' add_group_stats(dt, group_var = .(cyl), value_var = c(hp, mpg), fun = cumsum)
+#' }
 #'
 #' @export
-set_stat_by <- function(df, group_var, value_var, fun = cumsum, prefix = "c") {
-  # has_ptr(df, error_raise = TRUE)
-  # old_class <- class(df)
-  # set_dt(df)
-  grps <- match_cols(df, sapply(rlang::enexpr(group_var), rlang::as_name))
-  vals <- match_cols(df, sapply(rlang::enexpr(value_var), rlang::as_name))
+add_group_stats <- function(dt, group_var, value_var, fun = cumsum,
+                            prefix = "c") {
+  lifecycle::signal_stage("experimental", "add_group_stats()")
+  assert_class(dt, "data.table")
+  grps <- match_cols(dt, sapply(rlang::enexpr(group_var), rlang::as_name))
+  vals <- match_cols(dt, sapply(rlang::enexpr(value_var), rlang::as_name))
   cols <- sprintf("%s%s", prefix, vals)
-  df[, `:=`((cols), lapply(.SD, fun)), keyby = grps, .SDcols = vals]
-  # data.table::setattr(df, "class", old_class)
-  invisible(df[])
+  dt[, `:=`((cols), lapply(.SD, fun)), keyby = grps, .SDcols = vals]
+  dt
 }
 
-#' Get statistic by groups
+#' Summarise group-wise statistics
 #'
-#' Get statistic column by groups
+#' @description
+#' `r lifecycle::badge("experimental")`
 #'
-#' @param df a data.frame
-#' @param group_var names of columns for grouping
-#' @param value_var names of columns to be applied for statistics.
-#' @param fun a function applying to columns
-#' @return a grouped data.frame
+#' Computes summary statistics for selected columns, grouped by one or more
+#' variables. The function `fun` is applied to each value column within each group.
+#'
+#' @details
+#' - Unlike [add_group_stats()], this function expects aggregation functions
+#'   that return a scalar (e.g., `sum`, `mean`, `max`).
+#' - The result is one row per group, with summary values for each variable.
+#'
+#' @param dt A data.table. (Convert beforehand with `data.table::setDT()` if needed.)
+#' @param group_var Unquoted column(s) used for grouping (e.g., `.(grp1, grp2)`).
+#' @param value_var Unquoted column(s) to summarise.
+#' @param fun A summary function such as `sum`, `mean`, `max`. Must return a scalar.
+#'
+#' @return A grouped summary data.table, with one row per group and one
+#'   column per statistic.
 #'
 #' @examples
-#' # get statistics by groups
-#' \dontrun{
-#' set_ptr(mtcars)
-#' get_stat_by(mtcars, .(cyl, vs), value_var = .(hp, drat), fun = sum)}
+#' \donttest{
+#' dt <- data.table::as.data.table(mtcars)
+#'
+#' # Group-wise sums
+#' summarise_group_stats(dt, .(cyl, vs), value_var = .(hp, drat), fun = sum)
+#'
+#' # Group-wise means
+#' summarise_group_stats(dt, .(cyl), value_var = .(mpg, wt), fun = mean)
+#' }
 #'
 #' @export
-get_stat_by <- function(df, group_var, value_var, fun = sum) {
-  # has_ptr(df, error_raise = TRUE)
-  # old_class <- class(df)
-  # set_dt(df)
-  grps <- match_cols(df, sapply(rlang::enexpr(group_var), rlang::as_name))
-  vals <- match_cols(df, sapply(rlang::enexpr(value_var), rlang::as_name))
-  dt <- df[, lapply(.SD, fun), keyby = grps, .SDcols = vals]
-  # data.table::setattr(dt, "class", old_class)
-  # data.table::setattr(df, "class", old_class)
-  return(dt)
+summarise_group_stats <- function(dt, group_var, value_var, fun = sum) {
+  lifecycle::signal_stage("experimental", "summarise_group_stats()")
+  grps <- match_cols(dt, sapply(rlang::enexpr(group_var), rlang::as_name))
+  vals <- match_cols(dt, sapply(rlang::enexpr(value_var), rlang::as_name))
+  dt[, lapply(.SD, fun), keyby = grps, .SDcols = vals]
 }
 
-#' Get proportion from a vector
+#' Compute frequency proportions
 #'
-#' Get proportion from a vector.
+#' @description
+#' `r lifecycle::badge("experimental")`
 #'
-#' @param x a vector
-#' @return a proportion data.frame
+#' Given a vector, compute the relative frequency of each unique value
+#' and return the result as a data.frame.
+#'
+#' @param x A vector (numeric, character, or factor).
+#'
+#' @return A data.table with unique values and their proportions.
 #'
 #' @examples
-#' \dontrun{
-#' get_prop(sample(1:10, 1000, replace = TRUE))}
+#' \donttest{
+#' # Frequency proportions
+#' x <- sample(1:10, 1000, replace = TRUE)
+#' freq_prop(x)
+#' }
 #'
 #' @export
-get_prop <- function(x) {
-  op <- options(scipen = 14)
-  df <- data.table::as.data.table(prop.table(table(x)))
-  set_col_lower(df)
+freq_prop <- function(x) {
+  lifecycle::signal_stage("experimental", "freq_prop()")
+  op <- options(scipen = 14L)
   on.exit(op)
-  return(df)
+  freq <- table(x)
+  prop <- prop.table(freq)
+  df <- as.data.table(freq)
+  dp <- as.data.table(prop)
+  data.table::setnames(df, c("x", "freq"))
+  data.table::setnames(dp, c("x", "prop"))
+  prop <- NULL
+  df[dp, prop := prop, on = .(x)]
+  df[]
 }

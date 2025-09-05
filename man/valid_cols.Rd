@@ -2,23 +2,23 @@
 % Please edit documentation in R/utils.R
 \name{valid_cols}
 \alias{valid_cols}
-\title{Validate columns}
+\title{Validate that columns exist}
 \usage{
 valid_cols(df, cols)
 }
 \arguments{
-\item{df}{a data.frame}
+\item{df}{A data frame.}
 
-\item{cols}{a string vector specifying columns}
+\item{cols}{A character vector of column names to validate.}
 }
 \value{
-no return value
+No return value. Called for side effects.
 }
 \description{
-Does the data frame contain all columns?
+Check whether a data frame contains all of the specified columns.
+Throws an error if any are missing.
 }
 \examples{
-# different columns
 \dontrun{valid_cols(mtcars, c("mpg", "cyl", "disp", "hp", "drat"))}
 
 }

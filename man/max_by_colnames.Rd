@@ -4,7 +4,7 @@
 \alias{max_by_colnames}
 \alias{min_by_colnames}
 \alias{sum_by_colnames}
-\title{max, min, sum by column names}
+\title{Aggregate by column names (max, min, sum)}
 \usage{
 max_by_colnames(x, na.rm = TRUE)
 
@@ -13,30 +13,40 @@ min_by_colnames(x, na.rm = TRUE)
 sum_by_colnames(x, na.rm = TRUE)
 }
 \arguments{
-\item{x}{A numeric matrix}
+\item{x}{A numeric matrix with non-\code{NULL} column names.}
 
-\item{na.rm}{a boolean value removing NA or not}
+\item{na.rm}{Logical; if \code{TRUE}, missing values are removed before
+aggregation.}
 }
 \value{
-A matrix of minimum values shrinked by column names
+A numeric matrix with one column per unique column name of \code{x}:
+\itemize{
+\item \code{max_by_colnames()} returns the maximum of each group.
+\item \code{min_by_colnames()} returns the minimum of each group.
+\item \code{sum_by_colnames()} returns the sum of each group.
+}
 }
 \description{
-max, min, sum of values on each column name of a matrix.
+Compute the maximum, minimum, or sum of values in a numeric matrix,
+grouped by identical column names. These functions are implemented in C
+for performance.
 }
 \examples{
-# max by col nm
-\donttest{x <- matrix(c(1:9), ncol = 3)
-set_dimnames(x, list(c("a", "a", "b"), c("a", "b", "b")))
-max_by_colnames(x)}
+\donttest{
+# Maximum values grouped by column names
+x <- matrix(c(1:9), ncol = 3)
+set_mat_dimnames(x, list(c("a", "a", "b"), c("a", "b", "b")))
+max_by_colnames(x)
 
-# min by col nm
-\donttest{x <- matrix(c(1:9), ncol = 3)
-set_dimnames(x, list(c("a", "a", "b"), c("a", "b", "b")))
-min_by_colnames(x)}
+# Minimum values grouped by column names
+x <- matrix(c(1:9), ncol = 3)
+set_mat_dimnames(x, list(c("a", "a", "b"), c("a", "b", "b")))
+min_by_colnames(x)
 
-# sum by col nm
-\donttest{x <- matrix(c(1:9), ncol = 3)
-set_dimnames(x, list(c("a", "a", "b"), c("a", "b", "b")))
-sum_by_colnames(x)}
+# Sum of values grouped by column names
+x <- matrix(c(1:9), ncol = 3)
+set_mat_dimnames(x, list(c("a", "a", "b"), c("a", "b", "b")))
+sum_by_colnames(x)
+}
 
 }

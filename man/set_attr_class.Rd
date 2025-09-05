@@ -2,32 +2,35 @@
 % Please edit documentation in R/attr.R
 \name{set_attr_class}
 \alias{set_attr_class}
-\title{Set matched attributes' class}
+\title{Set class for matching attributes}
 \usage{
 set_attr_class(x, name, class, regex = TRUE)
 }
 \arguments{
-\item{x}{any objects; e.g, list, columns of a data.frame or data.table}
+\item{x}{Any R object (e.g., list, data.frame, data.table).}
 
-\item{name}{the attribute names.}
+\item{name}{Attribute names or pattern to match.}
 
-\item{class}{a string specifying class; e.g, c("data.table", "data.frame")}
+\item{class}{Character vector specifying the class to assign.
+(e.g., c("data.table", "data.frame"))}
 
-\item{regex}{a logical specifying attributes finding method (a string vector or regular expression),
-regex = \code{TRUE} is a default}
+\item{regex}{Logical; if \code{TRUE} (default), treats \code{name} as a regular
+expression pattern, if \code{FALSE} treats it as exact attribute names.}
 }
 \value{
-matched attributes' names
+Returns invisibly; called for side effects.
 }
 \description{
-Set matched attributes' class.
+Set the class for attributes that match specified names or patterns.
 }
 \examples{
-# set matched attributes' class
-\donttest{df <- data.frame(x = 1:3, y = c("a", "b", "c"))
+\donttest{
+# Set class of matched attribute
+df <- data.frame(x = 1:3, y = c("a", "b", "c"))
 attr(df, "summary") <- data.frame(a = 4:6, b = c("d", "e", "f"))
 attr(df, "summary")
 set_attr_class(df, "sum", c("tbl_df", "tbl", "data.frame"), regex = TRUE)
-attr(df, "summary")}
+attr(df, "summary")
+}
 
 }

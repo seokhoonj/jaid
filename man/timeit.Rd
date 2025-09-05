@@ -2,18 +2,19 @@
 % Please edit documentation in R/time.R
 \name{timeit}
 \alias{timeit}
-\title{Time it}
+\title{Measure execution time of an expression}
 \usage{
 timeit(expr)
 }
 \arguments{
-\item{expr}{\R code expression}
+\item{expr}{An R expression to evaluate. Use \code{{ ... }} to time multiple lines.}
 }
 \description{
-Time \R code expression
+Evaluate an expression and return the elapsed time in \code{HH:MM:SS.subsec}
+format. Intended for quick ad-hoc timing in scripts.
 }
 \examples{
-# time it
-\donttest{timeit(for (i in 1:1000000) i)}
+# Time a simple loop
+\donttest{timeit({ for (i in 1:1e6) i })}
 
 }

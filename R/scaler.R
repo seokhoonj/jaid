@@ -1,14 +1,21 @@
 #' Scaler
 #'
-#' Scale a numeric vector using min-max, robust or standard method.
+#' Apply common scaling transformations to a numeric vector.
+#' Supports **min-max scaling**, **robust scaling** (median/IQR),
+#' and **standard scaling** (z-score).
 #'
-#' @param x a numeric vector
-#' @param method a string specifying a scaling method (minmax, robust, standard)
-#' @return a scaled vector
+#' @param x A numeric vector.
+#' @param method Character string specifying the scaling method.
+#'   One of `"minmax"`, `"robust"`, or `"standard"`.
+#'
+#' @return A numeric vector of the same length as `x`, scaled according
+#'   to the chosen method.
 #'
 #' @examples
 #' \dontrun{
-#' # create scaled data
+#' library(ggplot2)
+#' library(plotly)
+#'
 #' set.seed(123)
 #' x <- rnorm(100)
 #' df <- rbind(
@@ -16,9 +23,12 @@
 #'   data.frame(method = "Robust"  , x = seq_along(x), y = scaler(x, "robust")),
 #'   data.frame(method = "Standard", x = seq_along(x), y = scaler(x, "standard"))
 #' )
-#' g <- ggshort::ggline(df, x = x, y = y, group = method, color = method) +
-#'   ggplot2::labs(title = "Scaling Method: Min-max vs Robust vs Standard") +
-#'   ggshort::theme_view()
+#'
+#' ggplot(df, aes(x = x, y = y, group = method, color = method)) +
+#'   geom_line() +
+#'   labs(title = "Scaling Method: Min-max vs Robust vs Standard") +
+#'   theme_bw()
+#'
 #' plotly::ggplotly(g)
 #' }
 #'

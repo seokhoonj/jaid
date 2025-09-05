@@ -4,7 +4,7 @@
 \alias{row_max}
 \alias{row_min}
 \alias{row_sum}
-\title{max, min, sum on each row of a matrix}
+\title{Row-wise maximum, minimum, and sum}
 \usage{
 row_max(x)
 
@@ -13,25 +13,32 @@ row_min(x)
 row_sum(x)
 }
 \arguments{
-\item{x}{A numeric matrix}
+\item{x}{A numeric matrix.}
 }
 \value{
-A vector of min, max, sum of values on each row of a matrix
+A numeric vector of length equal to the number of rows in \code{x}:
+\itemize{
+\item \code{row_max()} returns the maximum of each row.
+\item \code{row_min()} returns the minimum of each row.
+\item \code{row_sum()} returns the sum of each row.
+}
 }
 \description{
-Get max, min, sum of values on each row of a matrix.
+Compute the maximum, minimum, or sum of values in each row of a numeric
+matrix. These functions are implemented in C for performance.
 }
 \examples{
-# row max
-\donttest{x <- matrix(c(1:9), nrow = 3)
-row_max(x)}
+\donttest{
+x <- matrix(1:9, nrow = 3)
 
-# row min
-\donttest{x <- matrix(c(1:9), nrow = 3)
-row_min(x)}
+# Row-wise maximum
+row_max(x)
 
-# row sum
-\donttest{x <- matrix(c(1:9), nrow = 3)
-row_sum(x)}
+# Row-wise minimum
+row_min(x)
+
+# Row-wise sum
+row_sum(x)
+}
 
 }

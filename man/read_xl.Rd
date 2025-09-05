@@ -2,7 +2,7 @@
 % Please edit documentation in R/read.R
 \name{read_xl}
 \alias{read_xl}
-\title{read_xl}
+\title{Read an Excel sheet as a data.table}
 \usage{
 read_xl(
   path,
@@ -20,63 +20,37 @@ read_xl(
 )
 }
 \arguments{
-\item{path}{Path to the xls/xlsx file.}
+\item{path}{Path to the Excel file.}
 
-\item{sheet}{Sheet to read. Either a string (the name of a sheet), or an
-integer (the position of the sheet). Ignored if the sheet is specified via
-\code{range}. If neither argument specifies the sheet, defaults to the first
-sheet.}
+\item{sheet}{A sheet name or 1-based index. If \code{NULL}, an interactive
+selector is shown.}
 
-\item{range}{A cell range to read from, as described in \link[readxl]{cell-specification}.
-Includes typical Excel ranges like "B3:D87", possibly including the sheet
-name like "Budget!B2:G14", and more. Interpreted strictly, even if the
-range forces the inclusion of leading or trailing empty rows or columns.
-Takes precedence over \code{skip}, \code{n_max} and \code{sheet}.}
+\item{range}{Cell range to read, e.g., "A1:D10". \code{NULL} reads the full sheet.}
 
-\item{col_names}{\code{TRUE} to use the first row as column names, \code{FALSE} to get
-default names, or a character vector giving a name for each column. If user
-provides \code{col_types} as a vector, \code{col_names} can have one entry per
-column, i.e. have the same length as \code{col_types}, or one entry per
-unskipped column.}
+\item{col_names}{Whether the first row contains column names.}
 
-\item{col_types}{Either \code{NULL} to guess all from the spreadsheet or a
-character vector containing one entry per column from these options:
-"skip", "guess", "logical", "numeric", "date", "text" or "list". If exactly
-one \code{col_type} is specified, it will be recycled. The content of a cell in
-a skipped column is never read and that column will not appear in the data
-frame output. A list cell loads a column as a list of length 1 vectors,
-which are typed using the type guessing logic from \code{col_types = NULL}, but
-on a cell-by-cell basis.}
+\item{col_types}{Column types; see \code{\link[readxl:read_excel]{readxl::read_excel()}}.}
 
-\item{na}{Character vector of strings to interpret as missing values. By
-default, readxl treats blank cells as missing data.}
+\item{na}{Character vector of strings to interpret as missing values.}
 
-\item{trim_ws}{Should leading and trailing whitespace be trimmed?}
+\item{trim_ws}{Trim leading and trailing whitespace from character fields.}
 
-\item{skip}{Minimum number of rows to skip before reading anything, be it
-column names or data. Leading empty rows are automatically skipped, so this
-is a lower bound. Ignored if \code{range} is given.}
+\item{skip}{Number of rows to skip before reading data.}
 
-\item{n_max}{Maximum number of data rows to read. Trailing empty rows are
-automatically skipped, so this is an upper bound on the number of rows in
-the returned tibble. Ignored if \code{range} is given.}
+\item{n_max}{Maximum number of data rows to read.}
 
-\item{guess_max}{Maximum number of data rows to use for guessing column
-types.}
+\item{guess_max}{Maximum rows used for type guessing.}
 
-\item{progress}{Display a progress spinner? By default, the spinner appears
-only in an interactive session, outside the context of knitting a document,
-and when the call is likely to run for several seconds or more. See
-\code{\link[readxl:readxl_progress]{readxl_progress()}} for more details.}
+\item{progress}{Whether to show a progress bar.}
 
-\item{.name_repair}{Handling of column names. Passed along to
-\code{\link[tibble:as_tibble]{tibble::as_tibble()}}. readxl's default is `.name_repair = "unique", which
-ensures column names are not empty and are unique.}
+\item{.name_repair}{Strategy for repairing duplicate/invalid names; see
+\code{\link[tibble:as_tibble]{tibble::as_tibble()}}.}
 }
 \value{
-a data.table
+A data.table
 }
 \description{
-read_xl is almost same as \code{\link[readxl:read_excel]{readxl::read_excel()}} but it's convenient when not knowing the
-sheet names. and the output type is a data.table not a tibble.
+Convenience wrapper around \code{\link[readxl:read_excel]{readxl::read_excel()}}. If \code{sheet} is not
+provided, interactively lists available sheets and prompts for a selection.
+The result is returned as a data.table (not a tibble).
 }

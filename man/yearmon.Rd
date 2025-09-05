@@ -2,22 +2,24 @@
 % Please edit documentation in R/date.R
 \name{yearmon}
 \alias{yearmon}
-\title{Year month}
+\title{Format dates as YYYYMM}
 \usage{
 yearmon(x)
 }
 \arguments{
-\item{x}{a date vector}
+\item{x}{A Date vector.}
 }
 \value{
-a character vector
+A character vector in \code{YYYYMM} format (e.g., "202312").
 }
 \description{
-Get an year month from the date.
+Extract year and month from dates as a compact \code{YYYYMM} character string.
 }
 \examples{
-# get year month
+\donttest{
+# Get year-month
 x <- as.Date(c("1999-12-31", "2000-01-01"))
 yearmon(x)
+}
 
 }

@@ -4,7 +4,7 @@
 \alias{col_max}
 \alias{col_min}
 \alias{col_sum}
-\title{max, min, sum on each column of a matrix}
+\title{Column-wise maximum, minimum, and sum}
 \usage{
 col_max(x)
 
@@ -13,25 +13,32 @@ col_min(x)
 col_sum(x)
 }
 \arguments{
-\item{x}{A numeric matrix}
+\item{x}{A numeric matrix.}
 }
 \value{
-A vector of min, max, sum of values on each column of a matrix
+A numeric vector of length equal to the number of columns in \code{x}:
+\itemize{
+\item \code{col_max()} returns the maximum of each column.
+\item \code{col_min()} returns the minimum of each column.
+\item \code{col_sum()} returns the sum of each column.
+}
 }
 \description{
-Get max, min, sum of values on each column of a matrix.
+Compute the maximum, minimum, or sum of values in each column of a numeric
+matrix. These functions are implemented in C for performance.
 }
 \examples{
-# column max
-\donttest{x <- matrix(c(1:9), ncol = 3)
-col_max(x)}
+\donttest{
+x <- matrix(1:9, ncol = 3)
 
-# column min
-\donttest{x <- matrix(c(1:9), ncol = 3)
-col_min(x)}
+# Column-wise maximum
+col_max(x)
 
-# column sum
-\donttest{x <- matrix(c(1:9), ncol = 3)
-col_sum(x)}
+# Column-wise minimum
+col_min(x)
+
+# Column-wise sum
+col_sum(x)
+}
 
 }

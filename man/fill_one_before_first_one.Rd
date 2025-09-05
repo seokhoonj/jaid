@@ -3,31 +3,40 @@
 \name{fill_one_before_first_one}
 \alias{fill_one_before_first_one}
 \alias{set_one_before_first_one}
-\title{Fill with one before the first one}
+\title{Insert ones before the first one per row group}
 \usage{
 fill_one_before_first_one(x)
 
 set_one_before_first_one(x)
 }
 \arguments{
-\item{x}{A binary matrix}
+\item{x}{A binary matrix with row names.}
 }
 \value{
-A binary matrix
+\itemize{
+\item \code{fill_one_before_first_one()} returns a modified copy of \code{x}.
+\item \code{set_one_before_first_one()} modifies \code{x} in place and returns it invisibly.
+}
 }
 \description{
-Fill with one before the first one appears in each column in a binary matrix
-by rownames
+For each group of rows (defined by row names), scan each column from
+top to bottom. Whenever a \code{1} is encountered, also set the entry in
+the immediately preceding row of the same group to \code{1}. All other
+entries remain unchanged.
 }
 \examples{
-# fill with one before the first one appears by rownames
-\donttest{x <- matrix(c(0, 1, 0, 0, 0, 1, 1, 0, 1), nrow = 3)
-set_rownames(x, c(1, 1, 2))
-fill_one_before_first_one(x)}
+\donttest{
+# Example binary matrix
+x <- matrix(c(0, 1, 0,
+              0, 0, 1,
+              1, 0, 1), nrow = 3, byrow = TRUE)
+set_mat_rownames(x, c(1, 1, 2))
 
-# Set to one before the first one appears by rownames
-\donttest{x <- matrix(c(0, 1, 0, 0, 0, 1, 1, 0, 1), nrow = 3)
-set_rownames(x, c(1, 1, 2))
-fill_one_before_first_one(x)}
+# Return a modified copy
+fill_one_before_first_one(x)
+
+# Modify the matrix in place
+set_one_before_first_one(x)
+}
 
 }

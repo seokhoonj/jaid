@@ -7,11 +7,11 @@
 paste_list(x, sep = "|", na.rm = FALSE)
 }
 \arguments{
-\item{x}{a list with same length vectors or data frame column vectors you want to paste.}
+\item{x}{A list with same length vectors or data frame column vectors you want to paste.}
 
-\item{sep}{a character string to separate the terms.}
+\item{sep}{A character string to separate the terms.}
 
-\item{na.rm}{a logical evaluating to TRUE or FALSE indicating whether NA values should be stripped before the computation proceeds.}
+\item{na.rm}{A logical evaluating to TRUE or FALSE indicating whether NA values should be stripped before the computation proceeds.}
 }
 \value{
 a vector pasted
@@ -20,8 +20,9 @@ a vector pasted
 Paste vectors of equal length in a list or data.frame
 }
 \examples{
-# paste length and width of iris
+\donttest{
 iris$size <- paste_list(iris[, c("Sepal.Length", "Sepal.Width", "Petal.Length", "Petal.Width")])
 head(iris)
+}
 
 }

@@ -2,28 +2,29 @@
 % Please edit documentation in R/replace.R
 \name{replace_na_with_zero}
 \alias{replace_na_with_zero}
-\title{Replace NA with zero}
+\title{Replace NA with zero (in place)}
 \usage{
 replace_na_with_zero(df, cols)
 }
 \arguments{
-\item{df}{a data frame}
+\item{df}{A data.table (modified in place).}
 
-\item{cols}{a string vector specifying columns}
+\item{cols}{A character vector of column names. Defaults to all numeric/integer columns.}
 }
 \value{
-no return value
+The modified data.table (invisibly for chaining).
 }
 \description{
-Replace NA_integer_ or NA_real_ values with zero in a memory-efficient way
+Efficiently replace numeric \code{NA} values with \code{0} in a data.table. If \code{cols}
+is missing, all numeric and integer columns are targeted.
 }
 \examples{
 \dontrun{
+# Replace NA with 0
 df <- data.table(x = c(1, NA, 3), y = c("A", "B", NA), z = c(NA, 5, NA))
-set_ptr(df)
 data.table::address(df)
 replace_na_with_zero(df)
 data.table::address(df)
-df}
+}
 
 }

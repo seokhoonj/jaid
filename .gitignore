@@ -2,6 +2,8 @@
 .Rhistory
 .RData
 .Ruserdata
+.lintr
+*.cpp
 *.csv
 *.doc
 *.docx

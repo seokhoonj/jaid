@@ -2,25 +2,24 @@
 % Please edit documentation in R/str.R
 \name{get_pattern}
 \alias{get_pattern}
-\title{Get a first pattern}
+\title{Get first match}
 \usage{
 get_pattern(pattern, x, ignore.case = TRUE)
 }
 \arguments{
-\item{pattern}{a string containing a \link{regular expression}}
+\item{pattern}{A string containing a regular expression.}
 
-\item{x}{a string vector}
+\item{x}{A character vector.}
 
-\item{ignore.case}{if \code{FALSE}, the pattern matching is case sensitive and if \code{TRUE}, case is ignored during matching.}
+\item{ignore.case}{Logical; if \code{TRUE}, case is ignored. Default: \code{TRUE}.}
 }
 \value{
-a string vector
+A character vector of the same length as \code{x}.
 }
 \description{
-Get a first pattern from a string vector.
+Extract the first regex match from each string (empty string if no match).
 }
 \examples{
-# get a first pattern from a string vector
 \donttest{get_pattern(pattern = "c", c("a|b|c", "a|c|c"))}
 
 }

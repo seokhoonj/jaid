@@ -2,20 +2,43 @@
 % Please edit documentation in R/sizeof.R
 \name{sizeof}
 \alias{sizeof}
-\title{Object size}
+\title{Object size utility}
 \usage{
 sizeof(x, unit)
 }
 \arguments{
-\item{x}{object vector, data.frame, environment and etc}
+\item{x}{An R object (e.g., vector, data frame, data.table, environment).}
 
-\item{unit}{size unit \code{B}, \code{KB}, \code{MB}, \code{GB} default \code{KB}}
+\item{unit}{Character string giving the size unit. One of \code{"B"}, \code{"KB"},
+\code{"MB"}, or \code{"GB"}. Case-insensitive. Defaults to \code{"MB"}.}
+}
+\value{
+A data frame (or data.table) describing object size(s) in the chosen unit.
 }
 \description{
-Calculates the object size
+Provides a unified way to inspect the memory footprint of R objects.
+Supports atomic objects, data frames, data.tables, and environments.
+}
+\details{
+This is an S3 generic with methods for different object types:
+\itemize{
+\item \code{sizeof.default()} — reports the total size of a single object.
+\item \code{sizeof.data.frame()} — reports the size of each column plus the total.
+\item \code{sizeof.data.table()} — like the data frame method, but returns a
+data.table.
+\item \code{sizeof.environment()} — reports the size of each object in the given
+environment plus the total.
+}
+
+Internally uses \code{\link[utils:object.size]{utils::object.size()}}.
 }
 \examples{
 \dontrun{
-sizeof(x = sys.frame(), unit = "kb")
+# Check the size of the current frame
+sizeof(sys.frame(), unit = "KB")
+
+# Size of the iris data
+sizeof(iris, unit = "MB")
 }
+
 }

@@ -2,29 +2,34 @@
 % Please edit documentation in R/date.R
 \name{mondiff}
 \alias{mondiff}
-\title{Month difference}
+\title{Difference in months between two dates}
 \usage{
 mondiff(sdate, edate, day_limit = c(0:31))
 }
 \arguments{
-\item{sdate}{a start date vector}
+\item{sdate}{A start date vector}
 
-\item{edate}{a end date vector}
+\item{edate}{An end date vector}
 
-\item{day_limit}{if the day of sdate is less than \code{day_limit}, count it as a
-full month, if the day of edate is greater than or equal to \code{day_limit},
-count it as a full month.}
+\item{day_limit}{Day threshold for counting full months. If the start date's
+day is less than this value, it counts as a full month. If the end date's
+day is greater than or equal to this value, it counts as a full month.}
 }
 \value{
-a numeric vector
+A numeric vector representing the number of months between the dates
 }
 \description{
-Month difference between two dates
+Compute the number of months between two dates with an optional day
+threshold. If the first element of \code{day_limit} is non-zero, the start date
+counts as a full month when its day is \verb{>= day_limit[1]}, and the end date
+counts as a full month when its day is \verb{< day_limit[1]}.
 }
 \examples{
-# mondiff
+\donttest{
+# Month difference
 sdate <- as.Date("1999-12-31")
 edate <- as.Date("2000-01-01")
 mondiff(sdate, edate)
+}
 
 }

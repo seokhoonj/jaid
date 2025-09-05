@@ -2,20 +2,24 @@
 % Please edit documentation in R/meta.R
 \name{meta}
 \alias{meta}
-\title{Meta information}
+\title{Extract meta information about an object}
 \usage{
 meta(x)
 }
 \arguments{
-\item{x}{object vector, data.frame, environment and etc}
+\item{x}{An R object (e.g., data.frame).}
 }
 \value{
-meta information data frame
+A \code{meta} object summarizing information (see \code{\link[=meta.data.frame]{meta.data.frame()}}).
 }
 \description{
-Show meta information
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
+}
+\details{
+Generic function to display meta information about an object.
+Currently supports \code{data.frame} objects with a specific method.
 }
 \examples{
-\donttest{meta(cars)}
+\donttest{meta(mtcars)}
 
 }

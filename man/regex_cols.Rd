@@ -2,24 +2,25 @@
 % Please edit documentation in R/utils.R
 \name{regex_cols}
 \alias{regex_cols}
-\title{Find columns using regular expression pattern}
+\title{Find columns by regular expression}
 \usage{
 regex_cols(df, pattern)
 }
 \arguments{
-\item{df}{a data.frame}
+\item{df}{A data.frame.}
 
-\item{pattern}{a string vector specifying columns}
+\item{pattern}{A character string containing a regular expression.}
 }
 \value{
-a string vector
+A character vector of matching column names.
 }
 \description{
-Find columns using regular expression pattern
+Return column names that match a regular expression.
 }
 \examples{
-# find columns using regular expression pattern
-\donttest{df <- data.frame(col_a = c(1, 2, 3), col_b = c("A", "B", "C"), col_c = c(4, 5, 6))
-regex_cols(df, pattern = c("a|c"))}
+\donttest{
+df <- data.frame(col_a = c(1, 2, 3), col_b = c("A", "B", "C"), col_c = c(4, 5, 6))
+regex_cols(df, pattern = c("a|c"))
+}
 
 }

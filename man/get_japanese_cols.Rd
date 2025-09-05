@@ -2,16 +2,25 @@
 % Please edit documentation in R/lang.R
 \name{get_japanese_cols}
 \alias{get_japanese_cols}
-\title{Get japanese columns?}
+\title{Get columns containing Japanese text}
 \usage{
 get_japanese_cols(x)
 }
 \arguments{
-\item{x}{a data frame}
+\item{x}{A data.frame or data.table.}
 }
 \value{
-japanese column names
+A character vector of column names containing Japanese text.
 }
 \description{
-Get japanese columns?
+Scans each column of a data frame-like object and returns the names of
+columns where at least one value contains Japanese characters
+(as determined by \code{\link[=is_japanese]{is_japanese()}}).
+}
+\examples{
+\dontrun{
+df <- data.frame(a = c("A", "い"), b = c("B", "C"))
+get_japanese_cols(df)
+}
+
 }

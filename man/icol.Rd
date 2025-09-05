@@ -2,23 +2,25 @@
 % Please edit documentation in R/utils.R
 \name{icol}
 \alias{icol}
-\title{order numbers of columns}
+\title{Get column indices}
 \usage{
 icol(x, cols)
 }
 \arguments{
-\item{x}{a data.frame}
+\item{x}{A data.frame.}
 
-\item{cols}{string names of columns}
+\item{cols}{A character vector of column names.}
 }
 \value{
-order numbers of columns
+An integer vector of column indices.
 }
 \description{
-Get order numbers of columns
+Return the column numbers corresponding to given column names.
 }
 \examples{
-# order numbers of columns
+\donttest{
+# Column numbers for selected names
 icol(mtcars, c("disp", "drat", "qsec", "am", "carb"))
+}
 
 }

@@ -10,19 +10,22 @@ split_and_paste_uni_str(x, split = "|")
 split_and_paste_sort_uni_str(x, split = "|")
 }
 \arguments{
-\item{x}{a string vector}
+\item{x}{A character vector.}
 
-\item{split}{a string to use for splitting}
+\item{split}{A single string delimiter.}
 }
 \value{
-a string vector
+A character vector of the same length as \code{x}.
 }
 \description{
-Split and paste unique strings
+Split each string then paste the \strong{unique} tokens back with the same separator.
+
+Split each string then paste the \strong{sorted unique} tokens with the same separator.
 }
 \examples{
-# split and paste unique strings
-\donttest{split_and_paste_uni_str(c("b|a|b", "d|c|d"), split = "|")
-split_and_paste_sort_uni_str(c("b|a|b", "d|c|d"), split = "|")}
+\donttest{
+split_and_paste_uni_str(c("b|a|b", "d|c|d"), split = "|")
+split_and_paste_sort_uni_str(c("b|a|b", "d|c|d"), split = "|")
+}
 
 }

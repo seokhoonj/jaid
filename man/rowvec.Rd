@@ -3,24 +3,30 @@
 \name{rowvec}
 \alias{rowvec}
 \alias{colvec}
-\title{Change vector into row vector or column vector}
+\title{Convert a vector into a row or column vector}
 \usage{
 rowvec(x)
 
 colvec(x)
 }
 \arguments{
-\item{x}{a vector}
+\item{x}{A vector.}
 }
 \value{
-a column vector or row vector.
+A matrix with either one row (\code{rowvec()}) or one column (\code{colvec()}),
+preserving names where available.
 }
 \description{
-Change vector into row vector or column vector.
+These functions reshape a one-dimensional vector into either a row vector
+(1 × \emph{n}) or a column vector (\emph{n} × 1).
 }
 \examples{
-# change into column vector
+\donttest{
+# Convert into a row vector
 rowvec(c(1, 2, 3, 4, 5))
+
+# Convert into a column vector
 colvec(c(1, 2, 3, 4, 5))
+}
 
 }

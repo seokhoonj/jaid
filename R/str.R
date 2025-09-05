@@ -1,15 +1,14 @@
 #' Paste strings
 #'
-#' Paste strings
+#' Collapse a character vector into a single string using a separator.
 #'
-#' @param x a string vector
-#' @param collapse an optional character string to separate the results. Not
-#' [`NA_character_`]. When `collapse` is a string, the result is always a string
-#' ([`character`] of length 1). default "|"
-#' @return a string vector
+#' @param x A character vector.
+#' @param collapse A single string used to separate elements (not `NA_character_`).
+#'   Default: `"|"`.
+#'
+#' @return A length-1 character vector (a single collapsed string).
 #'
 #' @examples
-#' # paste string
 #' \donttest{paste_str(c("a", "b", "c"))}
 #'
 #' @export
@@ -18,16 +17,15 @@ paste_str <- function(x, collapse = "|")
 
 #' Paste unique strings
 #'
-#' Paste unique strings
+#' Collapse unique, non-missing elements of a character vector into a single string.
 #'
-#' @param x a string vector
-#' @param collapse an optional character string to separate the results. Not
-#' [`NA_character_`]. When `collapse` is a string, the result is always a string
-#' ([`character`] of length 1). default "|"
-#' @return a string vector
+#' @param x A character vector.
+#' @param collapse A single string used to separate elements (not `NA_character_`).
+#'   Default: `"|"`.
+#'
+#' @return A length-1 character vector.
 #'
 #' @examples
-#' # paste unique string
 #' \donttest{paste_uni_str(c("a", "a", "c", "b", "b", "d", "e"))}
 #'
 #' @export
@@ -36,13 +34,13 @@ paste_uni_str <- function(x, collapse = "|")
 
 #' Paste sorted unique strings
 #'
-#' Paste sorted unique strings
+#' Collapse **sorted** unique, non-missing elements into a single string.
 #'
-#' @param x a string vector
-#' @param collapse an optional character string to separate the results. Not
-#' [`NA_character_`]. When `collapse` is a string, the result is always a string
-#' ([`character`] of length 1). default "|"
-#' @return a string vector
+#' @param x A character vector.
+#' @param collapse A single string used to separate elements (not `NA_character_`).
+#'   Default: `"|"`.
+#'
+#' @return A length-1 character vector.
 #'
 #' @examples
 #' # paste sorted unique string
@@ -54,11 +52,12 @@ paste_sort_uni_str <- function(x, collapse = "|")
 
 #' Split strings
 #'
-#' Split strings
+#' Split each input string on a delimiter.
 #'
-#' @param x a string vector
-#' @param split a string to use for splitting
-#' @return a string vector
+#' @param x A character vector.
+#' @param split A single string delimiter.
+#'
+#' @return A list of character vectors (one element per input string).
 #'
 #' @examples
 #' # split strings
@@ -70,16 +69,18 @@ split_str <- function(x, split = "|")
 
 #' Split and paste unique strings
 #'
-#' Split and paste unique strings
+#' Split each string then paste the **unique** tokens back with the same separator.
 #'
-#' @param x a string vector
-#' @param split a string to use for splitting
-#' @return a string vector
+#' @param x A character vector.
+#' @param split A single string delimiter.
+#'
+#' @return A character vector of the same length as `x`.
 #'
 #' @examples
-#' # split and paste unique strings
-#' \donttest{split_and_paste_uni_str(c("b|a|b", "d|c|d"), split = "|")
-#' split_and_paste_sort_uni_str(c("b|a|b", "d|c|d"), split = "|")}
+#' \donttest{
+#' split_and_paste_uni_str(c("b|a|b", "d|c|d"), split = "|")
+#' split_and_paste_sort_uni_str(c("b|a|b", "d|c|d"), split = "|")
+#' }
 #'
 #' @export
 split_and_paste_uni_str <- function(x, split = "|") {
@@ -88,23 +89,26 @@ split_and_paste_uni_str <- function(x, split = "|") {
 }
 
 #' @rdname split_and_paste_uni_str
+#' @description
+#' Split each string then paste the **sorted unique** tokens with the same separator.
+#'
 #' @export
 split_and_paste_sort_uni_str <- function(x, split = "|") {
   z <- split_str(x, split = split)
   sapply(z, function(x) paste_sort_uni_str(x, collapse = split))
 }
 
-#' Count pattern matched strings
+#' Count pattern matches
 #'
-#' Count pattern matched strings from a string vector.
+#' Count regex matches in each string.
 #'
-#' @param pattern a string containing a [regular expression]
-#' @param x a string
-#' @param ignore.case if `FALSE`, the pattern matching is case sensitive and if `TRUE`, case is ignored during matching.
-#' @return a string vector
+#' @param pattern A string containing a regular expression.
+#' @param x A character vector.
+#' @param ignore.case Logical; if `TRUE`, case is ignored. Default: `FALSE`.
+#'
+#' @return An integer vector of match counts (same length as `x`).
 #'
 #' @examples
-#' # count pattern matched strings from a string vector
 #' \donttest{count_pattern(pattern = "c", c("a|b|c", "a|c|c"))}
 #'
 #' @export
@@ -113,17 +117,17 @@ count_pattern <- function(pattern, x, ignore.case = FALSE) {
          function(x) length(x[x != -1]))
 }
 
-#' Get a first pattern
+#' Get first match
 #'
-#' Get a first pattern from a string vector.
+#' Extract the first regex match from each string (empty string if no match).
 #'
-#' @param pattern a string containing a [regular expression]
-#' @param x a string vector
-#' @param ignore.case if `FALSE`, the pattern matching is case sensitive and if `TRUE`, case is ignored during matching.
-#' @return a string vector
+#' @param pattern A string containing a regular expression.
+#' @param x A character vector.
+#' @param ignore.case Logical; if `TRUE`, case is ignored. Default: `TRUE`.
+#'
+#' @return A character vector of the same length as `x`.
 #'
 #' @examples
-#' # get a first pattern from a string vector
 #' \donttest{get_pattern(pattern = "c", c("a|b|c", "a|c|c"))}
 #'
 #' @export
@@ -134,20 +138,20 @@ get_pattern <- function(pattern, x, ignore.case = TRUE) {
   return(z)
 }
 
-#' Get all patterns
+#' Get all matches
 #'
-#' Get all patterns from a string vector.
+#' Extract all regex matches from each string and collapse them with a separator.
 #'
-#' @param pattern a string containing a [regular expression]
-#' @param x a string vector
-#' @param collapse an optional character string to separate the results. Not
-#' [`NA_character_`]. When `collapse` is a string, the result is always a string
-#' ([`character`] of length 1). default "|"
-#' @param ignore.case if `FALSE`, the pattern matching is case sensitive and if `TRUE`, case is ignored during matching.
-#' @return a string vector
+#' @param pattern A string containing a regular expression.
+#' @param x A character vector.
+#' @param collapse A single string used to separate matches (not `NA_character_`).
+#'   Default: `"|"`.
+#' @param ignore.case Logical; if `TRUE`, case is ignored. Default: `TRUE`.
+#'
+#' @return A character vector of the same length as `x`
+#'   (empty string for elements with no matches).
 #'
 #' @examples
-#' # get all patterns from a string vector
 #' \donttest{get_pattern_all(pattern = "c", c("a|b|c", "a|c|c"))}
 #'
 #' @export
@@ -157,16 +161,17 @@ get_pattern_all <- function(pattern, x, collapse = "|", ignore.case = TRUE) {
   sapply(z, function(s) paste(s, collapse = collapse))
 }
 
+
 #' Delete patterns
 #'
-#' Delete patterns from a string vector.
+#' Remove all regex matches from each string.
 #'
-#' @param pattern a string containing a [regular expression]
-#' @param x a string vector
-#' @return a string vector
+#' @param pattern A string containing a regular expression.
+#' @param x A character vector.
+#'
+#' @return A character vector with matches removed.
 #'
 #' @examples
-#' # delete patterns from a string vector
 #' \donttest{del_pattern(pattern = "c", c("abc", "acc"))}
 #'
 #' @export
@@ -177,15 +182,16 @@ del_pattern <- function(pattern, x)
 #'
 #' Paste vectors of equal length in a list or data.frame
 #'
-#' @param x a list with same length vectors or data frame column vectors you want to paste.
-#' @param sep a character string to separate the terms.
-#' @param na.rm a logical evaluating to TRUE or FALSE indicating whether NA values should be stripped before the computation proceeds.
+#' @param x A list with same length vectors or data frame column vectors you want to paste.
+#' @param sep A character string to separate the terms.
+#' @param na.rm A logical evaluating to TRUE or FALSE indicating whether NA values should be stripped before the computation proceeds.
 #' @return a vector pasted
 #'
 #' @examples
-#' # paste length and width of iris
+#' \donttest{
 #' iris$size <- paste_list(iris[, c("Sepal.Length", "Sepal.Width", "Petal.Length", "Petal.Width")])
 #' head(iris)
+#' }
 #'
 #' @export
 paste_list <- function(x, sep = "|", na.rm = FALSE) {

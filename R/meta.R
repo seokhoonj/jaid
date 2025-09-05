@@ -1,16 +1,44 @@
-#' Meta information
+#' Extract meta information about an object
 #'
-#' Show meta information
+#' `r lifecycle::badge("experimental")`
 #'
-#' @param x object vector, data.frame, environment and etc
-#' @return meta information data frame
+#' Generic function to display meta information about an object.
+#' Currently supports `data.frame` objects with a specific method.
+#'
+#' @param x An R object (e.g., data.frame).
+#'
+#' @return A `meta` object summarizing information (see [meta.data.frame()]).
 #'
 #' @examples
-#' \donttest{meta(cars)}
+#' \donttest{meta(mtcars)}
 #'
 #' @export
-meta <- function(x) UseMethod("meta")
+meta <- function(x) {
+  lifecycle::signal_stage("experimental", "meta()")
+  UseMethod("meta")
+}
 
+#' Meta information for a data.frame
+#'
+#' Summarize the structure and contents of a data.frame at the column level.
+#'
+#' The returned table includes:
+#' * `column`: column name
+#' * `class`: column class
+#' * `type`: underlying storage mode
+#' * `n`: number of non-missing values
+#' * `missing`: number of missing values
+#' * `zero`: number of zero values
+#' * `distinct`: number of distinct values
+#' * `prop`: proportion of non-missing values (`1 - missing/nrows`)
+#' * `nzprop`: proportion of non-zero values (`1 - zero/nrows`)
+#' * `mode`: most frequent value
+#'
+#' @param x A data.frame.
+#'
+#' @return A `meta` object, which is a `data.table` containing
+#'   column-level summary information.
+#'
 #' @method meta data.frame
 #' @export
 meta.data.frame <- function(x) {
@@ -28,16 +56,17 @@ meta.data.frame <- function(x) {
   df <- data.table(column, class, type, n, missing, zero, distinct,
                    prop = 1 - missing/nrows, nzprop = 1 - zero/nrows, mode)
   data.table::setattr(df, "class", c("meta", class(df)))
-  return(df)
+  df
 }
 
-
-#' Class and type information
+#' Inspect class and storage type
 #'
-#' Show class and type information.
+#' Generic function to show class and underlying storage type of objects.
+#' Currently provides a method for `data.frame`.
 #'
-#' @param x object vector, data.frame, environment and etc
-#' @return class and type information data frame
+#' @param x An R object (e.g., data.frame).
+#'
+#' @return An R object summarizing class and storage type.
 #'
 #' @examples
 #' \donttest{type(cars)}
@@ -45,6 +74,17 @@ meta.data.frame <- function(x) {
 #' @export
 type <- function(x) UseMethod("type")
 
+#' Class and type information for data frames
+#'
+#' Summarize class and storage type of each column in a data frame.
+#'
+#' @param x A `data.frame`.
+#'
+#' @return A `data.table` with columns:
+#' * `column`: column name
+#' * `class`: column class
+#' * `type`: storage type
+#'
 #' @method type data.frame
 #' @export
 type.data.frame <- function(x) {

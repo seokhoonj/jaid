@@ -2,25 +2,27 @@
 % Please edit documentation in R/date.R
 \name{add_year}
 \alias{add_year}
-\title{Add years}
+\title{Add years to a date}
 \usage{
 add_year(date, year)
 }
 \arguments{
-\item{date}{A date}
+\item{date}{A date-like object (coercible via \code{\link[=as.POSIXlt]{as.POSIXlt()}}).}
 
-\item{year}{A number of years to be added}
+\item{year}{Integer number of years to add (can be negative).}
 }
 \value{
-A date
+A Date with the years added.
 }
 \description{
-Add years to the date.
+Add a specified number of years to a date-like object. Negative values
+subtract years. Uses base rollover via POSIXlt.
 }
 \examples{
-# add years
 \donttest{
+# Add years
 date <- Sys.Date()
-add_year(date, 3)}
+add_year(date, 3)
+}
 
 }

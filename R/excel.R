@@ -1,252 +1,192 @@
-#' To a R1C1 format column
+#' Convert Excel column letters to numbers
 #'
-#' Convert a cell or column string from A1 to R1C1 format.
+#' Converts Excel column letters (A, B, C, ..., AA, AB, etc.) to column numbers.
 #'
-#' @param x A string specifying a cell or a column
-#' @return A numeric
+#' @param x String containing Excel cell reference or column letters.
+#'
+#' @return Numeric column number (A=1, B=2, ..., Z=26, AA=27, etc.)
 #'
 #' @examples
-#' # convert a cell or column string from A1 to R1C1 format
 #' \donttest{
-#' to_r1c1_col("C33")
-#' to_r1c1_col("ABC")
-#' to_r1c1_col("ABC123")}
+#' # Convert column letters to numbers
+#' to_r1c1_col("C33")    # Returns 3 (C = 3rd column)
+#' to_r1c1_col("ABC")    # Returns 731 (ABC = 731st column)
+#' to_r1c1_col("ABC123") # Returns 731 (extracts ABC only)
+#' }
 #'
 #' @export
 to_r1c1_col <- function(x) {
-  tbl <- seq_along(LETTERS)
-  names(tbl) <- LETTERS
-  spl <- unlist(strsplit(get_pattern("[A-Z]+", x), split = "",
-                         perl = TRUE))
-  num <- tbl[spl]
-  dig <- rev(seq_along(num) - 1)
-  return(sum(num * 26^dig))
+  col_letters <- get_pattern("[A-Z]+", x)
+  letters <- strsplit(col_letters, "")[[1L]]
+  result <- 0
+  for (letter in letters) {
+    result <- result * 26 + (match(letter, LETTERS))
+  }
+  result
 }
 
-#' To a A1 format column
+#' Convert column numbers to Excel letters
 #'
-#' Convert a cell or column numeric from R1C1 to A1 format.
+#' Converts column numbers to Excel column letters (1=A, 2=B, 27=AA, etc.).
 #'
-#' @param x A string specifying a cell or a column
-#' @return A string
+#' @param x Numeric column number.
+#'
+#' @return String with Excel column letters.
 #'
 #' @examples
-#' # convert a cell or column numeric from R1C1 to A1 format.
 #' \donttest{
-#' to_a1_col(1)
-#' to_a1_col(3)
-#' to_a1_col(26)}
+#' # Convert column numbers to letters
+#' to_a1_col(1)   # Returns "A" (1st column)
+#' to_a1_col(3)   # Returns "C" (3rd column)
+#' to_a1_col(26)  # Returns "Z" (26th column)
+#' to_a1_col(27)  # Returns "AA" (27th column)
+#' }
 #'
 #' @export
 to_a1_col <- function(x) {
-  tbl <- seq_along(LETTERS)
-  names(tbl) <- LETTERS
-  if (x <= 26) {
-    return(paste0(names(tbl[x]), collapse = ""))
+  if (x <= 26)
+    return(LETTERS[x])
+  result <- NA_character_
+  while (x > 0) {
+    x <- x - 1
+    result <- paste0(LETTERS[(x %% 26) + 1], result)
+    x <- x %/% 26
   }
-  quo_vec <- vector(mode = "integer")
-  rem_vec <- vector(mode = "integer")
-  i <- 1
-  while (x > 26) {
-    quo_vec[i] <- quo <- x%/%26
-    rem_vec[i] <- rem <- x%%26
-    x <- quo
-    i <- i + 1L
-  }
-  quo <- quo_vec[length(quo_vec)]
-  z <- c(quo, rev(rem_vec))
-  for (i in rev(2:length(z))) {
-    if (z[i] == 0) {
-      z[i] <- 26
-      z[i - 1] <- z[i - 1] - 1L
-    }
-  }
-  return(paste0(names(tbl[z]), collapse = ""))
+  result
 }
 
-write_data <- function(wb, sheet, data, rc = c(1L, 1L), rowNames = TRUE,
-                       fontName = "Comic Sans MS", borderColour = "#000000",
-                       widths = 8.43) {
-  headerStyle1 <- openxlsx::createStyle(
-    fontName = fontName,
-    fontSize = 14,
-    fontColour = "#000000",
-    halign = "center",
-    valign = "center",
-    fgFill = "#E6E6E7",
-    border = "TopRightBottom",
-    borderColour = borderColour,
-    borderStyle = c("thick", "thin", "double")
-  )
-  headerStyle2 <- openxlsx::createStyle(
-    fontName = fontName,
-    fontSize = 14,
-    fontColour = "#000000",
-    halign = "center",
-    valign = "center",
-    fgFill = "#E6E6E7",
-    border = "TopBottom",
-    borderColour = borderColour,
-    borderStyle = c("thick", "double")
-  )
-  bodyStyle1 <- openxlsx::createStyle(
-    fontName = fontName,
-    border = "TopRightBottom",
-    borderColour = borderColour
-  )
-  bodyStyle2 <- openxlsx::createStyle(
-    fontName = fontName,
-    border = "TopBottom",
-    borderColour = borderColour
-  )
-  footerStyle1 <- openxlsx::createStyle(
-    fontName = fontName,
-    border = "TopRightBottom",
-    borderColour = borderColour,
-    borderStyle = c("thin", "thin", "thick")
-  )
-  footerStyle2 <- openxlsx::createStyle(
-    fontName = fontName,
-    border = "TopBottom",
-    borderColour = borderColour,
-    borderStyle = c("thin", "thick")
-  )
 
-  openxlsx::writeData(wb = wb, sheet = sheet, x = data, xy = rev(rc),
-                      rowNames = rowNames)
-
-  startCell <- rc
-  endCell   <- startCell + dim(data)
-
-  srow <- startCell[1L]
-  scol <- startCell[2L]
-  erow <- endCell[1L]
-  ecol <- endCell[2L]
-
-  if (!rowNames) ecol <- ecol - 1
-
-  headerCols  <- scol:ecol
-  headerRows1 <- srow
-  headerCols1 <- scol:max(ecol-1, 1)
-  headerRows2 <- srow
-  headerCols2 <- ecol
-  bodyRows1   <- (srow+1):max(erow-1, 2)
-  bodyCols1   <- scol:max(ecol-1, 1)
-  bodyRows2   <- (srow+1):max(erow-1, 2)
-  bodyCols2   <- ecol
-  footerRows1 <- erow
-  footerCols1 <- scol:max(ecol-1, 1)
-  footerRows2 <- erow
-  footerCols2 <- ecol
-
-  openxlsx::addStyle(wb, sheet = sheet, headerStyle1, rows = headerRows1,
-                     cols = headerCols1, gridExpand = TRUE)
-  openxlsx::addStyle(wb, sheet = sheet, headerStyle2, rows = headerRows2,
-                     cols = headerCols2, gridExpand = TRUE)
-  openxlsx::addStyle(wb, sheet = sheet, bodyStyle1  , rows = bodyRows1,
-                     cols = bodyCols1  , gridExpand = TRUE)
-  openxlsx::addStyle(wb, sheet = sheet, bodyStyle2  , rows = bodyRows2,
-                     cols = bodyCols2  , gridExpand = TRUE)
-  openxlsx::addStyle(wb, sheet = sheet, footerStyle1, rows = footerRows1,
-                     cols = footerCols1, gridExpand = TRUE)
-  openxlsx::addStyle(wb, sheet = sheet, footerStyle2, rows = footerRows2,
-                     cols = footerCols2, gridExpand = TRUE)
-
-  openxlsx::setColWidths(wb, sheet, cols = headerCols, widths = widths)
-}
-
-#' Write data in an excel file
+#' Write data to an Excel workbook
 #'
-#' Write data in an excel file.
+#' Write a data.frame or a list of data.frames to an Excel workbook using
+#' `openxlsx`. When a list is supplied, each element is written to a
+#' separate worksheet. List names are used as sheet names; unnamed elements
+#' receive autogenerated names (e.g., "Sheet 1").
 #'
-#' @param data A data frame
-#' @param file A file path
-#' @param rc A vector of starting point row and column, default c(1L, 1L)
-#' @param rowNames A boolean value contains row names or not
-#' @param overwrite A boolean value that overwrite or not
+#' @param data A data.frame, or a named/unnamed list of data.frames. When a list
+#'   is provided, each element is written to its own worksheet.
+#' @param file A file path to the target `.xlsx` workbook.
+#' @param rc A length-2 integer vector giving the starting row and column
+#'   (default `c(1L, 1L)`).
+#' @param row_names Logical; whether to include row names.
+#' @param overwrite Logical; if `TRUE`, overwrite an existing workbook.
+#' @param font_size Numeric font size for the Excel output (default `14`).
+#' @param font_name Font family name for the Excel output (default `"Comic Sans MS"`).
+#' @param border_colour Border color used by the writing helper (HEX string, e.g., `"#000000"`).
+#' @param widths Column widths passed to the writing helper. Either a single
+#'   numeric value recycled across columns or a numeric vector per column.
 #'
-#' @return no return
+#' @return No return value, called for side effects (saves an Excel file).
 #'
 #' @examples
-#' # write xlsx file
 #' \dontrun{
-#' write_xlsx(list(cars = cars, matcars = mtcars), "data.xlsx")}
+#' write_data_xlsx(
+#'   list(cars = cars, mtcars = mtcars),
+#'   file = "data.xlsx",
+#'   rc = c(1L, 1L),
+#'   overwrite = TRUE
+#' )
+#' }
 #'
 #' @export
-data_xlsx <- function(data, file, rc = c(1L, 1L), rowNames = FALSE,
-                      overwrite = FALSE) {
+write_data_xlsx <- function(data, file, rc = c(1L, 1L), row_names = FALSE,
+                            overwrite = FALSE, font_size = 14,
+                            font_name = "Comic Sans MS",
+                            border_colour = "#000000", widths = 8.43) {
   if (is.data.frame(data))
     data <- list(data)
   if (!file.exists(file)) {
     wb <- openxlsx::createWorkbook()
-    sheetNames <- NULL
+    sheet_names <- NULL
   } else {
     wb <- openxlsx::loadWorkbook(file)
-    sheetNames <- openxlsx::getSheetNames(file)
+    sheet_names <- openxlsx::getSheetNames(file)
   }
-  dataNames <- names(data)
-  if (is.null(dataNames)) {
-    dataNames <- sprintf("Sheet %s", seq_along(data))
+  data_names <- names(data)
+  if (is.null(data_names)) {
+    data_names <- sprintf("Sheet %s", seq_along(data))
   } else {
-    dataLen <- length(dataNames[which(dataNames == "")])
-    dataNames[which(dataNames == "")] <- sprintf("Sheet %s", seq_along(dataLen))
+    empty_names <- which(data_names == "" | is.na(data_names))
+    if (length(empty_names)) {
+      data_names[empty_names] <- sprintf("Sheet %s", seq_along(empty_names))
+    }
   }
-  names(data) <- dataNames
-  newNames <- setdiff(dataNames, sheetNames)
-  lapply(seq_along(newNames), function(x)
-    openxlsx::addWorksheet(wb = wb, sheetName = newNames[[x]], gridLines = FALSE))
-  lapply(seq_along(data), function(x)
+  names(data) <- data_names
+  new_names <- setdiff(data_names, sheet_names)
+  lapply(seq_along(new_names), function(x) {
+    openxlsx::addWorksheet(wb = wb, sheetName = new_names[[x]], gridLines = FALSE)
+  })
+  lapply(seq_along(data), function(x) {
     write_data(wb, sheet = names(data)[[x]], data = data[[x]], rc = rc,
-               rowNames = rowNames))
+               row_names = row_names, font_size = font_size,
+               font_name = font_name, border_colour = border_colour,
+               widths = widths)
+  })
   openxlsx::saveWorkbook(wb = wb, file = file, overwrite = overwrite)
 }
 
-insert_plot <- function(wb, sheet, plot, rc = c(1L, 1L), width = 12, height = 6,
-                        dpi = 300) {
-  print(plot)
-  openxlsx::insertPlot(wb, sheet = sheet, width = width, height = height,
-                       startRow = rc[1L], startCol = rc[2L], dpi = dpi)
-}
-
-#' Draw plots in an excel file
+#' Save ggplot object(s) to an Excel workbook
 #'
-#' Draw plots in an excel file.
+#' Save one or more `ggplot` objects to an Excel workbook. A single `ggplot`
+#' object can be supplied directly, or multiple plots can be passed in a list.
+#' Each plot is written to a separate worksheet.
 #'
-#' @param plots ggplot files
-#' @param file a file path
-#' @param rc a vector of starting point row and column, default c(1L, 1L)
-#' @param width image width
-#' @param height image height
-#' @param dpi image resolution
-#' @param overwrite A boolean value that overwrite or not
-#' @return no return
+#' @param plot A `ggplot` object or a named/unnamed list of `ggplot` objects.
+#' @param file A file path to the target Excel workbook.
+#' @param rc A length-2 integer vector giving the starting row and column
+#'   (default is `c(1L, 1L)`).
+#' @param width Image width (in inches).
+#' @param height Image height (in inches).
+#' @param dpi Resolution of the image (dots per inch).
+#' @param overwrite Logical; if TRUE, overwrite an existing workbook.
+#'
+#' @return No return value, called for side effects (saves an Excel file).
 #'
 #' @examples
-#' # draw ggplot objects in an excel file
 #' \dontrun{
-#' draw_xlsx(list(image1, image2), "image.xlsx")}
+#' library(ggplot2)
 #'
-#' @export
-plot_xlsx <- function(plots, file, rc = c(1L, 1L), width = 12, height = 6,
-                      dpi = 300, overwrite = FALSE) {
+#' p1 <- ggplot(mtcars, aes(mpg, wt)) + geom_point()
+#' p2 <- ggplot(mtcars, aes(hp, qsec)) + geom_point()
+#'
+#' # Single plot
+#' save_plot_xlsx(p1, "single.xlsx")
+#'
+#' # Multiple plots
+#' save_plot_xlsx(list(Scatter1 = p1, Scatter2 = p2), "multi.xlsx")
+#' }
+#'
+save_plot_xlsx <- function(plot, file, rc = c(1L, 1L), width = 12, height = 6,
+                           dpi = 300, overwrite = FALSE) {
+  if (inherits(plot, "ggplot")) {
+    plot <- list(plot)
+  } else if (is.list(plot)) {
+    if (!all(vapply(plot, function(p) inherits(p, "ggplot"), logical(1L)))) {
+      stop("All elements of the list must be ggplot objects.")
+    }
+  } else {
+    stop("`plot` must be a ggplot object or a list of ggplot objects.")
+  }
+
   if (!file.exists(file)) {
     wb <- openxlsx::createWorkbook()
-    sheetNames <- NULL
+    sheet_names <- NULL
   } else {
     wb <- openxlsx::loadWorkbook(file)
-    sheetNames <- openxlsx::getSheetNames(file)
+    sheet_names <- openxlsx::getSheetNames(file)
   }
-  plotNames <- names(plots)
-  if (is.null(plotNames)) {
-    plotNames <- sprintf("Sheet %s", seq_along(plots))
+  plot_names <- names(plot)
+  if (is.null(plot_names)) {
+    plot_names <- sprintf("Sheet %s", seq_along(plots))
   } else {
-    plotLen <- length(plotNames[which(plotNames == "")])
-    plotNames[which(plotNames == "")] <- sprintf("Sheet %s", seq_along(plotLen))
+    plot_len <- length(plot_names[which(plot_names == "")])
+    plot_names[which(plot_names == "")] <- sprintf("Sheet %s", seq_along(plot_len))
   }
-  names(plots) <- plotNames
-  newNames <- setdiff(plotNames, sheetNames)
-  lapply(seq_along(newNames), function(x)
-    openxlsx::addWorksheet(wb = wb, sheetName = newNames[[x]], gridLines = FALSE))
+  names(plots) <- plot_names
+  new_names <- setdiff(plot_names, sheet_names)
+  lapply(seq_along(new_names), function(x) {
+    openxlsx::addWorksheet(wb = wb, sheetName = new_names[[x]], gridLines = FALSE)
+  })
   lapply(seq_along(plots), function(x) {
     print(plots[[x]])
     openxlsx::insertPlot(wb, sheet = names(plots)[[x]], width = width,
@@ -256,154 +196,227 @@ plot_xlsx <- function(plots, file, rc = c(1L, 1L), width = 12, height = 6,
   openxlsx::saveWorkbook(wb = wb, file = file, overwrite = overwrite)
 }
 
-#' Insert images in an excel file
+#' Save image file(s) to an Excel workbook
 #'
-#' Insert images in an excel file.
+#' Save one or more image files (PNG, JPEG, etc.) to an Excel workbook using
+#' `openxlsx`. Each image is inserted into a separate worksheet. If names
+#' are supplied, they are used as sheet names; otherwise, autogenerated names
+#' like "Sheet 1" are used.
 #'
-#' @param images image file paths
-#' @param file a file path
-#' @param rc a vector of starting point row and column, default c(1L, 1L)
-#' @param width image width
-#' @param height image height
-#' @param dpi image resolution
-#' @param overwrite A boolean value that overwrite or not
-#' @return no return
+#' @param image A file path (character scalar) or a character vector/list of
+#'   image file paths.
+#' @param file A file path to the target `.xlsx` workbook.
+#' @param rc A length-2 integer vector giving the starting row and column
+#'   (default `c(1L, 1L)`).
+#' @param width Image width (in inches).
+#' @param height Image height (in inches).
+#' @param dpi Resolution of the image (dots per inch).
+#' @param overwrite Logical; if `TRUE`, overwrite an existing workbook.
+#'
+#' @return No return value, called for side effects (saves an Excel file).
 #'
 #' @examples
-#' # insert images in an excel file
 #' \dontrun{
-#' image_xlsx(list(image1, image2), "image.xlsx")}
+#' save_image_xlsx(c("img1.png", "img2.jpg"), "images.xlsx")
+#' }
 #'
 #' @export
-image_xlsx <- function(images, file, rc = c(1L, 1L), width = 12, height = 6,
-                       dpi = 300, overwrite = FALSE) {
+save_image_xlsx <- function(image, file, rc = c(1L, 1L), width = 12,
+                            height = 6, dpi = 300, overwrite = FALSE) {
+  # normalize to a named character vector of paths
+  if (is.list(image)) image <- unlist(image, use.names = TRUE)
+
+  if (!is.character(image) || length(image) < 1L) {
+    stop("`image` must be a file path (character scalar) or a character vector/list of paths.")
+  }
+
+  # file existence check
+  missing_files <- image[!file.exists(image)]
+  if (length(missing_files)) {
+    stop("File(s) not found: ", paste(shQuote(missing_files), collapse = ", "))
+  }
   if (!file.exists(file)) {
     wb <- openxlsx::createWorkbook()
-    sheetNames <- NULL
+    sheet_names <- NULL
   } else {
     wb <- openxlsx::loadWorkbook(file)
-    sheetNames <- openxlsx::getSheetNames(file)
+    sheet_names <- openxlsx::getSheetNames(file)
   }
-  imageNames <- names(images)
-  if (is.null(imageNames)) {
-    imageNames <- sprintf("Sheet %s", seq_along(images))
+
+  image_names <- names(image)
+
+  if (is.null(image_names)) {
+    image_names <- sprintf("Sheet %s", seq_along(image))
   } else {
-    imageLen <- length(imageNames[which(imageNames == "")])
-    imageNames[which(imageNames == "")] <- sprintf("Sheet %s", seq_along(imageLen))
+    empty_idx <- which(image_names == "" | is.na(image_names))
+    if (length(empty_idx)) {
+      image_names[empty_idx] <- sprintf("Sheet %s", seq_along(empty_idx))
+    }
   }
-  names(images) <- imageNames
-  newNames <- setdiff(imageNames, sheetNames)
-  lapply(seq_along(newNames), function(x)
-    openxlsx::addWorksheet(wb = wb, sheetName = newNames[[x]], gridLines = FALSE)
+  names(image) <- image_names
+
+  new_names <- setdiff(image_names, sheet_names)
+  lapply(seq_along(new_names), function(x)
+    openxlsx::addWorksheet(wb = wb, sheetName = new_names[[x]], gridLines = FALSE)
   )
-  lapply(seq_along(images), function(x)
-    openxlsx::insertImage(wb, sheet = names(images)[[x]], width = width,
-                          height = height, file = images[[x]],
+  lapply(seq_along(image), function(x)
+    openxlsx::insertImage(wb, sheet = names(image)[[x]], width = width,
+                          height = height, file = image[[x]],
                           startRow = rc[1L], startCol = rc[2L], dpi = dpi)
   )
   openxlsx::saveWorkbook(wb = wb, file = file, overwrite = overwrite)
 }
 
-# data image --------------------------------------------------------------
-
-#' Plot a data image
+#' Deprecated: data_xlsx()
 #'
-#' Plot a data image (html < png < Plots in RStudio).
+#' `r lifecycle::badge("deprecated")`
 #'
-#' @param data a data.frame
-#' @param caption The table caption.
-#' @param footnote A vector of footnote texts, Footnotes here will be labeled with special symbols.
-#' The vector here should not have more than 20 elements.
-#' @param digits Maximum number of digits for numeric columns, passed to round(). This can also be a vector of length ncol(x), to set the
-#' number of digits for individual columns.
-#' @param full_width A TRUE or FALSE variable controlling whether the HTML table should have the preferable format for
-#' `full_width`. If not specified, a HTML table will have full width by default but this option will be set to `FALSE` for a LaTeX table
-#' @param html_font A string for HTML css font.
-#' @param zoom A number specifying the zoom factor. A zoom factor of 2 will result in twice as many pixels vertically and horizontally. Note that
-#' using 2 is not exactly the same as taking a screenshot on a HiDPI (Retina) device: it is like increasing the zoom to 200 doubling the
-#' height and width of the browser window. This differs from using a HiDPI device because some web pages load different, higher-
-#' resolution images when they know they will be displayed on a HiDPI device (but using zoom will not report that there is a HiDPI
-#' device).
-#' @param width A numeric vector or unit object specifying width.
-#' @param height A numeric vector or unit object specifying height.
-#' @return no return value.
+#' Use [write_data_xlsx()] instead.
 #'
-#' @examples
-#' # plot a data image
-#' \dontrun{
-#' plot_data_image(head(data), height = .5)}
+#' @param ... Additional arguments passed to [write_data_xlsx()].
+#'
+#' @return No return value, called for side effects.
+#'
+#' @seealso [write_data_xlsx()]
 #'
 #' @export
-plot_data_image <- function(data, caption = "Table.1", footnote = NULL,
-                            digits = 2, full_width = FALSE,
-                            html_font = "Comic Sans MS", zoom = 1.5,
-                            width = NULL, height = .5) {
-  file <- sprintf("%s.png", tempfile())
-  op <- options(knitr.kable.NA = "")
-  on.exit(op)
-  kableExtra::kbl(data, caption = caption, digits = digits,
-                  format.args = list(big.mark = ",")) |>
-    kableExtra::kable_classic(full_width = full_width, html_font = html_font) |>
-    kableExtra::footnote(symbol = footnote) |>
-    kableExtra::save_kable(file, zoom = zoom)
-  png <- png::readPNG(file)
-  while (!is.null(dev.list())) dev.off()
-  grid::grid.raster(png, width = width, height = height)
+data_xlsx <- function(...) {
+  lifecycle::deprecate_warn("0.0.0.9000", "data_xlsx()", "write_data_xlsx()")
+  write_data_xlsx(...)
 }
 
-#' View a html data image
+#' Deprecated: plot_xlsx()
 #'
-#' View a html data image (Viewer in RStudio).
+#' `r lifecycle::badge("deprecated")`
 #'
-#' @param data a data.frame
-#' @param caption The table caption.
-#' @param footnote A vector of footnote texts, Footnotes here will be labeled with special symbols.
-#' The vector here should not have more than 20 elements.
-#' @param digits Maximum number of digits for numeric columns, passed to round(). This can also be a vector of length ncol(x), to set the
-#' number of digits for individual columns.
-#' @param full_width A TRUE or FALSE variable controlling whether the HTML table should have the preferable format for
-#' `full_width`. If not specified, a HTML table will have full width by default but this option will be set to `FALSE` for a LaTeX table
-#' @param html_font A string for HTML css font.
-#' @return no return value.
+#' Use [save_plot_xlsx()] instead.
 #'
-#' @examples
-#' # plot a data image
-#' \dontrun{
-#' plot_data_image(head(data), height = .5)}
+#' @param ... Additional arguments passed to [save_plot_xlsx()].
+#'
+#' @return No return value, called for side effects.
+#'
+#' @seealso [save_plot_xlsx()]
 #'
 #' @export
-view_data_image <- function(data, caption = "Table.1", footnote = NULL,
-                            digits = 2, full_width = FALSE,
-                            html_font = "Comic Sans MS") {
-  op <- options(knitr.kable.NA = "")
-  on.exit(op)
-  kableExtra::kbl(data, caption = caption, digits = digits,
-                  format.args = list(big.mark = ",")) |>
-    kableExtra::kable_classic(full_width = full_width, html_font = html_font) |>
-    kableExtra::footnote(symbol = footnote)
+plot_xlsx <- function(...) {
+  lifecycle::deprecate_warn("0.0.0.9000", "plot_xlsx()", "save_plot_xlsx()")
+  save_plot_xlsx(...)
 }
 
-#' @rdname view_data_image
-#' @param vwidth Viewport width. This is the width of the browser "window".
-#' @param vheight Viewport height This is the height of the browser "window".
-#' @param zoom A number specifying the zoom factor. A zoom factor of 2 will result in twice as many pixels vertically and horizontally. Note that
-#' using 2 is not exactly the same as taking a screenshot on a HiDPI (Retina) device: it is like increasing the zoom to 200 doubling the
-#' height and width of the browser window. This differs from using a HiDPI device because some web pages load different, higher-
-#' resolution images when they know they will be displayed on a HiDPI device (but using zoom will not report that there is a HiDPI
-#' device).
-#' @param file A file path
+#' Deprecated: image_xlsx()
+#'
+#' `r lifecycle::badge("deprecated")`
+#'
+#' Use [save_image_xlsx()] instead.
+#'
+#' @param ... Additional arguments passed to [save_image_xlsx()].
+#'
+#' @return No return value, called for side effects.
+#'
+#' @seealso [save_image_xlsx()]
+#'
 #' @export
-save_data_image <- function(data, caption = "Table.1", footnote = NULL,
-                            digits = 2, full_width = FALSE,
-                            html_font = "Comic Sans MS",
-                            vwidth = 992, vheight = 744, zoom = 1.5, file) {
-  if (missing(file))
-    file <- sprintf("%s.png", tempfile())
-  op <- options(knitr.kable.NA = "")
-  on.exit(op)
-  kableExtra::kbl(data, caption = caption, digits = digits,
-                  format.args = list(big.mark = ",")) |>
-    kableExtra::kable_classic(full_width = full_width, html_font = html_font) |>
-    kableExtra::footnote(symbol = footnote) |>
-    kableExtra::save_kable(file, vwidth = vwidth, vheight = vheight, zoom = zoom)
+image_xlsx <- function(...) {
+  lifecycle::deprecate_warn("0.0.0.9000", "image_xlsx()", "save_image_xlsx()")
+  save_image_xlsx(...)
+}
+
+# Helper functions --------------------------------------------------------
+
+write_data <- function(wb, sheet, data, rc = c(1L, 1L), row_names = TRUE,
+                       font_size = 14, font_name = "Comic Sans MS",
+                       border_colour = "#000000", widths = 8.43) {
+  header_style1 <- openxlsx::createStyle(
+    fontName = font_name,
+    fontSize = font_size,
+    fontColour = "#000000",
+    halign = "center",
+    valign = "center",
+    fgFill = "#E6E6E7",
+    border = "TopRightBottom",
+    borderColour = border_colour,
+    borderStyle = c("thick", "thin", "double")
+  )
+  header_style2 <- openxlsx::createStyle(
+    fontName = font_name,
+    fontSize = font_size,
+    fontColour = "#000000",
+    halign = "center",
+    valign = "center",
+    fgFill = "#E6E6E7",
+    border = "TopBottom",
+    borderColour = border_colour,
+    borderStyle = c("thick", "double")
+  )
+  body_style1 <- openxlsx::createStyle(
+    fontName = font_name,
+    border = "TopRightBottom",
+    borderColour = border_colour
+  )
+  body_style2 <- openxlsx::createStyle(
+    fontName = font_name,
+    border = "TopBottom",
+    borderColour = border_colour
+  )
+  footer_style1 <- openxlsx::createStyle(
+    fontName = font_name,
+    border = "TopRightBottom",
+    borderColour = border_colour,
+    borderStyle = c("thin", "thin", "thick")
+  )
+  footer_style2 <- openxlsx::createStyle(
+    fontName = font_name,
+    border = "TopBottom",
+    borderColour = border_colour,
+    borderStyle = c("thin", "thick")
+  )
+
+  openxlsx::writeData(wb = wb, sheet = sheet, x = data, xy = rev(rc),
+                      rowNames = row_names)
+
+  start_cell <- rc
+  end_cell   <- start_cell + dim(data)
+
+  srow <- start_cell[1L]
+  scol <- start_cell[2L]
+  erow <- end_cell[1L]
+  ecol <- end_cell[2L]
+
+  if (!row_names) ecol <- ecol - 1
+
+  header_cols  <- scol:ecol
+  header_rows1 <- srow
+  header_cols1 <- scol:max(ecol - 1, 1)
+  header_rows2 <- srow
+  header_cols2 <- ecol
+  body_rows1   <- (srow + 1):max(erow - 1, 2)
+  body_cols1   <- scol:max(ecol - 1, 1)
+  body_rows2   <- (srow + 1):max(erow - 1, 2)
+  body_cols2   <- ecol
+  footer_rows1 <- erow
+  footer_cols1 <- scol:max(ecol - 1, 1)
+  footer_rows2 <- erow
+  footer_cols2 <- ecol
+
+  openxlsx::addStyle(wb, sheet = sheet, header_style1, rows = header_rows1,
+                     cols = header_cols1, gridExpand = TRUE)
+  openxlsx::addStyle(wb, sheet = sheet, header_style2, rows = header_rows2,
+                     cols = header_cols2, gridExpand = TRUE)
+  openxlsx::addStyle(wb, sheet = sheet, body_style1, rows = body_rows1,
+                     cols = body_cols1, gridExpand = TRUE)
+  openxlsx::addStyle(wb, sheet = sheet, body_style2, rows = body_rows2,
+                     cols = body_cols2, gridExpand = TRUE)
+  openxlsx::addStyle(wb, sheet = sheet, footer_style1, rows = footer_rows1,
+                     cols = footer_cols1, gridExpand = TRUE)
+  openxlsx::addStyle(wb, sheet = sheet, footer_style2, rows = footer_rows2,
+                     cols = footer_cols2, gridExpand = TRUE)
+
+  openxlsx::setColWidths(wb, sheet, cols = header_cols, widths = widths)
+}
+
+insert_plot <- function(wb, sheet, plot, rc = c(1L, 1L), width = 12, height = 6,
+                        dpi = 300) {
+  print(plot)
+  openxlsx::insertPlot(wb, sheet = sheet, width = width, height = height,
+                       startRow = rc[1L], startCol = rc[2L], dpi = dpi)
 }

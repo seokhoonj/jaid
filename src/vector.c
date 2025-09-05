@@ -151,14 +151,14 @@ SEXP Reverse(SEXP x) {
   } break;
   case STRSXP:{
     /* Previous implementation using STRING_PTR (non-API call to R):
-    SEXP *ptr = STRING_PTR(x);
-    SEXP tmp;
-    for (i = 0; i < size/2; ++i) {
-      tmp = ptr[i];
-      ptr[i] = ptr[size-1-i];
-      ptr[size-1-i] = tmp;
-    }
-    */
+     SEXP *ptr = STRING_PTR(x);
+     SEXP tmp;
+     for (i = 0; i < size/2; ++i) {
+     tmp = ptr[i];
+     ptr[i] = ptr[size-1-i];
+     ptr[size-1-i] = tmp;
+     }
+     */
     SEXP tmp;
     for (i = 0; i < size/2; ++i) {
       tmp = STRING_ELT(x, i);
@@ -173,7 +173,7 @@ SEXP Reverse(SEXP x) {
   return x;
 }
 
-SEXP Traverse(SEXP x, SEXP y) {
+SEXP Interleave(SEXP x, SEXP y) {
   if (TYPEOF(x) != TYPEOF(y))
     error("different input types");
 

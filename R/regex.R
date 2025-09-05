@@ -1,22 +1,25 @@
-#' grepl with `And` conditions
+#' Match only if all patterns are present (AND)
 #'
-#' grepl with `And` conditions.
+#' Vectorized helper around [base::grepl()] that returns `TRUE` only when
+#' every pattern in `pattern` is found in `x`. Internally, it builds a single
+#' regular expression using positive lookahead and evaluates it with
+#' `perl = TRUE`.
 #'
-#' @param pattern a character vector containing regular expressions
-#' @param x a character vector
-#' @param ignore.case if `FALSE`, the pattern matching is case sensitive and
-#' if `TRUE`, case is ignored during matching.
-#' @return a boolean vector
+#' @param pattern Character vector of regular expressions that must all match.
+#' @param x Character vector to search.
+#' @param ignore.case Logical; if `TRUE`, case is ignored during matching.
+#'
+#' @return Logical vector the same length as `x`.
 #'
 #' @examples
-#' # grepl with "And" conditions
-#' \donttest{string <- "abcde12345"
-#' grepl_and(c("a", "c", "e"), string)
-#' grepl_and(c("a", "c", "[1-5]"), string)
-#' grepl_and(c("a", "c", "z"), string)}
+#' x <- c("abcde12345", "xyz", "a1c")
+#' grepl_all(c("a", "c", "[1-5]"), x)
+#' grepl_all(c("foo", "bar"), c("foo bar", "foo", "bar"))
+#'
+#' @seealso [base::grepl()]
 #'
 #' @export
-grepl_and <- function(pattern, x, ignore.case = TRUE) {
+grepl_all <- function(pattern, x, ignore.case = TRUE) {
   pattern <- paste(sprintf("(?=.*%s)", pattern), collapse = "")
   grepl(pattern, x, ignore.case = ignore.case, perl = TRUE)
 }

@@ -1,22 +1,28 @@
-#' max, min, sum on each row of a matrix
+#' Row-wise maximum, minimum, and sum
 #'
-#' Get max, min, sum of values on each row of a matrix.
+#' Compute the maximum, minimum, or sum of values in each row of a numeric
+#' matrix. These functions are implemented in C for performance.
 #'
-#' @param x A numeric matrix
-#' @return A vector of min, max, sum of values on each row of a matrix
+#' @param x A numeric matrix.
+#'
+#' @return A numeric vector of length equal to the number of rows in `x`:
+#' * `row_max()` returns the maximum of each row.
+#' * `row_min()` returns the minimum of each row.
+#' * `row_sum()` returns the sum of each row.
 #'
 #' @examples
-#' # row max
-#' \donttest{x <- matrix(c(1:9), nrow = 3)
-#' row_max(x)}
+#' \donttest{
+#' x <- matrix(1:9, nrow = 3)
 #'
-#' # row min
-#' \donttest{x <- matrix(c(1:9), nrow = 3)
-#' row_min(x)}
+#' # Row-wise maximum
+#' row_max(x)
 #'
-#' # row sum
-#' \donttest{x <- matrix(c(1:9), nrow = 3)
-#' row_sum(x)}
+#' # Row-wise minimum
+#' row_min(x)
+#'
+#' # Row-wise sum
+#' row_sum(x)
+#' }
 #'
 #' @export
 row_max <- function(x) .Call(RowMax, x)
@@ -30,25 +36,31 @@ row_min <- function(x) .Call(RowMin, x)
 row_sum <- function(x) .Call(RowSum, x)
 
 
-#' max, min, sum on each column of a matrix
+#' Column-wise maximum, minimum, and sum
 #'
-#' Get max, min, sum of values on each column of a matrix.
+#' Compute the maximum, minimum, or sum of values in each column of a numeric
+#' matrix. These functions are implemented in C for performance.
 #'
-#' @param x A numeric matrix
-#' @return A vector of min, max, sum of values on each column of a matrix
+#' @param x A numeric matrix.
+#'
+#' @return A numeric vector of length equal to the number of columns in `x`:
+#' * `col_max()` returns the maximum of each column.
+#' * `col_min()` returns the minimum of each column.
+#' * `col_sum()` returns the sum of each column.
 #'
 #' @examples
-#' # column max
-#' \donttest{x <- matrix(c(1:9), ncol = 3)
-#' col_max(x)}
+#' \donttest{
+#' x <- matrix(1:9, ncol = 3)
 #'
-#' # column min
-#' \donttest{x <- matrix(c(1:9), ncol = 3)
-#' col_min(x)}
+#' # Column-wise maximum
+#' col_max(x)
 #'
-#' # column sum
-#' \donttest{x <- matrix(c(1:9), ncol = 3)
-#' col_sum(x)}
+#' # Column-wise minimum
+#' col_min(x)
+#'
+#' # Column-wise sum
+#' col_sum(x)
+#' }
 #'
 #' @export
 col_max <- function(x) .Call(ColMax, x)
@@ -61,41 +73,59 @@ col_min <- function(x) .Call(ColMin, x)
 #' @export
 col_sum <- function(x) .Call(ColSum, x)
 
-#' Column diffrences
+
+#' Column-wise differences
 #'
-#' Column diffrences for a numeric matrix
+#' Compute successive differences down each column of a numeric matrix,
+#' similar to [base::diff()] but applied column by column.
 #'
-#' @param x a numeric matrix
-#' @return a numeric matrix
+#' @param x A numeric matrix.
+#'
+#' @return A numeric matrix with one fewer row than `x`, containing the
+#'   differences between successive elements within each column.
+#'
+#' @examples
+#' \donttest{
+#' x <- matrix(1:9, nrow = 3)
+#' col_diff(x)
+#' }
 #'
 #' @export
 col_diff <- function(x) .Call(ColDiff, x)
 
 
-#' max, min, sum by row names
+#' Aggregate by row names (max, min, sum)
 #'
-#' max, min, sum of values on each row name of a matrix.
+#' Compute the maximum, minimum, or sum of values in a numeric matrix,
+#' grouped by identical row names. These functions are implemented in C
+#' for performance.
 #'
-#' @param x A numeric matrix
-#' @param na.rm a boolean value removing NA or not
+#' @param x A numeric matrix with non-`NULL` row names.
+#' @param na.rm Logical; if `TRUE`, missing values are removed before
+#'   aggregation.
 #'
-#' @return A matrix of minimum values shrinked by row names
+#' @return A numeric matrix with one row per unique row name of `x`:
+#' * `max_by_rownames()` returns the maximum of each group.
+#' * `min_by_rownames()` returns the minimum of each group.
+#' * `sum_by_rownames()` returns the sum of each group.
 #'
 #' @examples
-#' # max by row nm
-#' \donttest{x <- matrix(c(1:9), nrow = 3)
-#' set_dimnames(x, list(c("a", "a", "b"), c("a", "b", "b")))
-#' max_by_rownames(x)}
+#' \donttest{
+#' # Maximum values grouped by row names
+#' x <- matrix(c(1:9), nrow = 3)
+#' set_mat_dimnames(x, list(c("a", "a", "b"), c("a", "b", "b")))
+#' max_by_rownames(x)
 #'
-#' # min by row nm
-#' \donttest{x <- matrix(c(1:9), nrow = 3)
-#' set_dimnames(x, list(c("a", "a", "b"), c("a", "b", "b")))
-#' min_by_rownames(x)}
+#' # Minimum values grouped by row names
+#' x <- matrix(c(1:9), nrow = 3)
+#' set_mat_dimnames(x, list(c("a", "a", "b"), c("a", "b", "b")))
+#' min_by_rownames(x)
 #'
-#' # sum by row nm
-#' \donttest{x <- matrix(c(1:9), nrow = 3)
-#' set_dimnames(x, list(c("a", "a", "b"), c("a", "b", "b")))
-#' sum_by_rownames(x)}
+#' # Sum of values grouped by row names
+#' x <- matrix(c(1:9), nrow = 3)
+#' set_mat_dimnames(x, list(c("a", "a", "b"), c("a", "b", "b")))
+#' sum_by_rownames(x)
+#' }
 #'
 #' @export
 max_by_rownames <- function(x, na.rm = TRUE) {
@@ -118,30 +148,38 @@ sum_by_rownames <- function(x, na.rm = TRUE) {
 }
 
 
-#' max, min, sum by column names
+#' Aggregate by column names (max, min, sum)
 #'
-#' max, min, sum of values on each column name of a matrix.
+#' Compute the maximum, minimum, or sum of values in a numeric matrix,
+#' grouped by identical column names. These functions are implemented in C
+#' for performance.
 #'
-#' @param x A numeric matrix
-#' @param na.rm a boolean value removing NA or not
+#' @param x A numeric matrix with non-`NULL` column names.
+#' @param na.rm Logical; if `TRUE`, missing values are removed before
+#'   aggregation.
 #'
-#' @return A matrix of minimum values shrinked by column names
+#' @return A numeric matrix with one column per unique column name of `x`:
+#' * `max_by_colnames()` returns the maximum of each group.
+#' * `min_by_colnames()` returns the minimum of each group.
+#' * `sum_by_colnames()` returns the sum of each group.
 #'
 #' @examples
-#' # max by col nm
-#' \donttest{x <- matrix(c(1:9), ncol = 3)
-#' set_dimnames(x, list(c("a", "a", "b"), c("a", "b", "b")))
-#' max_by_colnames(x)}
+#' \donttest{
+#' # Maximum values grouped by column names
+#' x <- matrix(c(1:9), ncol = 3)
+#' set_mat_dimnames(x, list(c("a", "a", "b"), c("a", "b", "b")))
+#' max_by_colnames(x)
 #'
-#' # min by col nm
-#' \donttest{x <- matrix(c(1:9), ncol = 3)
-#' set_dimnames(x, list(c("a", "a", "b"), c("a", "b", "b")))
-#' min_by_colnames(x)}
+#' # Minimum values grouped by column names
+#' x <- matrix(c(1:9), ncol = 3)
+#' set_mat_dimnames(x, list(c("a", "a", "b"), c("a", "b", "b")))
+#' min_by_colnames(x)
 #'
-#' # sum by col nm
-#' \donttest{x <- matrix(c(1:9), ncol = 3)
-#' set_dimnames(x, list(c("a", "a", "b"), c("a", "b", "b")))
-#' sum_by_colnames(x)}
+#' # Sum of values grouped by column names
+#' x <- matrix(c(1:9), ncol = 3)
+#' set_mat_dimnames(x, list(c("a", "a", "b"), c("a", "b", "b")))
+#' sum_by_colnames(x)
+#' }
 #'
 #' @export
 max_by_colnames <- function(x, na.rm = TRUE) {
@@ -164,30 +202,40 @@ sum_by_colnames <- function(x, na.rm = TRUE) {
 }
 
 
-#' max, min, sum by dim (row and column) names
+#' Aggregate by both row and column names (max, min, sum)
 #'
-#' max, min, sum of values on each dim (row and column) name of a matrix.
+#' Compute element-wise aggregates of a numeric matrix after grouping
+#' simultaneously by identical **row names** and **column names**. That is,
+#' rows with the same name are reduced to one row, and columns with the same
+#' name are reduced to one column, using the chosen summary (max/min/sum).
 #'
-#' @param x A numeric matrix
-#' @param na.rm a boolean value removing NA or not
+#' @param x A numeric matrix with non-`NULL` row and column names.
+#' @param na.rm Logical; if `TRUE`, missing values are removed before
+#'   aggregation.
 #'
-#' @return A matrix of minimum values shrinked by dim (row and column) names
+#' @return A numeric matrix with one row per unique row name and one column
+#'   per unique column name of `x`:
+#' * `max_by_dimnames()` returns element-wise maxima within each (row-name, col-name) group.
+#' * `min_by_dimnames()` returns element-wise minima within each group.
+#' * `sum_by_dimnames()` returns element-wise sums within each group.
 #'
 #' @examples
-#' # max by dim names
-#' \donttest{x <- matrix(c(1:9), ncol = 3)
-#' set_dimnames(x, list(c("a", "a", "b"), c("a", "b", "b")))
-#' max_by_dimnames(x)}
+#' \donttest{
+#' # Maximum values grouped by row names and column names
+#' x <- matrix(c(1:9), ncol = 3)
+#' set_mat_dimnames(x, list(c("a", "a", "b"), c("a", "b", "b")))
+#' max_by_dimnames(x)
 #'
-#' # min by dim names
-#' \donttest{x <- matrix(c(1:9), ncol = 3)
-#' set_dimnames(x, list(c("a", "a", "b"), c("a", "b", "b")))
-#' min_by_dimnames(x)}
+#' # Minimum values grouped by row names and column names
+#' x <- matrix(c(1:9), ncol = 3)
+#' set_mat_dimnames(x, list(c("a", "a", "b"), c("a", "b", "b")))
+#' min_by_dimnames(x)
 #'
-#' # sum by dim names
-#' \donttest{x <- matrix(c(1:9), ncol = 3)
-#' set_dimnames(x, list(c("a", "a", "b"), c("a", "b", "b")))
-#' sum_by_dimnames(x)}
+#' # Sum of values grouped by row names and column names
+#' x <- matrix(c(1:9), ncol = 3)
+#' set_mat_dimnames(x, list(c("a", "a", "b"), c("a", "b", "b")))
+#' sum_by_dimnames(x)
+#' }
 #'
 #' @export
 max_by_dimnames <- function(x, na.rm = TRUE) {
@@ -206,28 +254,33 @@ sum_by_dimnames <- function(x, na.rm = TRUE) {
   sum_by_rownames(sum_by_colnames(x, na.rm = na.rm), na.rm = na.rm)
 }
 
-
-#' rotate a matrix
+#' Rotate a matrix by 90, 180, or 270 degrees
 #'
-#' Rotate a matrix.
+#' Rotate a numeric or character matrix clockwise by a specified angle.
+#' Only 90, 180, and 270 degree rotations are supported. Dimension names
+#' (row and column names) are preserved and reordered appropriately.
 #'
-#' @param x A matrix
-#' @param angle A numeric value specifying rotation angle (90, 180, 270)
+#' @param x A matrix.
+#' @param angle Integer. The rotation angle in degrees. Must be one of
+#'   `90`, `180`, or `270`. Values are taken modulo 360.
 #'
-#' @return A rotation matrix
+#' @return A matrix of the same mode as `x`, rotated by the specified angle,
+#'   with appropriately reordered dimension names.
 #'
 #' @examples
-#' # 90 degree rotation
-#' \donttest{x <- matrix(1:9, nrow = 3)
-#' rotate(x, 90)}
+#' \donttest{
+#' # Rotate a matrix by 90 degrees
+#' x <- matrix(1:9, nrow = 3)
+#' rotate(x, 90)
 #'
-#' # 180 degree rotation
-#' \donttest{x <- matrix(1:9, nrow = 3)
-#' rotate(x, 180)}
+#' # Rotate a matrix by 180 degrees
+#' x <- matrix(1:9, nrow = 3)
+#' rotate(x, 180)
 #'
-#' # 270 degree rotation
-#' \donttest{x <- matrix(1:9, nrow = 3)
-#' rotate(x, 270)}
+#' # Rotate a matrix by 270 degrees
+#' x <- matrix(1:9, nrow = 3)
+#' rotate(x, 270)
+#' }
 #'
 #' @export
 rotate <- function(x, angle = c(90, 180, 270)) {
@@ -236,145 +289,162 @@ rotate <- function(x, angle = c(90, 180, 270)) {
     dn <- dimnames(x)
     dn <- rev(dn)
     dn[[2L]] <- rev(dn[[2L]])
-    set_dimnames(z, dn)
+    set_mat_dimnames(z, dn)
   } else if (angle[1L] %% 360 == 180) {
     dn <- dimnames(x)
     dn <- lapply(dn, rev)
-    set_dimnames(z, dn)
+    set_mat_dimnames(z, dn)
   } else if (angle[1L] %% 360 == 270) {
     dn <- dimnames(x)
     dn[[2L]] <- rev(dn[[2L]])
     dn <- rev(dn)
-    set_dimnames(z, dn)
+    set_mat_dimnames(z, dn)
   }
   return(z)
 }
 
+#' In-place, memory-efficient matrix multiplications
+#'
+#' Perform matrix multiplications **in place**:
+#' the result is written back into the memory of the first matrix argument,
+#' avoiding additional allocations. Useful for large matrices and
+#' tight memory budgets.
+#'
+#' @section What “in place” means:
+#' * The first matrix argument is **modified** directly.
+#' * No new object is returned (called for side effects).
+#' * Copy the matrix first if you need to preserve it.
+#'
+#' @name mat-ops-inplace
+#' @param x,y,mat A numeric matrix (modified in place).
+#' @param vec A numeric vector (row or column operand).
+#' @param num A numeric scalar.
+#'
+#' @return No return value, called for side effects.
+#'
+#' @examples
+#' \dontrun{
+#' x <- matrix(1:4, 2, 2)
+#' y <- matrix(5:8, 2, 2)
+#'
+#' matXmat(x, y)       # matrix × matrix
+#' matXrow(x, c(1, 2)) # matrix × row vector
+#' matXcol(x, c(3, 4)) # matrix × column vector
+#' matXnum(x, 10)      # matrix × scalar
+#' }
+NULL
 
-#' Matrix X Matrix
-#'
-#' Multiply matrices and allocate the result to a first matrix memory.
-#'
-#' @param x a numeric matrix
-#' @param y a numeric matrix
-#' @return no return value
-#'
+#' @rdname mat-ops-inplace
 #' @export
 matXmat <- function(x, y) {
   assert_class(x, "matrix")
   assert_class(y, "matrix")
   if (is.integer(x) & is.numeric(y))
-    x <- as_numeric(x)
+    x <- as.numeric(x)
   if (is.numeric(x) & is.integer(y))
-    y <- as_numeric(y)
+    y <- as.numeric(y)
   invisible(.Call(MatXMat, x, y))
 }
 
-#' Matrix X Row vector
-#'
-#' Multiply a matrix and a row vector and allocate the result to the matrix memory.
-#'
-#' @param mat a numeric matrix
-#' @param vec a numeric vector
-#' @return no return value
-#'
+#' @rdname mat-ops-inplace
 #' @export
 matXrow <- function(mat, vec) {
   assert_class(mat, "matrix")
   if (is.integer(mat) & is.numeric(vec))
-    mat <- as_numeric(mat)
+    mat <- as.numeric(mat)
   if (is.numeric(mat) & is.integer(vec))
-    vec <- as_numeric(vec)
+    vec <- as.numeric(vec)
   invisible(.Call(MatXRow, mat, vec))
 }
 
-#' Matrix X Column vector
-#'
-#' Multiply a matrix and a column vector and allocate the result to the matrix memory.
-#'
-#' @param mat a numeric matrix
-#' @param vec a numeric vector
-#' @return no return value
-#'
+#' @rdname mat-ops-inplace
 #' @export
 matXcol <- function(mat, vec) {
   assert_class(mat, "matrix")
   if (is.integer(mat) & is.numeric(vec))
-    mat <- as_numeric(mat)
+    mat <- as.numeric(mat)
   if (is.numeric(mat) & is.integer(vec))
-    vec <- as_numeric(vec)
+    vec <- as.numeric(vec)
   invisible(.Call(MatXCol, mat, vec))
 }
 
-#' Matrix X Number
-#'
-#' Multiply a matrix and a numeric value and allocate the result to the matrix memory.
-#'
-#' @param mat a numeric matrix
-#' @param num a numeric value
-#' @return no return value
-#'
+#' @rdname mat-ops-inplace
 #' @export
 matXnum <- function(mat, num) {
   assert_class(mat, "matrix")
   if (is.integer(mat) & is.numeric(num))
-    mat <- as_numeric(mat)
+    mat <- as.numeric(mat)
   if (is.numeric(mat) & is.integer(num))
-    num <- as_numeric(num)
+    num <- as.numeric(num)
   invisible(.Call(MatXNum, mat, num))
 }
 
-#' Replace vectors in Matrix
+#' Replace a column vector in a matrix (in place)
 #'
-#' Replace vectors in Matrix
+#' Replace one or more columns of a matrix with a new vector, directly
+#' modifying the matrix memory. This avoids reallocation and can be more
+#' efficient for large matrices.
 #'
-#' @param mat a matrix
-#' @param col string names of columns or numeric order numbers of columns
-#' @param vec a vector to be replaced
-#' @return no return value
+#' @param mat A numeric matrix (modified in place).
+#' @param col Column(s) to replace; either character names or integer indices.
+#' @param vec A numeric vector to insert in place of the selected columns.
+#'
+#' @return No return value, called for side effects (the matrix is updated in place).
+#'
+#' @examples
+#' \dontrun{
+#' x <- matrix(as.numeric(1:6), 3, 2)
+#' replace_vec_in_mat(x, 2, c(100, 200, 300)) # replace 2nd column
+#' }
 #'
 #' @export
 replace_vec_in_mat <- function(mat, col, vec) {
-  if (is.character(col))
-    col <- icol(mat, col)
+  if (is.character(col)) col <- icol(mat, col)
   invisible(.Call(ReplaceVecInMat, mat, col, vec))
 }
 
+# Sample matrix -----------------------------------------------------------
 
-# sample matrix -----------------------------------------------------------
-
-#' Zeros
+#' Create a zero matrix
 #'
-#' Sample matrix containing only zeros
+#' Generate a matrix filled with zeros of the specified dimensions.
 #'
-#' @param dim a numeric vector specifying dimensions
-#' @return a matrix with zeros
+#' @param dim Integer vector giving the dimensions of the result.
+#'
+#' @return A numeric matrix of zeros with dimensions specified by `dim`.
 #'
 #' @examples
-#' # zeros
+#' \donttest{
+#' # 5x5 zero matrix
 #' zeros(c(5, 5))
+#' }
 #'
 #' @export
 zeros <- function(dim) {
   array(0L, dim = dim)
 }
 
-#' Rands
+#' Create a random matrix from specified values
 #'
-#' Generate a sample matrix with specific numbers randomly
+#' Generate a matrix by random sampling from a set of values.
 #'
-#' @param dim a numeric vector specifying dimensions
-#' @param x a numeric vector specifying numbers
-#' @param replace should sampling be with replacement?
-#' @param prob a vector of probability weights for obtaining the elements of the vector being sampled.
-#' @return a matrix with specific numbers
+#' @param dim Integer vector giving the dimensions of the result.
+#' @param x A numeric vector of values to sample from (default is `c(0L, 1L)`).
+#' @param replace Logical; should sampling be with replacement? Defaults to `TRUE`.
+#' @param prob A numeric vector of probability weights for sampling `x`.
+#'
+#' @return A numeric matrix sampled from `x` with dimensions specified by `dim`.
 #'
 #' @examples
-#' # rands
+#' \donttest{
+#' # 5x5 random matrix of 0s and 1s
 #' rands(c(5, 5))
+#'
+#' # 3x3 matrix sampled from 1:10 without replacement
+#' rands(c(3, 3), x = 1:10, replace = FALSE)
+#' }
 #'
 #' @export
 rands <- function(dim, x = c(0L, 1L), replace = TRUE, prob = NULL) {
   array(sample(x, size = prod(dim), replace = replace, prob = prob), dim = dim)
 }
-

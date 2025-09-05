@@ -2,23 +2,36 @@
 % Please edit documentation in R/ptr.R
 \name{has_ptr}
 \alias{has_ptr}
-\title{Has not a null pointer?}
+\title{Has a non-null data.table internal pointer?}
 \usage{
 has_ptr(df, error_raise = FALSE)
 }
 \arguments{
-\item{df}{a data.frame}
+\item{df}{A data.frame or data.table.}
 
-\item{error_raise}{a logcial whether to raise an error or not}
+\item{error_raise}{Logical; if \code{TRUE}, raise an error when the pointer is
+absent or NULL. Default is \code{FALSE}.}
 }
 \value{
-a logical value whether to have not a null external pointer or not
+\code{TRUE} if a non-null external pointer exists, otherwise \code{FALSE}.
 }
 \description{
-Has not a null external pointer?
+Checks whether \code{df} carries a valid (non-NULL) data.table self-reference
+external pointer stored in the \code{.internal.selfref} attribute.
 }
 \examples{
-# Has not null external pointer?
-\donttest{has_ptr(iris, error_raise = FALSE)}
+\dontrun{
+df <- data.frame(x = 1:3)
+has_ptr(df)  # typically FALSE
 
+dt <- data.table::data.table(x = 1:3)
+has_ptr(dt)  # TRUE if pointer attached
+
+# With error
+has_ptr(iris, error_raise = TRUE)  # errors if no pointer
+}
+
+}
+\seealso{
+\code{\link[=get_ptr]{get_ptr()}}, \code{\link[=drop_ptr]{drop_ptr()}}
 }

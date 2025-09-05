@@ -2,30 +2,39 @@
 % Please edit documentation in R/read.R
 \name{read_rds}
 \alias{read_rds}
-\title{read_rds}
+\title{Read an RDS file with data.table-friendly behavior}
 \usage{
 read_rds(file, refhook = NULL)
 }
 \arguments{
-\item{file}{a \link{connection} or the name of the file where the R object is saved
-to or read from.}
+\item{file}{A \link{connection} or file path to the serialized R object (.rds).}
 
-\item{refhook}{a hook function for handling reference objects.}
+\item{refhook}{A hook function for handling reference objects; passed to
+\code{\link[base:readRDS]{base::readRDS()}}.}
 }
 \value{
-an \R object
+An R object. If a data.frame is read, a data.table with allocated
+columns is returned. For lists, any data.frame elements are converted
+similarly.
 }
 \description{
-read_rds is almost same as readRDS except for a pointer.
+Behaves like \code{\link[base:readRDS]{base::readRDS()}} but, when the result is a data.frame (or a
+list containing data.frames), ensures a data.table-friendly internal layout
+by calling \code{\link[data.table:truelength]{data.table::setalloccol()}}. This helps preserve efficient pointer
+semantics when working with large tables.
 }
 \examples{
-# compare pointer values
-\dontrun{data <- copy(women)
-data.table::setDT(data)
+\dontrun{
+# Open a file chooser dialog
+data <- read_rds()
+
+# Compare pointer values
+data <- data.table::as.data.table(iris)
 saveRDS(data, "data.rds")
 df <- readRDS("data.rds")
 dt <- read_rds("data.rds")
-attributes(df)$.internal.selfref # <pointer: (nil)>
-attributes(dt)$.internal.selfref}
+attr(df, ".internal.selfref", exact = TRUE)  # <pointer: (nil)>
+attr(df, ".internal.selfref", exact = TRUE)
+}
 
 }

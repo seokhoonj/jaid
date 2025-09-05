@@ -2,18 +2,32 @@
 % Please edit documentation in R/utils.R
 \name{set_tibble}
 \alias{set_tibble}
-\title{Set tibble function}
+\title{Convert a data.frame to tibble (experimental)}
 \usage{
 set_tibble(df)
 }
 \arguments{
-\item{df}{a data.frame}
+\item{df}{A data.frame.}
 }
 \value{
-no return values.
+The input \code{df}, with tibble classes added, returned invisibly.
+The object is modified in place (by reference).
 }
 \description{
-as_tibble function re-exported from \code{tibble}.
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
+
+A wrapper that converts a \code{data.frame} to have tibble classes
+(\code{tbl_df}, \code{tbl}, \code{data.frame}). Internally it ensures reference
+semantics similar to \code{\link[data.table:setDT]{data.table::setDT()}}, then adjusts the
+class attribute.
+}
+\examples{
+\dontrun{
+df <- data.frame(x = 1:3, y = 4:6)
+set_tibble(df)
+class(df)  # "tbl_df" "tbl" "data.frame"
+}
+
 }
 \seealso{
 \code{\link[tibble:as_tibble]{tibble::as_tibble()}}

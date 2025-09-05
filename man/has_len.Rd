@@ -2,27 +2,32 @@
 % Please edit documentation in R/utils.R
 \name{has_len}
 \alias{has_len}
-\title{Has a length}
+\title{Check if an object has nonzero length}
 \usage{
 has_len(x, error_raise = FALSE)
 }
 \arguments{
-\item{x}{a}
+\item{x}{An object of class \code{character}, \code{integer}, \code{numeric}, \code{Date}, or \code{POSIXt}.}
 
-\item{error_raise}{a logical whether to raise an error or not}
+\item{error_raise}{Logical; if \code{TRUE}, raise an error if the object has zero length.}
 }
 \value{
-a logical value
+A logical scalar (\code{TRUE} if \code{x} has nonzero length, otherwise \code{FALSE}).
 }
 \description{
-Whether the object has a length or not
+Test whether an object has nonzero length. Can return a logical value
+or raise an error if \code{error_raise = TRUE}.
 }
 \examples{
-# has a length
-\donttest{has_len(c(numeric(), character()))}
-
-# raise an error
 \dontrun{
-has_len(c(numeric(), character()), error_raise = TRUE)}
+# Has a length
+has_len(c(numeric(), character()))
 
+# Raise an error
+has_len(c(numeric(), character()), error_raise = TRUE)
+}
+
+}
+\seealso{
+\code{\link[rlang:has_length]{rlang::has_length()}}
 }

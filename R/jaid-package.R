@@ -3,14 +3,15 @@
 #' @keywords internal
 #' @useDynLib jaid, .registration = TRUE
 #' @importFrom Rcpp sourceCpp
-#' @importFrom cli cli_alert col_cyan col_green cli_h2 col_red cli_text col_yellow
+#' @importFrom cli cat_bullet cat_line cat_rule cli_alert col_cyan col_green
+#' cli_h2 col_red cli_text col_yellow style_bold
 #' @importFrom data.table `:=` `.SD` `%chin%` address as.data.table copy
 #' data.table fifelse mday month set setalloccol setattr setDF setDT setindex
 #' setnames setorder setorderv year
-#' @importFrom grDevices dev.list dev.off
-#' @importFrom grid grid.raster
+#' @importFrom grDevices as.raster
+#' @importFrom grid grid.newpage grid.raster
 #' @importFrom kableExtra footnote kable_classic kbl save_kable
-#' @importFrom methods is
+#' @importFrom lifecycle badge deprecate_warn signal_stage
 #' @importFrom openssl aes_cbc_decrypt aes_cbc_encrypt sha256
 #' @importFrom openxlsx addStyle addWorksheet createStyle createWorkbook
 #' insertImage insertPlot saveWorkbook setColWidths writeData

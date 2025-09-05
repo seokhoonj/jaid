@@ -7,19 +7,20 @@
 match_cols(df, cols)
 }
 \arguments{
-\item{df}{a data frame}
+\item{df}{A data.frame.}
 
-\item{cols}{a string vector specifying columns}
+\item{cols}{A character vector of column names.}
 }
 \value{
-a string vector
+A character vector of matched column names (non-matching entries are dropped).
 }
 \description{
-Get matched columns from a data frame.
+Return column names from a data frame that match a specified set.
 }
 \examples{
-# match columns
-\donttest{df <- data.frame(x = c(1, 2, 3), y = c("A", "B", "C"), z = c(4, 5, 6))
-match_cols(df, c("x", "z"))}
+\donttest{
+df <- data.frame(x = c(1, 2, 3), y = c("A", "B", "C"), z = c(4, 5, 6))
+match_cols(df, c("x", "z"))
+}
 
 }

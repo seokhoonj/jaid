@@ -2,23 +2,26 @@
 % Please edit documentation in R/attr.R
 \name{regex_attr}
 \alias{regex_attr}
-\title{Matched attributes using regular expressions}
+\title{Find attributes by regular expression}
 \usage{
 regex_attr(x, name)
 }
 \arguments{
-\item{x}{any objects; e.g, list, columns of a data.frame or data.table}
+\item{x}{Any R object (e.g., \code{list}, \code{data.frame}, \code{data.table}).}
 
-\item{name}{the regular expression attribute names.}
+\item{name}{A character string containing a regular expression pattern
+to match against attribute names.}
 }
 \value{
-matched attributes' names
+A character vector of matching attribute names.
 }
 \description{
-Find matched attributes using regular expressions.
+Return the names of attributes in \code{x} whose names match a regular expression pattern.
 }
 \examples{
-# matched attributes using regular expressions
-\donttest{regex_attr(iris, "class|names")}
+\donttest{
+# Find attributes by regex
+regex_attr(iris, "class|names")
+}
 
 }

@@ -1,14 +1,22 @@
-#' Change vector into row vector or column vector
+#' Convert a vector into a row or column vector
 #'
-#' Change vector into row vector or column vector.
+#' These functions reshape a one-dimensional vector into either a row vector
+#' (1 × *n*) or a column vector (*n* × 1).
 #'
-#' @param x a vector
-#' @return a column vector or row vector.
+#' @param x A vector.
+#'
+#' @return
+#' A matrix with either one row (`rowvec()`) or one column (`colvec()`),
+#' preserving names where available.
 #'
 #' @examples
-#' # change into column vector
+#' \donttest{
+#' # Convert into a row vector
 #' rowvec(c(1, 2, 3, 4, 5))
+#'
+#' # Convert into a column vector
 #' colvec(c(1, 2, 3, 4, 5))
+#' }
 #'
 #' @export
 rowvec <- function(x) array(x, dim = c(1L, length(x)), dimnames = list(NULL, names(x)))
@@ -17,71 +25,77 @@ rowvec <- function(x) array(x, dim = c(1L, length(x)), dimnames = list(NULL, nam
 #' @export
 colvec <- function(x) array(x, dim = c(length(x), 1L), dimnames = list(names(x), NULL))
 
-#' Length of a unique vector
+#' Count unique elements
 #'
-#' Calculate length of a unique vector.
+#' Returns the number of distinct values in a vector. This is a lightweight,
+#' fast alternative to `length(unique(x))`, implemented in C for performance.
 #'
-#' @param x A vector
-#' @return A length of a unique vector
+#' @param x A vector.
+#'
+#' @return An integer scalar: the count of distinct values in `x`.
 #'
 #' @examples
-#' # length of unique vector
-#' \donttest{x <- c(1, 1, 2, 3, 4, 5, 5)
-#' unilen(x)}
+#' \donttest{
+#' # Length of unique vector
+#' x <- c(1, 1, 2, 3, 4, 5, 5)
+#' unilen(x)
+#' }
 #'
 #' @export
 unilen <- function(x) .Call(Unilen, x)
 
-#' Reverse a vector
+#' Reverse the order of elements in a vector
 #'
-#' Reverse a vector directly.
+#' Returns the input vector with its elements in reverse order.
 #'
-#' @param x A vector
-#' @return A reversed vector
+#' @param x A vector.
+#' @return A vector of the same type as `x`, with elements in reverse order.
 #'
 #' @examples
-#' # reverse a vector
-#' \donttest{x <- c(1:10)
-#' reverse(x)}
+#' \donttest{
+#' # Reverse a numeric vector
+#' x <- c(1:10)
+#' reverse(x)
+#' }
 #'
 #' @export
 reverse <- function(x) invisible(.Call(Reverse, x))
 
-#' Traverse two vectors
+#' Interleave two vectors
 #'
-#' Intersect the elements of two vectors.
+#' Combine two vectors by interleaving their elements. That is, take one element
+#' from `x`, then one from `y`, alternating until both vectors are exhausted.
 #'
-#' @param x A vector
-#' @param y A vector
-#' @return A combined vector
+#' @param x A vector.
+#' @param y A vector.
+#' @return A vector containing the elements of `x` and `y` interleaved.
+#'   The type will follow the usual R coercion rules when combining vectors.
 #'
 #' @examples
-#' # traverse two vectors
+#' # Interleave two numeric vectors
 #' \donttest{x <- c(1, 3, 5, 7)
 #' y <- c(2, 4, 6, 8)
-#' traverse(x, y)}
+#' interleave(x, y)}
 #'
 #' @export
-traverse <- function(x, y) .Call(Traverse, x, y)
+interleave <- function(x, y) .Call(Interleave, x, y)
 
 #' Most frequent value (mode, modal value)
 #'
-#' Get the most frequent value.
+#' Returns the most frequently occurring value (the statistical mode) in a vector.
 #'
-#' @param x A vector
-#' @param na.rm A boolean value removing na or not
+#' @param x A vector.
+#' @param na.rm Logical. Should missing values (`NA`) be removed? Defaults to FALSE.
 #'
-#' @return the most frequent value vector and its frequency
+#' @return The most frequent value vector and its frequency
 #'
 #' @examples
-#' # get the most frequent values
-#' \donttest{x <- c(1, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 5)
-#' mostfreq(x)}
+#' # Get the most frequent values
+#' x <- c(1, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 5)
+#' mostfreq(x)
 #'
 #' @export
 mostfreq <- function(x, na.rm = FALSE) {
-  # fastModeX(x, na.rm) is so slow for 10 million vector.
-  # need to find a different way
   if (na.rm)
     x <- x[!is.na(x)]
   if (inherits(x, "character"))
@@ -92,19 +106,38 @@ mostfreq <- function(x, na.rm = FALSE) {
   uniqx[which.max(tabulate(match(x, uniqx)))]
 }
 
-#' List of sequential vectors
+#' Generate a list of sequential vectors
 #'
-#' Generate list of sequential vectors
+#' Create a list where each element is a sequence generated from the
+#' corresponding elements of `from` and `to`.
 #'
-#' @param from,to the starting and (maximal) end vectors of the sequence.
-#' @param by number: increment of the sequence.
+#' @param from A numeric vector giving the starting values of the sequences.
+#' @param to A numeric vector giving the end values of the sequences. Must be the same length as `from`.
+#' @param by A numeric value giving the increment of the sequences. Defaults to 1.
+#'
+#' @return A list of numeric vectors, each containing a sequence from
+#'   the corresponding elements of `from` to `to`.
+#'
+#' @examples
+#' \donttest{
+#' # Generate sequences 1:3, 2:5, and 3:7
+#' seq_list(from = c(1, 2, 3), to = c(3, 5, 7))
+#'
+#' # Using a custom step size
+#' seq_list(from = c(1, 5), to = c(3, 9), by = 2)
+#' }
 #'
 #' @export
-seqvec <- function(from, to, by = 1L) {
+seq_list <- function(from, to, by = 1L) {
   if (length(from) != length(to))
-    stop("Two vectors have a different length.")
-  lapply(seq_along(from), function(x) seq(from[x], to[x], by))
+    stop("`from` and `to` must have the same length.")
+  # lapply(seq_along(from), function(x) seq(from[x], to[x], by))
+  mapply(seq, from, to, MoreArgs = list(by = by), SIMPLIFY = FALSE)
 }
 
+# To be updated -----------------------------------------------------------
 
-before_change_index <- function(x) .Call(BeforeChangeIndex, x)
+before_change_index <- function(x) {
+  lifecycle::signal_stage("experimental", "before_change_index()")
+  .Call(BeforeChangeIndex, x)
+}

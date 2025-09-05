@@ -1,6 +1,6 @@
 #include "jaid.h"
 
-// refer to `r-source/src/main/unique.c`
+// Refer to `r-source/src/main/unique.c`
 typedef size_t hlen;
 
 #define NIL -1
@@ -891,7 +891,7 @@ SEXP ColDiff(SEXP x) {
   dimnames = getAttrib(x, R_DimNamesSymbol);
   if (!isNull(dimnames)) {
     rownames = VECTOR_ELT(dimnames, 0);
-    SetRowNames(z, rownames);
+    SetMatRowNames(z, rownames);
   }
   UNPROTECT(1);
   return z;

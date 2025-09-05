@@ -7,22 +7,25 @@
 set_attr(x, name, value)
 }
 \arguments{
-\item{x}{any objects; e.g, list, columns of a data.frame or data.table}
+\item{x}{Any R object (e.g., \code{list}, \code{data.frame}, \code{data.table})}
 
-\item{name}{the character attribute name.}
+\item{name}{Character string specifying the attribute name}
 
-\item{value}{the value to assign to the attribute or \code{NULL} removes teh attribute, if present.}
+\item{value}{Value to assign to the attribute, or \code{NULL} to remove the
+attribute if it exists}
 }
 \value{
-the changed object (invisibly) for use in compound statements.
+Returns the modified object invisibly for use in compound statements
 }
 \description{
-setattr functions re-exported from \code{data.table}.
+A wrapper for \code{data.table::setattr()} to set object attributes.
 }
 \examples{
-# set attributes
-\dontrun{df <- data.frame(a = 1:3, b = 4:6)
+\donttest{
+# Set attributes
+df <- data.frame(a = 1:3, b = 4:6)
 set_attr(df, "flag", TRUE)
-attr(df, "flag")}
+attr(df, "flag")
+}
 
 }

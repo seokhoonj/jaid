@@ -2,25 +2,31 @@
 % Please edit documentation in R/ptr.R
 \name{get_ptr}
 \alias{get_ptr}
-\title{Get external pointer}
+\title{Get data.table internal pointer}
 \usage{
 get_ptr(df)
 }
 \arguments{
-\item{df}{a data.frame}
+\item{df}{A data.frame or data.table.}
 }
 \value{
-No return value.
+The value of the \code{.internal.selfref} attribute, or \code{NULL}
+if it does not exist.
 }
 \description{
-Get external pointer
+Retrieves the internal data.table self-reference (\code{.internal.selfref})
+attribute from an object, if present.
 }
 \examples{
-# get pointer
 \dontrun{
-df <- data.frame(x = c(1:3), y = c("a", "b", "c"))
-get_ptr(df)
-df <- setalloccol(df)
-get_ptr(df)}
+df <- data.frame(x = 1:3, y = c("a", "b", "c"))
+get_ptr(df)  # usually NULL
 
+data.table::setalloccol(df)
+get_ptr(df)  # now shows the internal pointer
+}
+
+}
+\seealso{
+\code{\link[=drop_ptr]{drop_ptr()}}, \code{\link[data.table:truelength]{data.table::setalloccol()}}
 }
