@@ -14,9 +14,9 @@ extern SEXP Unilen(SEXP);
 extern SEXP Reverse(SEXP);
 extern SEXP Interleave(SEXP, SEXP);
 extern SEXP Rotate(SEXP, SEXP);
-extern SEXP SetMatDimNames(SEXP, SEXP);
-extern SEXP SetMatColNames(SEXP, SEXP);
-extern SEXP SetMatRowNames(SEXP, SEXP);
+extern SEXP SetDimNames(SEXP, SEXP);
+extern SEXP SetColNames(SEXP, SEXP);
+extern SEXP SetRowNames(SEXP, SEXP);
 extern SEXP MaxByColNames(SEXP, SEXP, SEXP, SEXP, SEXP);
 extern SEXP MaxByRowNames(SEXP, SEXP, SEXP, SEXP, SEXP);
 extern SEXP MinByColNames(SEXP, SEXP, SEXP, SEXP, SEXP);
@@ -53,9 +53,9 @@ static const R_CallMethodDef CallEntries[] = {
     {"Reverse",                     (DL_FUNC) &Reverse,                     1},
     {"Interleave",                  (DL_FUNC) &Interleave,                  2},
     {"Rotate",                      (DL_FUNC) &Rotate,                      2},
-    {"SetMatDimNames",              (DL_FUNC) &SetMatDimNames,              2},
-    {"SetMatColNames",              (DL_FUNC) &SetMatColNames,              2},
-    {"SetMatRowNames",              (DL_FUNC) &SetMatRowNames,              2},
+    {"SetDimNames",                 (DL_FUNC) &SetDimNames,                 2},
+    {"SetColNames",                 (DL_FUNC) &SetColNames,                 2},
+    {"SetRowNames",                 (DL_FUNC) &SetRowNames,                 2},
     {"MaxByColNames",               (DL_FUNC) &MaxByColNames,               5},
     {"MaxByRowNames",               (DL_FUNC) &MaxByRowNames,               5},
     {"MinByColNames",               (DL_FUNC) &MinByColNames,               5},

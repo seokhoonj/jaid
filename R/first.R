@@ -18,7 +18,7 @@
 #' x <- matrix(c(-1,  2, 0,
 #'               -2, -1, 5,
 #'                2, -2, 3), nrow = 3, byrow = TRUE)
-#' set_mat_rownames(x, c(1, 1, 2))
+#' set_rownames(x, c(1, 1, 2))
 #'
 #' # Keep only the first positive per group
 #' fill_zero_not_first_pos(x)
@@ -82,7 +82,7 @@ set_zero_not_first_pos <- function(x, include_cols) {
 #' x <- matrix(c(0, 1, 0,
 #'               0, 0, 1,
 #'               1, 0, 1), nrow = 3, byrow = TRUE)
-#' set_mat_rownames(x, c(1, 1, 2))
+#' set_rownames(x, c(1, 1, 2))
 #'
 #' # Return a modified copy
 #' fill_one_before_first_one(x)

@@ -1,13 +1,13 @@
 #include "jaid.h"
 
 // Set matrix dimnames
-SEXP SetMatDimNames(SEXP x, SEXP dimnames) {
+SEXP SetDimNames(SEXP x, SEXP dimnames) {
   setAttrib(x, R_DimNamesSymbol, dimnames);
   return x;
 }
 
 // Set matrix rownames
-SEXP SetMatRowNames(SEXP x, SEXP rownames) {
+SEXP SetRowNames(SEXP x, SEXP rownames) {
   SEXP colnames, dimnames, dimsymbols;
   PROTECT(dimnames = allocVector(VECSXP, 2));
   dimsymbols = getAttrib(x, R_DimNamesSymbol);
@@ -24,7 +24,7 @@ SEXP SetMatRowNames(SEXP x, SEXP rownames) {
 }
 
 // Set matrix colnames
-SEXP SetMatColNames(SEXP x, SEXP colnames) {
+SEXP SetColNames(SEXP x, SEXP colnames) {
   SEXP dimnames, dimsymbols, rownames;
   PROTECT(dimnames = allocVector(VECSXP, 2));
   dimsymbols = getAttrib(x, R_DimNamesSymbol);

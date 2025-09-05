@@ -37,17 +37,17 @@ name are reduced to one column, using the chosen summary (max/min/sum).
 \donttest{
 # Maximum values grouped by row names and column names
 x <- matrix(c(1:9), ncol = 3)
-set_mat_dimnames(x, list(c("a", "a", "b"), c("a", "b", "b")))
+set_dimnames(x, list(c("a", "a", "b"), c("a", "b", "b")))
 max_by_dimnames(x)
 
 # Minimum values grouped by row names and column names
 x <- matrix(c(1:9), ncol = 3)
-set_mat_dimnames(x, list(c("a", "a", "b"), c("a", "b", "b")))
+set_dimnames(x, list(c("a", "a", "b"), c("a", "b", "b")))
 min_by_dimnames(x)
 
 # Sum of values grouped by row names and column names
 x <- matrix(c(1:9), ncol = 3)
-set_mat_dimnames(x, list(c("a", "a", "b"), c("a", "b", "b")))
+set_dimnames(x, list(c("a", "a", "b"), c("a", "b", "b")))
 sum_by_dimnames(x)
 }
 

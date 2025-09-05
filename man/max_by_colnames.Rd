@@ -35,17 +35,17 @@ for performance.
 \donttest{
 # Maximum values grouped by column names
 x <- matrix(c(1:9), ncol = 3)
-set_mat_dimnames(x, list(c("a", "a", "b"), c("a", "b", "b")))
+set_dimnames(x, list(c("a", "a", "b"), c("a", "b", "b")))
 max_by_colnames(x)
 
 # Minimum values grouped by column names
 x <- matrix(c(1:9), ncol = 3)
-set_mat_dimnames(x, list(c("a", "a", "b"), c("a", "b", "b")))
+set_dimnames(x, list(c("a", "a", "b"), c("a", "b", "b")))
 min_by_colnames(x)
 
 # Sum of values grouped by column names
 x <- matrix(c(1:9), ncol = 3)
-set_mat_dimnames(x, list(c("a", "a", "b"), c("a", "b", "b")))
+set_dimnames(x, list(c("a", "a", "b"), c("a", "b", "b")))
 sum_by_colnames(x)
 }
 

@@ -86,9 +86,9 @@ extern "C" {
 
   // Matrix
   SEXP Rotate(SEXP x, SEXP angle);
-  SEXP SetMatDimNames(SEXP x, SEXP dimnames);
-  SEXP SetMatColNames(SEXP x, SEXP colnames);
-  SEXP SetMatRowNames(SEXP x, SEXP rownames);
+  SEXP SetDimNames(SEXP x, SEXP dimnames);
+  SEXP SetColNames(SEXP x, SEXP colnames);
+  SEXP SetRowNames(SEXP x, SEXP rownames);
 
   SEXP MaxByColNames(SEXP x, SEXP g, SEXP uniqueg, SEXP snarm, SEXP minval);
   SEXP MaxByRowNames(SEXP x, SEXP g, SEXP uniqueg, SEXP snarm, SEXP minval);

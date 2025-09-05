@@ -113,17 +113,17 @@ col_diff <- function(x) .Call(ColDiff, x)
 #' \donttest{
 #' # Maximum values grouped by row names
 #' x <- matrix(c(1:9), nrow = 3)
-#' set_mat_dimnames(x, list(c("a", "a", "b"), c("a", "b", "b")))
+#' set_dimnames(x, list(c("a", "a", "b"), c("a", "b", "b")))
 #' max_by_rownames(x)
 #'
 #' # Minimum values grouped by row names
 #' x <- matrix(c(1:9), nrow = 3)
-#' set_mat_dimnames(x, list(c("a", "a", "b"), c("a", "b", "b")))
+#' set_dimnames(x, list(c("a", "a", "b"), c("a", "b", "b")))
 #' min_by_rownames(x)
 #'
 #' # Sum of values grouped by row names
 #' x <- matrix(c(1:9), nrow = 3)
-#' set_mat_dimnames(x, list(c("a", "a", "b"), c("a", "b", "b")))
+#' set_dimnames(x, list(c("a", "a", "b"), c("a", "b", "b")))
 #' sum_by_rownames(x)
 #' }
 #'
@@ -167,17 +167,17 @@ sum_by_rownames <- function(x, na.rm = TRUE) {
 #' \donttest{
 #' # Maximum values grouped by column names
 #' x <- matrix(c(1:9), ncol = 3)
-#' set_mat_dimnames(x, list(c("a", "a", "b"), c("a", "b", "b")))
+#' set_dimnames(x, list(c("a", "a", "b"), c("a", "b", "b")))
 #' max_by_colnames(x)
 #'
 #' # Minimum values grouped by column names
 #' x <- matrix(c(1:9), ncol = 3)
-#' set_mat_dimnames(x, list(c("a", "a", "b"), c("a", "b", "b")))
+#' set_dimnames(x, list(c("a", "a", "b"), c("a", "b", "b")))
 #' min_by_colnames(x)
 #'
 #' # Sum of values grouped by column names
 #' x <- matrix(c(1:9), ncol = 3)
-#' set_mat_dimnames(x, list(c("a", "a", "b"), c("a", "b", "b")))
+#' set_dimnames(x, list(c("a", "a", "b"), c("a", "b", "b")))
 #' sum_by_colnames(x)
 #' }
 #'
@@ -223,17 +223,17 @@ sum_by_colnames <- function(x, na.rm = TRUE) {
 #' \donttest{
 #' # Maximum values grouped by row names and column names
 #' x <- matrix(c(1:9), ncol = 3)
-#' set_mat_dimnames(x, list(c("a", "a", "b"), c("a", "b", "b")))
+#' set_dimnames(x, list(c("a", "a", "b"), c("a", "b", "b")))
 #' max_by_dimnames(x)
 #'
 #' # Minimum values grouped by row names and column names
 #' x <- matrix(c(1:9), ncol = 3)
-#' set_mat_dimnames(x, list(c("a", "a", "b"), c("a", "b", "b")))
+#' set_dimnames(x, list(c("a", "a", "b"), c("a", "b", "b")))
 #' min_by_dimnames(x)
 #'
 #' # Sum of values grouped by row names and column names
 #' x <- matrix(c(1:9), ncol = 3)
-#' set_mat_dimnames(x, list(c("a", "a", "b"), c("a", "b", "b")))
+#' set_dimnames(x, list(c("a", "a", "b"), c("a", "b", "b")))
 #' sum_by_dimnames(x)
 #' }
 #'
@@ -289,16 +289,16 @@ rotate <- function(x, angle = c(90, 180, 270)) {
     dn <- dimnames(x)
     dn <- rev(dn)
     dn[[2L]] <- rev(dn[[2L]])
-    set_mat_dimnames(z, dn)
+    set_dimnames(z, dn)
   } else if (angle[1L] %% 360 == 180) {
     dn <- dimnames(x)
     dn <- lapply(dn, rev)
-    set_mat_dimnames(z, dn)
+    set_dimnames(z, dn)
   } else if (angle[1L] %% 360 == 270) {
     dn <- dimnames(x)
     dn[[2L]] <- rev(dn[[2L]])
     dn <- rev(dn)
-    set_mat_dimnames(z, dn)
+    set_dimnames(z, dn)
   }
   return(z)
 }

@@ -891,7 +891,7 @@ SEXP ColDiff(SEXP x) {
   dimnames = getAttrib(x, R_DimNamesSymbol);
   if (!isNull(dimnames)) {
     rownames = VECTOR_ELT(dimnames, 0);
-    SetMatRowNames(z, rownames);
+    SetRowNames(z, rownames);
   }
   UNPROTECT(1);
   return z;

@@ -32,7 +32,7 @@ values in the group are set to zero.
 x <- matrix(c(-1,  2, 0,
               -2, -1, 5,
                2, -2, 3), nrow = 3, byrow = TRUE)
-set_mat_rownames(x, c(1, 1, 2))
+set_rownames(x, c(1, 1, 2))
 
 # Keep only the first positive per group
 fill_zero_not_first_pos(x)
