@@ -34,10 +34,10 @@ reverse(x) # edit x directly
 x
 #> [1] 9 8 7 6 5 4 3 2 1
 
-# intersect the elements of two vectors
+# interleave two vectors
 x <- c(1, 3, 5, 7)
 y <- c(2, 4, 6, 8)
-traverse(x, y)
+interleave(x, y)
 #> [1] 1 2 3 4 5 6 7 8
 
 # most frequent value
