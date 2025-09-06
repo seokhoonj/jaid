@@ -19,7 +19,7 @@ of inclusive days in each merged range.
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}
 }
 \details{
-Use \code{\link[=collpase_date_ranges]{collpase_date_ranges()}} instead.
+Use \code{\link[=collapse_date_ranges]{collapse_date_ranges()}} instead.
 }
 \seealso{
 \code{\link[=write_data_xlsx]{write_data_xlsx()}}

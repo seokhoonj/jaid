@@ -188,7 +188,7 @@ mondiff <- function(sdate, edate, day_limit = c(0:31)) {
 #' - Requires `data.table`. The merging index is computed in C for speed.
 #'
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' id <- c("A","A","B")
 #' work <- c("cleansing","analysis","cleansing")
 #' sdate <- as.Date(c("2022-03-01","2022-03-05","2022-03-08"))
@@ -203,7 +203,7 @@ mondiff <- function(sdate, edate, day_limit = c(0:31)) {
 #' }
 #'
 #' @export
-collpase_date_ranges <- function(df, id_var, merge_var, from_var, to_var,
+collapse_date_ranges <- function(df, id_var, merge_var, from_var, to_var,
                                  interval = 0, collapse = "|") {
   id_var    <- match_cols(df, sapply(rlang::enexpr(id_var), rlang::as_name))
   merge_var <- match_cols(df, sapply(rlang::enexpr(merge_var), rlang::as_name))
@@ -236,7 +236,7 @@ collpase_date_ranges <- function(df, id_var, merge_var, from_var, to_var,
 #'
 #' `r lifecycle::badge("deprecated")`
 #'
-#' Use [collpase_date_ranges()] instead.
+#' Use [collapse_date_ranges()] instead.
 #'
 #' @param ...	Additional arguments passed to combine_overlapping_date_range().
 #'
@@ -250,5 +250,5 @@ collpase_date_ranges <- function(df, id_var, merge_var, from_var, to_var,
 #' @export
 combine_overlapping_date_range <- function(...) {
   lifecycle::deprecate_warn("0.0.0.9000", "combine_overlapping_date_ranges()", "collapse_date_ranges()")
-  collpase_date_ranges(...)
+  collapse_date_ranges(...)
 }
