@@ -5,14 +5,13 @@
 \title{Search files for lines containing a given pattern}
 \usage{
 find_in_files(
-  path = "./R",
+  path = getwd(),
   word,
   recursive = TRUE,
   ignore_case = TRUE,
   show_lines = TRUE,
   fixed = FALSE,
-  skip_ext = c("bin", "dll", "o", "so", "rda", "rds", "bmp", "gif", "ico", "jpeg", "jpg",
-    "png", "tif", "tiff", "7z", "gz", "tar", "xz", "zip", "pdf")
+  skip_extensions
 )
 }
 \arguments{
@@ -32,7 +31,7 @@ and text. Default is \code{TRUE}.}
 \item{fixed}{Logical. Whether to treat \code{word} as a fixed string rather than
 a regular expression. Default is \code{FALSE}.}
 
-\item{skip_ext}{Character vector. File extensions to skip during search
+\item{skip_extensions}{Character vector. File extensions to skip during search
 (e.g., binary files, images, compressed archives, PDFs). Default includes
 common non-text formats such as \code{bin}, \code{dll}, \code{o}, \code{so}, \code{rda}, \code{rds},
 images (\code{jpg}, \code{png}, etc.), compressed files (\code{zip}, \code{tar}, \code{gz}, etc.),

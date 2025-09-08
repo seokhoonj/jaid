@@ -66,7 +66,7 @@ mkdir <- function(folder = c("dev", "data", "info", "inst", "output", "R",
 #'   and text. Default is `TRUE`.
 #' @param fixed Logical. Whether to treat `word` as a fixed string rather than
 #'   a regular expression. Default is `FALSE`.
-#' @param skip_ext Character vector. File extensions to skip during search
+#' @param skip_extensions Character vector. File extensions to skip during search
 #'   (e.g., binary files, images, compressed archives, PDFs). Default includes
 #'   common non-text formats such as `bin`, `dll`, `o`, `so`, `rda`, `rds`,
 #'   images (`jpg`, `png`, etc.), compressed files (`zip`, `tar`, `gz`, etc.),
@@ -87,18 +87,30 @@ mkdir <- function(folder = c("dev", "data", "info", "inst", "output", "R",
 #' }
 #'
 #' @export
-find_in_files <- function(path = "./R",
+find_in_files <- function(path = getwd(),
                           word,
                           recursive = TRUE,
                           ignore_case = TRUE,
                           show_lines = TRUE,
                           fixed = FALSE,
-                          skip_ext = c(
-                            "bin", "dll", "o", "so", "rda", "rds",
-                            "bmp", "gif", "ico", "jpeg", "jpg", "png",
-                            "tif", "tiff", "7z", "gz", "tar", "xz",
-                            "zip", "pdf"
-                          )) {
+                          skip_extensions) {
+
+  if (missing(skip_extensions)) {
+    skip_extensions <- list(
+      image_raster = c("bmp","gif","jpeg","jpg","png","tif","tiff","webp",
+                       "apng","avif","heif","heic","ico"),
+      image_vector = c("svg","ai","psd","xcf","icns","pdf","raw"),
+      archive      = c("7z","gz","tar","xz","zip","bz2"),
+      binary_build = c("bin","dll","o","so"),
+      database     = c("db","sqlite","sqlite3","mdb","accdb"),
+      office       = c("xls","xlsb","xlsm","xlsx","ods","numbers",
+                       "doc","docx","ppt","pptx","pdf"),
+      data_format  = c("RData","rda","rds","pkl","msgpack","feather",
+                       "parquet","avro","orc","h5","hdf5",
+                       "sas7bdat","sav","por","dta","mat")
+      )
+    skip_extensions <- unlist(skip_extensions, use.names = FALSE)
+  }
 
   highlight_line <- function(text, pattern) {
     m <- gregexpr(pattern, text,
@@ -130,8 +142,8 @@ find_in_files <- function(path = "./R",
     files <- list.files(path, recursive = recursive, full.names = TRUE)
     files <- files[file.info(files)$isdir == FALSE]
   }
-  exts <- paste0("\\.(", paste0(skip_ext, collapse = "|"), ")$")
-  files <- files[!grepl(exts, files, ignore.case = TRUE)]
+  extensions <- paste0("\\.(", paste0(skip_extensions, collapse = "|"), ")$")
+  files <- files[!grepl(extensions, files, ignore.case = TRUE)]
 
   results <- list()
   for (f in files) {
@@ -150,12 +162,12 @@ find_in_files <- function(path = "./R",
   }
 
   # console output
-  cli::cat_rule("Search results")
+  cli::cat_rule(cli::col_yellow("Search results"), line = 2)
   if (!length(results)) {
-    cli::cat_line(cli::col_yellow("No matches found."))
+    cli::cat_line(cli::col_cyan("No matches found."))
   } else {
     for (fp in names(results)) {
-      cli::cat_bullet(fp, bullet = "file")
+      cli::cat_bullet(cli::col_blue(fp), bullet = "file")
       if (show_lines && nrow(results[[fp]]) > 0) {
         for (k in seq_len(nrow(results[[fp]]))) {
           ln <- results[[fp]]$line[k]
