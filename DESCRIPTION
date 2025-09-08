@@ -1,13 +1,17 @@
 Package: jaid
-Title: Joo's functional aid toolkit
+Title: Joo's Functional Aid Toolkit
 Version: 0.0.0.9001
 Authors@R: 
     person(given = "Seokhoon", family = "Joo", role = c("aut", "cre"),
            email = "seokhoonj@gmail.com")
-Description: Joo's functional aid toolkit for efficient and productive programming.
+Description: High-performance utilities for efficient and productive programming, 
+    including vector and matrix helpers, data.table-friendly in-place transformations, 
+    string tools for Japanese text (e.g., Zenkaku to Hankaku), convenient I/O wrappers, 
+    and date/time helpers. Selected routines are implemented in C for speed.
 License: MIT + file LICENSE
 Encoding: UTF-8
 Depends: R (>= 4.1.0)
+ByteCompile: true
 Imports:
     Rcpp (>= 0.12.10),
     cli (>= 3.6.2),
@@ -37,26 +41,3 @@ LinkingTo:
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.2
 Config/testthat/edition: 3
-X-ImportsPackageLicense:
-    Rcpp (GPL (>= 2)),
-    cli (MIT + file LICENSE),
-    data.table (MPL-2.0 | file LICENSE),
-    grDevices (GPL-2 | GPL-3),
-    grid (GPL-2 | GPL-3),
-    kableExtra (MIT + file LICENSE),
-    lifecycle (MIT + file LICENSE),
-    openssl (MIT + file LICENSE),
-    openxlsx (MIT + file LICENSE),
-    png (GPL-2 | GPL-3),
-    readxl (MIT + file LICENSE),
-    reticulate (Apache License 2.0),
-    rlang (MIT + file LICENSE),
-    scales (MIT + file LICENSE),
-    stringi (file LICENSE - BSD-3-Clause + Unicode License v3 (partially GPL like stri_stats_latex),
-    stringr (MIT + file LICENSE),
-    tibble (MIT + file LICENSE),
-    usethis (MIT + file LICENSE),
-X-SuggestsPackageLicense:
-    magick (MIT + file LICENSE),
-    shiny (GPL-3 + LICENSE),
-    webshot2 (MIT + file LICENSE)
