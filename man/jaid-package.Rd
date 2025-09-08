@@ -4,9 +4,22 @@
 \name{jaid-package}
 \alias{jaid}
 \alias{jaid-package}
-\title{jaid: Joo's functional aid toolkit}
+\title{jaid: Joo's Functional Aid Toolkit}
 \description{
 Joo's functional aid toolkit for efficient programming.
+}
+\details{
+\itemize{
+\item High-performance vector/matrix utilities backed by C routines
+\item data.table-friendly helpers for in-place, memory-aware transformations
+\item String tools for Japanese text detection and Zenkaku→Hankaku conversion
+\item Convenient I/O wrappers: \code{read_rds()}, \code{read_xl()}, \code{read_wb()}
+\item Date utilities: \code{add_mon()}, \code{add_year()}, \code{bmonth()}/\code{emonth()}, \code{yearmon()}, \code{mondiff()}
+\item Misc: timing (\code{timeit()}), row/column replication
+}
+
+Many helpers return new objects; functions that take a data.table typically
+modify in place. See individual function documentation for details.
 }
 \author{
 \strong{Maintainer}: Seokhoon Joo \email{seokhoonj@gmail.com}
