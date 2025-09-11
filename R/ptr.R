@@ -25,29 +25,39 @@ is_null_externalptr <- function(ptr) {
   .Call(IsNullExternalPtr, ptr)
 }
 
-# #' Set external pointer
-# #'
-# #' Set external pointer
-# #'
-# #' @param df a data.frame
-# #' @return No return value.
-# #'
-# #' @examples
-# #' # set pointer
-# #' \donttest{set_ptr(iris)}
-# #'
-# #' @export
-# set_ptr <- function(df) {
-#   if (!has_ptr(df)) {
-#     # legacy code (problems in Shiny):
-#     n <- sys.nframe()
-#     df_name <- trace_arg_expr(df)
-#     old_class <- class(df)
-#     data.table::setalloccol(df)
-#     set_attr(df, "class", old_class)
-#     assign(df_name, df, envir = parent.frame(n))
-#   }
-# }
+#' Deprecated: set_ptr()
+#'
+#' @description
+#' `r lifecycle::badge("deprecated")`
+#'
+#' Set an external pointer.
+#'
+#' @param df A data.frame.
+#' @param skip_shiny Logical; if `TRUE`, and a Shiny context is detected
+#'   (via [.is_shiny_running()]), the function immediately returns
+#'   `data.table::setDT(df)`
+#' @return No return value. Called for side effects.
+#'
+#' @examples
+#' \donttest{
+#' set_ptr(iris)
+#' }
+#'
+#' @export
+set_ptr <- function(df, skip_shiny = TRUE) {
+  lifecycle::deprecate_warn("0.0.0.9001", "set_ptr()", "data.table::setDT()")
+  if (skip_shiny && .is_shiny_running())
+    return(data.table::setDT(df))
+  if (!has_ptr(df)) {
+    # legacy code (problems in Shiny):
+    n <- sys.nframe()
+    df_name <- trace_arg_expr(df)
+    old_class <- class(df)
+    data.table::setalloccol(df)
+    set_attr(df, "class", old_class)
+    assign(df_name, df, envir = parent.frame(n))
+  }
+}
 
 #' Get data.table internal pointer
 #'
@@ -157,4 +167,28 @@ has_ptr <- function(df, error_raise = FALSE) {
     if (!is_null_externalptr(p))
       return(rt)
   }
+}
+
+#' Deprecated: get_copied_dt()
+#'
+#' @description
+#' `r lifecycle::badge("deprecated")`
+#'
+#' Convert a data.frame to data.table
+#'
+#' @param df A data.frame.
+#' @return A data.table copied.
+#'
+#' @examples
+#' \donttest{
+#' df <- data.frame(x = 1:3, y = c("a", "b", "c"))
+#' get_copied_dt(df)
+#' }
+#'
+#' @export
+get_copied_dt <- function(df) {
+  lifecycle::deprecate_warn(
+    "0.0.0.9001", "get_copied_dt()", "data.table::copy()"
+  )
+  return(data.table::setDT(data.table::copy(df))[])
 }
