@@ -4,7 +4,7 @@
 #' each column, values are replicated according to arguments passed to
 #' [base::rep()] (e.g., `times`, `each`).
 #'
-#' @param x A `matrix`, `data.frame`, or `data.table`.
+#' @param x A matrix, data.frame or data.table.
 #' @param ... Arguments passed to [base::rep()] such as `times` and `each`.
 #'
 #' @return An object of the same general type as `x` with rows replicated.

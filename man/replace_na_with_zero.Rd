@@ -15,7 +15,7 @@ replace_na_with_zero(df, cols)
 The modified data.table (invisibly for chaining).
 }
 \description{
-Efficiently replace numeric \code{NA} values with \code{0} in a data.table. If \code{cols}
+Efficiently replace numeric NA values with 0 in a data.table. If \code{cols}
 is missing, all numeric and integer columns are targeted.
 }
 \examples{

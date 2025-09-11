@@ -14,7 +14,7 @@ An R object summarizing class and storage type.
 }
 \description{
 Generic function to show class and underlying storage type of objects.
-Currently provides a method for \code{data.frame}.
+Currently provides a method for data.frame.
 }
 \examples{
 \donttest{type(cars)}

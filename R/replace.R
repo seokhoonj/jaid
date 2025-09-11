@@ -1,6 +1,6 @@
 #' Replace NA with zero (in place)
 #'
-#' Efficiently replace numeric `NA` values with `0` in a data.table. If `cols`
+#' Efficiently replace numeric NA values with 0 in a data.table. If `cols`
 #' is missing, all numeric and integer columns are targeted.
 #'
 #' @param df A data.table (modified in place).

@@ -16,7 +16,7 @@ rep_row(x, ...)
 \method{rep_row}{matrix}(x, ...)
 }
 \arguments{
-\item{x}{A \code{matrix}, \code{data.frame}, or \code{data.table}.}
+\item{x}{A matrix, data.frame or data.table.}
 
 \item{...}{Arguments passed to \code{\link[base:rep]{base::rep()}} such as \code{times} and \code{each}.}
 }

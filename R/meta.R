@@ -3,11 +3,11 @@
 #' `r lifecycle::badge("experimental")`
 #'
 #' Generic function to display meta information about an object.
-#' Currently supports `data.frame` objects with a specific method.
+#' Currently supports data.frame objects with a specific method.
 #'
 #' @param x An R object (e.g., data.frame).
 #'
-#' @return A `meta` object summarizing information (see [meta.data.frame()]).
+#' @return A meta object summarizing information (see [meta.data.frame()]).
 #'
 #' @examples
 #' \donttest{meta(mtcars)}
@@ -62,7 +62,7 @@ meta.data.frame <- function(x) {
 #' Inspect class and storage type
 #'
 #' Generic function to show class and underlying storage type of objects.
-#' Currently provides a method for `data.frame`.
+#' Currently provides a method for data.frame.
 #'
 #' @param x An R object (e.g., data.frame).
 #'
@@ -78,9 +78,9 @@ type <- function(x) UseMethod("type")
 #'
 #' Summarize class and storage type of each column in a data frame.
 #'
-#' @param x A `data.frame`.
+#' @param x A data.frame.
 #'
-#' @return A `data.table` with columns:
+#' @return A data.table with columns:
 #' * `column`: column name
 #' * `class`: column class
 #' * `type`: storage type

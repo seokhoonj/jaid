@@ -10,14 +10,14 @@ meta(x)
 \item{x}{An R object (e.g., data.frame).}
 }
 \value{
-A \code{meta} object summarizing information (see \code{\link[=meta.data.frame]{meta.data.frame()}}).
+A meta object summarizing information (see \code{\link[=meta.data.frame]{meta.data.frame()}}).
 }
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
 }
 \details{
 Generic function to display meta information about an object.
-Currently supports \code{data.frame} objects with a specific method.
+Currently supports data.frame objects with a specific method.
 }
 \examples{
 \donttest{meta(mtcars)}

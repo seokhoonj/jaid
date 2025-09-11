@@ -7,10 +7,10 @@
 \method{type}{data.frame}(x)
 }
 \arguments{
-\item{x}{A \code{data.frame}.}
+\item{x}{A data.frame.}
 }
 \value{
-A \code{data.table} with columns:
+A data.table with columns:
 \itemize{
 \item \code{column}: column name
 \item \code{class}: column class
