@@ -269,13 +269,14 @@ save_image_xlsx <- function(image, file, rc = c(1L, 1L), width = 12,
 
 #' Deprecated: data_xlsx()
 #'
+#' @description
 #' `r lifecycle::badge("deprecated")`
 #'
 #' Use [write_data_xlsx()] instead.
 #'
 #' @param ... Additional arguments passed to [write_data_xlsx()].
 #'
-#' @return No return value, called for side effects.
+#' @return Same return value as [write_data_xlsx()].
 #'
 #' @seealso [write_data_xlsx()]
 #'
@@ -293,7 +294,7 @@ data_xlsx <- function(...) {
 #'
 #' @param ... Additional arguments passed to [save_plot_xlsx()].
 #'
-#' @return No return value, called for side effects.
+#' @return Same return value as [save_plot_xlsx()].
 #'
 #' @seealso [save_plot_xlsx()]
 #'
@@ -311,7 +312,7 @@ plot_xlsx <- function(...) {
 #'
 #' @param ... Additional arguments passed to [save_image_xlsx()].
 #'
-#' @return No return value, called for side effects.
+#' @return Same return value as [save_image_xlsx()].
 #'
 #' @seealso [save_image_xlsx()]
 #'

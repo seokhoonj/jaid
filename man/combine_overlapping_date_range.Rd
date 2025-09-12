@@ -10,7 +10,7 @@ combine_overlapping_date_range(...)
 \item{...}{Additional arguments passed to combine_overlapping_date_range().}
 }
 \value{
-A \code{data.table} with merged, non-overlapping date ranges. The output
+A data.table with merged, non-overlapping date ranges. The output
 contains the ID columns, any \code{merge_var} columns (collapsed), the original
 date columns (\code{from_var}, \code{to_var}), and a \code{stay} column giving the number
 of inclusive days in each merged range.

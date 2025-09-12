@@ -240,12 +240,9 @@ collapse_date_ranges <- function(df, id_var, merge_var, from_var, to_var,
 #'
 #' @param ...	Additional arguments passed to combine_overlapping_date_range().
 #'
-#' @return A data.table with merged, non-overlapping date ranges. The output
-#'   contains the ID columns, any `merge_var` columns (collapsed), the original
-#'   date columns (`from_var`, `to_var`), and a `stay` column giving the number
-#'   of inclusive days in each merged range.
+#' @return Same return value as [collapse_date_ranges()]
 #'
-#' @seealso [write_data_xlsx()]
+#' @seealso [collapse_date_ranges()]
 #'
 #' @export
 combine_overlapping_date_range <- function(...) {

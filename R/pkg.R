@@ -1,4 +1,7 @@
-print_package_recipe <- function() {
+
+# Scaffold ----------------------------------------------------------------
+
+.scaffold_package_recipe <- function() {
   lines <- c(
     "usethis::create_package(path)",
     "usethis::use_description()",
@@ -24,25 +27,52 @@ print_package_recipe <- function() {
   cat("path = \"\"", paste0("\n", lines))
 }
 
-package_license <- function(packages) {
+.scaffold_deprecated <- function(when, what, with) {
+  lines <- c(
+    sprintf("#' Deprecated: %s()", what),
+    "#'",
+    "#' @description",
+    "#' `r lifecycle::badge(\"deprecated\")`",
+    "#'",
+    sprintf("#' Use [%s()] instead.", with),
+    "#'",
+    sprintf("#' @param ... Additional arguments passed to [%s()].", with),
+    "#'",
+    sprintf("#' @return Same return value as [%s()].", with),
+    "#'",
+    sprintf("#' @seealso [%s()]", with),
+    "#'",
+    "#' @export",
+    sprintf("%s <- function(...) {", what),
+    sprintf("  lifecycle::deprecate_warn(\"%s\", \"%s()\", \"%s()\")", when, what, with),
+    sprintf("  %s(...)", with),
+    "}"
+  )
+  cat(lines, sep = "\n")
+}
+
+# Internal helper functions -----------------------------------------------
+
+.package_license <- function(packages) {
   license <- sapply(packages, function(x) utils::packageDescription(x)["License"])
   names(license) <- packages
   license
 }
 
-print_description_license <- function(packages = c("data.table", "ggplot2")) {
+.print_description_license <- function(packages = c("data.table", "ggplot2")) {
   lines <- sort(unique(sapply(packages, function(x)
     sprintf("%s (%s)", x, package_license(x)))))
   cat("X-PackageLicense:", paste0("\n  ", lines))
 
 }
 
-print_description_depends <- function() {
+.print_description_depends <- function() {
   cat(sprintf("Depends: R (>= %s)\n", getRversion()))
 }
 
-print_description_imports <- function(packages = c("data.table", "ggplot2")) {
+.print_description_imports <- function(packages = c("data.table", "ggplot2")) {
   lines <- sort(unique(sapply(packages, function(x)
     sprintf("%s (>= %s)", x,utils::packageVersion(x)))))
   cat("Imports:", paste0("\n  ", lines))
 }
+
