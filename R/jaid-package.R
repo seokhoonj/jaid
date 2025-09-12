@@ -15,7 +15,7 @@
 #' @useDynLib jaid, .registration = TRUE
 #' @importFrom Rcpp sourceCpp
 #' @importFrom cli cat_bullet cat_line cat_rule cli_alert col_cyan col_green
-#' cli_h2 col_red cli_text col_yellow style_bold
+#' cli_h2 col_red cli_text col_yellow rule style_bold
 #' @importFrom data.table `:=` `.SD` `%chin%` address as.data.table copy
 #' data.table fifelse mday month set setalloccol setattr setDF setDT setindex
 #' setnames setorder setorderv year
