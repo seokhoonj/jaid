@@ -162,9 +162,9 @@ find_in_files <- function(path = getwd(),
   }
 
   # console output
-  cli::cat_rule(cli::col_yellow("Search results"), line = 2)
+  cat(cli::col_cyan(cli::rule("Search results", line = 2)), "\n")
   if (!length(results)) {
-    cli::cat_line(cli::col_cyan("No matches found."))
+    cli::cat_line(cli::col_yellow("No matches found."))
   } else {
     for (fp in names(results)) {
       cli::cat_bullet(cli::col_blue(fp), bullet = "file")
