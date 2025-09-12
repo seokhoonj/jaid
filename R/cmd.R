@@ -172,8 +172,12 @@ find_in_files <- function(path = getwd(),
         for (k in seq_len(nrow(results[[fp]]))) {
           ln <- results[[fp]]$line[k]
           tx <- results[[fp]]$text[k]
+          line_link <- cli::style_hyperlink(
+            paste0(sprintf("%6d", ln)),
+            paste0(.make_file_url(fp), "#", ln) # 일부 콘솔은 #line 미지원일 수 있음
+          )
           cli::cat_line(
-            paste0("  ", sprintf("%6d", ln), " | ", highlight_line(tx, word))
+            paste0("  ", line_link, " | ", highlight_line(tx, word))
           )
         }
       }
@@ -181,4 +185,74 @@ find_in_files <- function(path = getwd(),
   }
 
   invisible(results)
+}
+
+#' Find and replace text in files
+#'
+#' Search files for lines containing a given pattern and replace them
+#' with another string. Works on multiple files, supports regex or fixed search.
+#'
+#' @param path Character scalar. Path to a folder, file, or glob pattern.
+#' @param word Character scalar. Pattern to search for.
+#' @param replacement Character scalar. Replacement text.
+#' @param recursive Logical. Search subdirectories? Default TRUE.
+#' @param ignore_case Logical. Ignore case in matching? Default TRUE.
+#' @param fixed Logical. If TRUE, treat `word` as fixed string (not regex).
+#' @param skip_extensions Character vector of file extensions to skip.
+#'   Same default as [find_in_files()].
+#' @param dry_run Logical. If TRUE, only show what would be replaced
+#'   without modifying files. Default TRUE.
+#'
+#' @return Invisibly, a list with file names and number of replacements.
+#' @export
+replace_in_files <- function(path = getwd(),
+                             word,
+                             replacement,
+                             recursive = TRUE,
+                             ignore_case = TRUE,
+                             fixed = FALSE,
+                             skip_extensions = NULL,
+                             dry_run = TRUE) {
+  results <- find_in_files(path, word,
+                           recursive = recursive,
+                           ignore_case = ignore_case,
+                           fixed = fixed,
+                           skip_extensions = skip_extensions)
+
+  if (!length(results)) {
+    cli::cat_line(cli::col_yellow("No matches found."))
+    return(invisible(list()))
+  }
+
+  summary <- list()
+  for (fp in names(results)) {
+    lines <- readLines(fp, warn = FALSE)
+    new_lines <- gsub(word, replacement, lines,
+                      ignore.case = ignore_case,
+                      fixed = fixed)
+
+    if (!identical(lines, new_lines)) {
+      n_repl <- sum(lines != new_lines)
+      summary[[fp]] <- n_repl
+      cli::cat_bullet(paste0(fp, " (", n_repl, " replacements)"))
+
+      if (!dry_run) {
+        writeLines(new_lines, fp, useBytes = TRUE)
+      }
+    }
+  }
+
+  if (dry_run) {
+    cli::cat_line(cli::col_cyan("Dry run: no files modified. Use `dry_run = FALSE` to apply changes."))
+  }
+
+  invisible(summary)
+}
+
+# Internal helper function ------------------------------------------------
+
+.make_file_url <- function(path) {
+  # file:// prefix for Windows
+  p <- normalizePath(path, winslash = "/", mustWork = FALSE)
+  paste0("file://", p)
 }
