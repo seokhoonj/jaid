@@ -196,34 +196,33 @@ check_col_spec <- function(df, col_spec) {
     ), "compatible", NA_character_
   )]
 
-  # Column Check Summary
-  if (requireNamespace("cli", quietly = TRUE)) {
-    cli::cli_h2("Column Check Summary")
-    for (stat in c("match", "mismatch", "missing", "extra")) {
-      dt_sub <- dt[status == stat]
-      if (nrow(dt_sub) == 0) {
-        msg_str <- ""
-      } else if (stat == "mismatch") {
-        msg_vec <- dt_sub[, paste0(
-          column, " (", actual, " \u2192 ", expected,
-          ifelse(!is.na(note), paste0(": ", note), ""), ")"
-        )]
-        msg_str <- paste(msg_vec, collapse = ", ")
-      } else {
-        msg_str <- paste(dt_sub$column, collapse = ", ")
-      }
-
-      color_msg <- switch(stat,
-                          match    = cli::col_green(msg_str),
-                          mismatch = cli::col_red(msg_str),
-                          missing  = cli::col_yellow(msg_str),
-                          extra    = cli::col_cyan(msg_str)
-      )
-      icon <- switch(stat, match = "o", mismatch = "x", missing = "-", extra = "+")
-      cli::cli_alert("{.strong {icon} {stat}:} {color_msg}")
+  # Column check summary
+  cat(cli::col_cyan(cli::rule("Column check summary", line = 2)), "\n")
+  for (stat in c("match", "mismatch", "missing", "extra")) {
+    dt_sub <- dt[status == stat]
+    if (nrow(dt_sub) == 0) {
+      msg_str <- ""
+    } else if (stat == "mismatch") {
+      msg_vec <- dt_sub[, paste0(
+        column, " (", actual, " \u2192 ", expected,
+        ifelse(!is.na(note), paste0(": ", note), ""), ")"
+      )]
+      msg_str <- paste(msg_vec, collapse = ", ")
+    } else {
+      msg_str <- paste(dt_sub$column, collapse = ", ")
     }
-    cli::cli_text("")
+
+    color_msg <- switch(stat,
+                        match    = cli::col_green(msg_str),
+                        mismatch = cli::col_red(msg_str),
+                        missing  = cli::col_yellow(msg_str),
+                        extra    = cli::col_cyan(msg_str)
+    )
+    icon <- switch(stat, match = "o", mismatch = "x", missing = "-", extra = "+")
+    cli::cli_alert("{.strong {icon} {stat}:} {color_msg}")
   }
+  cli::cli_text("")
+
   data.table::setindex(dt, NULL)
   return(dt)
 }
