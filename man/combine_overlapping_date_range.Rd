@@ -10,10 +10,7 @@ combine_overlapping_date_range(...)
 \item{...}{Additional arguments passed to combine_overlapping_date_range().}
 }
 \value{
-A data.table with merged, non-overlapping date ranges. The output
-contains the ID columns, any \code{merge_var} columns (collapsed), the original
-date columns (\code{from_var}, \code{to_var}), and a \code{stay} column giving the number
-of inclusive days in each merged range.
+Same return value as \code{\link[=collapse_date_ranges]{collapse_date_ranges()}}
 }
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}
@@ -22,5 +19,5 @@ of inclusive days in each merged range.
 Use \code{\link[=collapse_date_ranges]{collapse_date_ranges()}} instead.
 }
 \seealso{
-\code{\link[=write_data_xlsx]{write_data_xlsx()}}
+\code{\link[=collapse_date_ranges]{collapse_date_ranges()}}
 }

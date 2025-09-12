@@ -10,7 +10,7 @@ image_xlsx(...)
 \item{...}{Additional arguments passed to \code{\link[=save_image_xlsx]{save_image_xlsx()}}.}
 }
 \value{
-No return value, called for side effects.
+Same return value as \code{\link[=save_image_xlsx]{save_image_xlsx()}}.
 }
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}
