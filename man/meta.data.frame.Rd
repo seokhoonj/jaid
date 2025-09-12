@@ -10,7 +10,7 @@
 \item{x}{A data.frame.}
 }
 \value{
-A \code{meta} object, which is a \code{data.table} containing
+A meta object, which is a \code{data.table} containing
 column-level summary information.
 }
 \description{

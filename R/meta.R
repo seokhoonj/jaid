@@ -36,7 +36,7 @@ meta <- function(x) {
 #'
 #' @param x A data.frame.
 #'
-#' @return A `meta` object, which is a `data.table` containing
+#' @return A meta object, which is a `data.table` containing
 #'   column-level summary information.
 #'
 #' @method meta data.frame
@@ -55,6 +55,9 @@ meta.data.frame <- function(x) {
   mode <- sapply(x, function(s) mostfreq(s, na.rm = TRUE))
   df <- data.table(column, class, type, n, missing, zero, distinct,
                    prop = 1 - missing/nrows, nzprop = 1 - zero/nrows, mode)
+  data.table::setattr(df, "nrow", nrows)
+  data.table::setattr(df, "ncol", ncol(x))
+  data.table::setattr(df, "nunique", nrow(unique(x)))
   data.table::setattr(df, "class", c("meta", class(df)))
   df
 }
