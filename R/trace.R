@@ -1,3 +1,5 @@
+# Trace argument expression -----------------------------------------------
+
 #' Retrieve the Original Expression Passed to an Argument
 #'
 #' @description

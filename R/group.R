@@ -28,8 +28,10 @@ add_group_stats <- function(dt, group_var, value_var, fun = cumsum,
                             prefix = "c") {
   lifecycle::signal_stage("experimental", "add_group_stats()")
   assert_class(dt, "data.table")
-  grps <- match_cols(dt, sapply(rlang::enexpr(group_var), rlang::as_name))
-  vals <- match_cols(dt, sapply(rlang::enexpr(value_var), rlang::as_name))
+  # grps <- match_cols(dt, sapply(rlang::enexpr(group_var), rlang::as_name))
+  # vals <- match_cols(dt, sapply(rlang::enexpr(value_var), rlang::as_name))
+  grps <- capture_names(dt, !!rlang::enquo(group_var))
+  vals <- capture_names(dt, !!rlang::enquo(value_var))
   cols <- sprintf("%s%s", prefix, vals)
   dt[, `:=`((cols), lapply(.SD, fun)), keyby = grps, .SDcols = vals]
   dt
@@ -70,8 +72,10 @@ add_group_stats <- function(dt, group_var, value_var, fun = cumsum,
 #' @export
 summarise_group_stats <- function(dt, group_var, value_var, fun = sum) {
   lifecycle::signal_stage("experimental", "summarise_group_stats()")
-  grps <- match_cols(dt, sapply(rlang::enexpr(group_var), rlang::as_name))
-  vals <- match_cols(dt, sapply(rlang::enexpr(value_var), rlang::as_name))
+  # grps <- match_cols(dt, sapply(rlang::enexpr(group_var), rlang::as_name))
+  # vals <- match_cols(dt, sapply(rlang::enexpr(value_var), rlang::as_name))
+  grps <- capture_names(dt, !!rlang::enquo(group_var))
+  vals <- capture_names(dt, !!rlang::enquo(value_var))
   dt[, lapply(.SD, fun), keyby = grps, .SDcols = vals]
 }
 

@@ -69,7 +69,8 @@ stratified_sampling <- function(df, group_var, size, replace = TRUE,
   lifecycle::signal_stage("experimental", "stratified_sampling()")
   assert_class(df, "data.table")
   # group_var <- match_cols(df, vapply(substitute(group_var), deparse, "character"))
-  group_var <- match_cols(df, sapply(rlang::enexpr(group_var), rlang::as_name))
+  # group_var <- match_cols(df, sapply(rlang::enexpr(group_var), rlang::as_name))
+  group_var <- capture_names(df, !!rlang::enquo(group_var))
   group <- df[, .(n = .N), keyby = group_var]
   data.table::set(group, j = "g", value = seq_len(nrow(group)))
   if (size > 0 & size < 1) {

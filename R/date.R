@@ -205,10 +205,14 @@ mondiff <- function(sdate, edate, day_limit = c(0:31)) {
 #' @export
 collapse_date_ranges <- function(df, id_var, merge_var, from_var, to_var,
                                  interval = 0, collapse = "|") {
-  id_var    <- match_cols(df, sapply(rlang::enexpr(id_var), rlang::as_name))
-  merge_var <- match_cols(df, sapply(rlang::enexpr(merge_var), rlang::as_name))
-  from_var  <- rlang::as_name(rlang::enquo(from_var))
-  to_var    <- rlang::as_name(rlang::enquo(to_var))
+  # id_var    <- match_cols(df, sapply(rlang::enexpr(id_var), rlang::as_name))
+  # merge_var <- match_cols(df, sapply(rlang::enexpr(merge_var), rlang::as_name))
+  # from_var  <- rlang::as_name(rlang::enquo(from_var))
+  # to_var    <- rlang::as_name(rlang::enquo(to_var))
+  id_var    <- capture_names(df, !!rlang::enquo(id_var))
+  merge_var <- capture_names(df, !!rlang::enquo(merge_var))
+  from_var  <- capture_names(df, !!rlang::enquo(from_var))
+  to_var    <- capture_names(df, !!rlang::enquo(to_var))
   all_var   <- c(id_var, merge_var, from_var, to_var)
   dt <- df[, .SD, .SDcols = all_var]
   data.table::setnames(dt, c(id_var, merge_var, "from", "to"))

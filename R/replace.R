@@ -177,7 +177,8 @@ trim_ws <- function(df, cols, ws = "[ \t\r\n]") {
     class <- sapply(df, class)
     cols <- names(class)[which(class == "character")]
   } else {
-    cols <- match_cols(df, sapply(rlang::enexpr(cols), rlang::as_name))
+    # cols <- match_cols(df, sapply(rlang::enexpr(cols), rlang::as_name))
+    cols <- capture_names(df, !!rlang::enquo(cols))
   }
   re <- sprintf("^%s+|%s+$", ws, ws)
   df[, `:=`((cols), lapply(.SD, function(x)
@@ -213,7 +214,8 @@ rm_punct <- function(df, cols, pattern = "(?!\\*)[[:punct:]]") {
     class <- sapply(df, class)
     cols <- names(class)[which(class == "character")]
   } else {
-    cols <- match_cols(df, sapply(rlang::enexpr(cols), rlang::as_name))
+    # cols <- match_cols(df, sapply(rlang::enexpr(cols), rlang::as_name))
+    cols <- capture_names(df, !!rlang::enquo(cols))
   }
   df[, `:=`((cols), lapply(.SD, function(x)
     gsub(pattern, "", x, perl = TRUE))), .SDcols = cols]
@@ -244,7 +246,8 @@ rm_punct <- function(df, cols, pattern = "(?!\\*)[[:punct:]]") {
 #' @export
 rm_cols <- function(df, cols) {
   assert_class(df, "data.table")
-  cols <- match_cols(df, sapply(rlang::enexpr(cols), rlang::as_name))
+  # cols <- match_cols(df, sapply(rlang::enexpr(cols), rlang::as_name))
+  cols <- capture_names(df, !!rlang::enquo(cols))
   df[, `:=`((cols), NULL)]
   df
 }

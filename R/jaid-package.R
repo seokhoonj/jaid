@@ -32,7 +32,8 @@
 #' @importFrom reticulate conda_create conda_list install_miniconda
 #' install_python py_config py_install use_condaenv use_virtualenv
 #' virtualenv_create
-#' @importFrom rlang as_name enexpr enquo enquos has_length quo_is_null
+#' @importFrom rlang as_name call_args call_name enexpr enquo enquos eval_tidy
+#'   has_length is_call is_quosure is_symbol quo_is_null
 #' @importFrom scales comma
 #' @importFrom stats IQR median sd
 #' @importFrom stringi stri_enc_toutf32 stri_trans_general

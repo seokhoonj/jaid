@@ -389,11 +389,14 @@ set_col_upper <- function(df)
 #'
 #' @export
 set_col_order <- function(df, neworder, before = NULL, after = NULL) {
-  neworder <- match_cols(df, sapply(rlang::enexpr(neworder), rlang::as_name))
-  before <- match_cols(df, sapply(rlang::enexpr(before), rlang::as_name))
-  after  <- match_cols(df, sapply(rlang::enexpr(after), rlang::as_name))
-  if (!has_len(before)) before <- NULL
-  if (!has_len(after)) after <- NULL
+  # neworder <- match_cols(df, sapply(rlang::enexpr(neworder), rlang::as_name))
+  # before <- match_cols(df, sapply(rlang::enexpr(before), rlang::as_name))
+  # after  <- match_cols(df, sapply(rlang::enexpr(after), rlang::as_name))
+  neworder <- capture_names(df, !!rlang::enquo(neworder))
+  before   <- capture_names(df, !!rlang::enquo(before))
+  after    <- capture_names(df, !!rlang::enquo(after))
+  if (!rlang::has_length(before)) before <- NULL
+  if (!rlang::has_length(after)) after <- NULL
   data.table::setcolorder(x = df, neworder = neworder, before = before, after = after)
 }
 

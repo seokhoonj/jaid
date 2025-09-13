@@ -107,7 +107,7 @@ find_in_files <- function(path = getwd(),
                        "doc","docx","ppt","pptx","pdf"),
       data_format  = c("RData","rda","rds","pkl","msgpack","feather",
                        "parquet","avro","orc","h5","hdf5",
-                       "sas7bdat","sav","por","dta","mat")
+                       "sas7bdat","sav","por","dta","mat","csv")
       )
     skip_extensions <- unlist(skip_extensions, use.names = FALSE)
   }
@@ -134,14 +134,18 @@ find_in_files <- function(path = getwd(),
   }
 
   # expand path: glob, file, or folder
-  if (length(path) == 1L && grepl("[*?]", path)) {
-    files <- Sys.glob(path)
-  } else if (file.exists(path) && !dir.exists(path)) {
-    files <- normalizePath(path, mustWork = FALSE)
-  } else {
-    files <- list.files(path, recursive = recursive, full.names = TRUE)
-    files <- files[file.info(files)$isdir == FALSE]
-  }
+  files <- unlist(lapply(path, function(p) {
+    if (length(p) == 1L && grepl("[*?]", p)) {
+      Sys.glob(p)
+    } else if (file.exists(p) && !dir.exists(p)) {
+      normalizePath(p, mustWork = FALSE)
+    } else if (dir.exists(p)) {
+      ff <- list.files(p, recursive = recursive, full.names = TRUE)
+      ff[file.info(ff)$isdir == FALSE]
+    } else {
+      character(0)
+    }
+  }))
   extensions <- paste0("\\.(", paste0(skip_extensions, collapse = "|"), ")$")
   files <- files[!grepl(extensions, files, ignore.case = TRUE)]
 
@@ -149,6 +153,7 @@ find_in_files <- function(path = getwd(),
   for (f in files) {
     lines <- tryCatch(readLines(f, warn = FALSE), error = function(e) NULL)
     if (is.null(lines)) next
+    lines <- .sanitize_utf8(lines)
     idx <- grep(word, lines, ignore.case = ignore_case, perl = !fixed,
                 fixed = fixed)
     if (length(idx) == 0) next
@@ -251,8 +256,21 @@ replace_in_files <- function(path = getwd(),
 
 # Internal helper function ------------------------------------------------
 
+#' @keywords internal
+#' @noRd
 .make_file_url <- function(path) {
   # file:// prefix for Windows
   p <- normalizePath(path, winslash = "/", mustWork = FALSE)
   paste0("file://", p)
+}
+
+#' Sanitize text to valid UTF-8 (prevents grep/readLines warnings)
+#' @keywords internal
+#' @noRd
+.sanitize_utf8 <- function(x) {
+  # from = "" lets iconv guess source encoding; sub = "byte" keeps bytes visibly
+  y <- iconv(x, from = "", to = "UTF-8", sub = "byte")
+  # Fallback: if iconv returns NA, replace with empty string
+  y[is.na(y)] <- ""
+  y
 }
