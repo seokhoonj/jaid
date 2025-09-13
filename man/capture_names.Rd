@@ -36,8 +36,8 @@ them into a character vector of valid column names from a data frame.
 the argument with \code{!!rlang::enquo(x)} before passing to \code{capture_names()}.
 For example:
 
-\if{html}{\out{<div class="sourceCode">}}\preformatted{f <- function(x) \{
-  capture_names(!!rlang::enquo(x))
+\if{html}{\out{<div class="sourceCode">}}\preformatted{f <- function(data, cols) \{
+  capture_names(data, !!rlang::enquo(cols))
 \}
 }\if{html}{\out{</div>}}
 }

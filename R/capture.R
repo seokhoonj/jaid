@@ -26,8 +26,8 @@
 #'   the argument with `!!rlang::enquo(x)` before passing to `capture_names()`.
 #'   For example:
 #'   ```
-#'   f <- function(x) {
-#'     capture_names(!!rlang::enquo(x))
+#'   f <- function(data, cols) {
+#'     capture_names(data, !!rlang::enquo(cols))
 #'   }
 #'   ```
 #' @examples
@@ -124,7 +124,7 @@ capture_names <- function(data, cols) {
 #' `c("a", "b")` (character literals).
 #'
 #' For processing quosures or language objects **as values** (not typed
-#' directly), see the internal helpers [.quo_to_chr()] and [.lang_to_chr()].
+#' directly), see the internal helpers `.quo_to_chr()` and `.lang_to_chr()`.
 #'
 #' @param x An expression typed at the call site, e.g. `c(a, b)` or
 #'   `c("a", "b")`. Single names like `a` are also supported.
@@ -180,9 +180,9 @@ capture_chr <- function(x) {
     return(.lang_to_chr(rlang::get_expr(x)))
 
   if (rlang::is_symbol(x) || rlang::is_call(x))
-    return(.expr_to_chr(x))
+    return(.lang_to_chr(x))
 
-  if (is.character(x)) # check here as well as in .expr_to_chr()
+  if (is.character(x)) # check here as well as in .lang_to_chr()
     return(x)
 
   stop("Provide a quosure (enquo/quo), symbol/call, or a character vector.",

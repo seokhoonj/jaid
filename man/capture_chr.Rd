@@ -23,7 +23,7 @@ directly at the call site, such as \code{c(a, b)} (bare symbols) or
 \code{c("a", "b")} (character literals).
 
 For processing quosures or language objects \strong{as values} (not typed
-directly), see the internal helpers \code{\link[=.quo_to_chr]{.quo_to_chr()}} and \code{\link[=.lang_to_chr]{.lang_to_chr()}}.
+directly), see the internal helpers \code{.quo_to_chr()} and \code{.lang_to_chr()}.
 \itemize{
 \item When used \strong{inside another function}, make sure to capture and unquote
 the argument with \code{!!rlang::enquo(x)} before passing to \code{capture_chr()}.
