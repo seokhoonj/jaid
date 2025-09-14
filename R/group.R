@@ -113,3 +113,44 @@ freq_prop <- function(x) {
   df[dp, prop := prop, on = .(x)]
   df[]
 }
+
+
+# Deprecated functions ----------------------------------------------------
+
+#' Deprecated: set_stat_by()
+#'
+#' @description
+#' `r lifecycle::badge("deprecated")`
+#'
+#' Use [add_group_stats()] instead.
+#'
+#' @param ... Additional arguments passed to [add_group_stats()].
+#'
+#' @return Same return value as [add_group_stats()].
+#'
+#' @seealso [add_group_stats()]
+#'
+#' @export
+set_stat_by <- function(...) {
+  lifecycle::deprecate_warn("0.0.0.9001", "set_stat_by()", "add_group_stats()")
+  add_group_stats(...)
+}
+
+#' Deprecated: get_stat_by()
+#'
+#' @description
+#' `r lifecycle::badge("deprecated")`
+#'
+#' Use [summarise_group_stats()] instead.
+#'
+#' @param ... Additional arguments passed to [summarise_group_stats()].
+#'
+#' @return Same return value as [summarise_group_stats()].
+#'
+#' @seealso [summarise_group_stats()]
+#'
+#' @export
+get_stat_by <- function(...) {
+  lifecycle::deprecate_warn("0.0.0.9001", "get_stat_by()", "summarise_group_stats()")
+  summarise_group_stats(...)
+}
