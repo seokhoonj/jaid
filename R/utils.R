@@ -142,6 +142,8 @@ valid_cols <- function(df, cols) {
 #'     \item `actual`: Actual class of the column (NA if missing)
 #'     \item `expected`: Expected class of the column (NA if not specified)
 #'     \item `status`: Comparison result: "match", "mismatch", "missing", or "extra"
+#'     \item `sample`: Example value from the first row of the column
+#'       (NA if column is missing)
 #'   }
 #'
 #' @examples
@@ -176,55 +178,102 @@ check_col_spec <- function(df, col_spec) {
   column <- status <- expected <- note <- NULL
   act_cols <- names(df)
   exp_cols <- names(col_spec)
-  actual <- sapply(df, function(x) class(x)[1L])
-  act_dt <- data.table::as.data.table(actual, keep.rownames = "column")
-  exp_dt <- data.table::data.table(column = names(col_spec), expected = unlist(col_spec))
-  dt <- data.table::rbindlist(
-    list(
-      act_dt[ exp_dt, on = .(column)],
-      act_dt[!exp_dt, on = .(column)]
-    ),
-    fill = TRUE
-  )
-  dt[, status := data.table::fifelse(actual == expected, "match", "mismatch")]
-  dt[is.na(actual), status := "missing"]
-  dt[is.na(expected), status := "extra"]
-  dt[, note := data.table::fifelse(
-    status == "mismatch" & (
-      (actual == "integer" & expected == "numeric") |
-      (actual == "numeric" & expected == "integer")
-    ), "compatible", NA_character_
-  )]
+  actual <- vapply(df, function(x) class(x)[1L], character(1L))
 
-  # Column check summary
+  # # data.table
+  # act_dt <- data.table::as.data.table(actual, keep.rownames = "column")
+  # exp_dt <- data.table::data.table(column = names(col_spec), expected = unlist(col_spec))
+  # dt <- data.table::rbindlist(
+  #   list(
+  #     act_dt[ exp_dt, on = .(column)],
+  #     act_dt[!exp_dt, on = .(column)]
+  #   ),
+  #   fill = TRUE
+  # )
+  # dt[, status := data.table::fifelse(actual == expected, "match", "mismatch")]
+  # dt[is.na(actual), status := "missing"]
+  # dt[is.na(expected), status := "extra"]
+  # dt[, note := data.table::fifelse(
+  #   status == "mismatch" & (
+  #     (actual == "integer" & expected == "numeric") |
+  #     (actual == "numeric" & expected == "integer")
+  #   ), "compatible", NA_character_
+  # )]
+  # ds <- data.table::data.table(t(head(df, 1)), keep.rownames = "column")
+  # dt[ds, on = .(column), `:=`(first, V1)]
+  # data.table::setindex(dt, NULL)
+
+  # actual classes
+  act_df <- data.frame(
+    column = names(actual), actual = actual,
+    stringsAsFactors = FALSE
+  )
+
+  # expected classes
+  exp_df <- data.frame(
+    column = exp_cols, expected = unlist(col_spec, use.names = FALSE),
+    stringsAsFactors = FALSE
+  )
+
+  # full join by column
+  merged <- merge(exp_df, act_df, by = "column", all = TRUE)
+  merged <- merged[c("column", "actual", "expected")]
+
+  # status
+  merged$status <- ifelse(
+    is.na(merged$actual), "missing",
+    ifelse(is.na(merged$expected), "extra",
+           ifelse(merged$actual == merged$expected, "match", "mismatch"))
+  )
+
+  # compatibility note
+  merged$note <- ifelse(
+    merged$status == "mismatch" & (
+      (merged$actual == "integer" & merged$expected == "numeric") |
+        (merged$actual == "numeric" & merged$expected == "integer")
+    ),
+    "compatible", NA_character_
+  )
+
+  # add first-row sample values
+  first_row <- df[1, , drop = FALSE]
+  merged$sample <- vapply(merged$column, function(col) {
+    if (col %in% names(first_row)) {
+      as.character(first_row[[col]])  # simpler: take first-row value as string
+    } else {
+      NA_character_
+    }
+  }, character(1L))
+
+  # Console summary
   cat(cli::col_cyan(cli::rule("Column check summary", line = 2)), "\n")
   for (stat in c("match", "mismatch", "missing", "extra")) {
-    dt_sub <- dt[status == stat]
-    if (nrow(dt_sub) == 0) {
-      msg_str <- ""
-    } else if (stat == "mismatch") {
-      msg_vec <- dt_sub[, paste0(
-        column, " (", actual, " \u2192 ", expected,
-        ifelse(!is.na(note), paste0(": ", note), ""), ")"
-      )]
-      msg_str <- paste(msg_vec, collapse = ", ")
-    } else {
-      msg_str <- paste(dt_sub$column, collapse = ", ")
-    }
-
-    color_msg <- switch(stat,
-                        match    = cli::col_green(msg_str),
-                        mismatch = cli::col_red(msg_str),
-                        missing  = cli::col_yellow(msg_str),
-                        extra    = cli::col_cyan(msg_str)
+    sub <- merged[merged$status == stat, ]
+    if (nrow(sub) == 0) next
+    msg_str <- switch(
+      stat,
+      match = paste(sub$column, collapse = ", "),
+      mismatch = paste0(
+        sub$column, " (", sub$actual, " → ", sub$expected,
+        ifelse(!is.na(sub$note), paste0(": ", sub$note), ""), ")",
+        collapse = ", "
+      ),
+      missing = paste(sub$column, collapse = ", "),
+      extra   = paste(sub$column, collapse = ", ")
+    )
+    color_msg <- switch(
+      stat,
+      match    = cli::col_green(msg_str),
+      mismatch = cli::col_red(msg_str),
+      missing  = cli::col_yellow(msg_str),
+      extra    = cli::col_cyan(msg_str)
     )
     icon <- switch(stat, match = "o", mismatch = "x", missing = "-", extra = "+")
     cli::cli_alert("{.strong {icon} {stat}:} {color_msg}")
   }
   cli::cli_text("")
 
-  data.table::setindex(dt, NULL)
-  return(dt)
+  merged
 }
 
 #' Check if a data frame has rows

@@ -19,6 +19,8 @@ A data.table with the following columns:
 \item \code{actual}: Actual class of the column (NA if missing)
 \item \code{expected}: Expected class of the column (NA if not specified)
 \item \code{status}: Comparison result: "match", "mismatch", "missing", or "extra"
+\item \code{sample}: Example value from the first row of the column
+(NA if column is missing)
 }
 }
 \description{
