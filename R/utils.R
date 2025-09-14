@@ -177,12 +177,12 @@ check_col_spec <- function(df, col_spec) {
   if (!all(sapply(col_spec, is.character)))
     stop("All elements of col_spec must be character strings (expected classes).")
 
-  column <- status <- expected <- note <- NULL
-  act_cols <- names(df)
-  exp_cols <- names(col_spec)
+  cols_act <- names(df)
+  cols_exp <- names(col_spec)
   actual <- vapply(df, function(x) class(x)[1L], character(1L))
 
   # data.table
+  # column <- status <- expected <- note <- NULL
   # act_dt <- data.table::as.data.table(actual, keep.rownames = "column")
   # exp_dt <- data.table::data.table(column = names(col_spec), expected = unlist(col_spec))
   # dt <- data.table::rbindlist(
@@ -206,20 +206,21 @@ check_col_spec <- function(df, col_spec) {
   # data.table::setindex(dt, NULL)
 
   # actual classes
-  act_df <- data.frame(
+  df_act <- data.frame(
     column = names(actual), actual = actual,
     stringsAsFactors = FALSE
   )
 
   # expected classes
-  exp_df <- data.frame(
-    column = exp_cols, expected = unlist(col_spec, use.names = FALSE),
+  df_exp <- data.frame(
+    column = cols_exp, expected = unlist(col_spec, use.names = FALSE),
     stringsAsFactors = FALSE
   )
 
   # full join by column
-  merged <- merge(exp_df, act_df, by = "column", all = TRUE)
-  merged <- merged[c("column", "actual", "expected")]
+  merged <- merge(df_act, df_exp, by = "column", all = TRUE)
+  cols_order <- c(cols_exp, setdiff(cols_act, cols_exp))
+  merged <- merged[match(cols_order, merged$column),]
 
   # status
   merged$status <- ifelse(
