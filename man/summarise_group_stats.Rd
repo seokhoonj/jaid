@@ -4,32 +4,54 @@
 \alias{summarise_group_stats}
 \title{Summarise group-wise statistics}
 \usage{
-summarise_group_stats(dt, group_var, value_var, fun = sum)
+summarise_group_stats(
+  x,
+  group_var,
+  value_var,
+  fun = sum,
+  col_names = NULL,
+  prefix = "",
+  suffix = ""
+)
 }
 \arguments{
-\item{dt}{A data.table. (Convert beforehand with \code{data.table::setDT()} if needed.)}
+\item{x}{A data.table, data.frame, or tibble.}
 
-\item{group_var}{Unquoted column(s) used for grouping (e.g., \code{.(grp1, grp2)}).}
+\item{group_var}{Unquoted grouping columns (e.g., \code{.(grp1, grp2)} or \code{c(grp1, grp2)}),
+or a character vector. If missing, a single overall summary is returned.}
 
-\item{value_var}{Unquoted column(s) to summarise.}
+\item{value_var}{Unquoted value column(s) to summarise (same NSE rules as \code{group_var}),
+or a character vector.}
 
-\item{fun}{A summary function such as \code{sum}, \code{mean}, \code{max}. Must return a scalar.}
+\item{fun}{A summary function (e.g., \code{sum}, \code{mean}, \code{max}) that returns a scalar,
+\strong{or} a vector/list of functions with length equal to \code{value_var}.}
+
+\item{col_names}{Optional character vector of output names. Must have the same length
+as \code{value_var}. If omitted, names are auto-generated from \code{prefix}, original name,
+and \code{suffix}.}
+
+\item{prefix, suffix}{Strings to prepend/append when auto-naming output columns.}
 }
 \value{
-A grouped summary data.table, with one row per group and one
-column per statistic.
+A summarised table (same high-level class as the input: data.table /
+data.frame / tibble) with one row per group and one column per summary.
 }
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
 
-Computes summary statistics for selected columns, grouped by one or more
-variables. The function \code{fun} is applied to each value column within each group.
+Compute scalar summaries for one or more value columns, grouped by
+one or more variables. The function \code{fun} is applied to each value
+column \strong{within each group} and must return a length-1 result.
 }
 \details{
 \itemize{
-\item Unlike \code{\link[=add_group_stats]{add_group_stats()}}, this function expects aggregation functions
-that return a scalar (e.g., \code{sum}, \code{mean}, \code{max}).
-\item The result is one row per group, with summary values for each variable.
+\item Unlike \code{\link[=add_group_stats]{add_group_stats()}}, this performs \strong{aggregation}
+(one row per group). \code{fun} should return a scalar (e.g. \code{sum}, \code{mean},
+\code{max}, or a custom length-1 function).
+\item Accepts a single function for all columns, or a vector/list of functions
+mapped elementwise to \code{value_var}.
+\item Works with data.table, data.frame, or tibble. Non-data.table inputs are
+converted internally and restored to the original class on return.
 }
 }
 \examples{
@@ -39,8 +61,19 @@ dt <- data.table::as.data.table(mtcars)
 # Group-wise sums
 summarise_group_stats(dt, .(cyl, vs), value_var = .(hp, drat), fun = sum)
 
-# Group-wise means
-summarise_group_stats(dt, .(cyl), value_var = .(mpg, wt), fun = mean)
+# Group-wise means with custom names
+summarise_group_stats(dt, cyl, value_var = .(mpg, wt), fun = mean,
+                      col_names = c("mpg_mean", "wt_mean"))
+
+# Overall summary (no groups)
+summarise_group_stats(dt, value_var = .(mpg, hp), fun = max)
+
+# Different summary per column (elementwise mapping)
+summarise_group_stats(dt,
+                      group_var = cyl,
+                      value_var = .(mpg, hp, wt),
+                      fun = list(mean, sum, max),
+                      col_names = c("mpg_mean", "hp_sum", "wt_max"))
 }
 
 }

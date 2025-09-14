@@ -1,40 +1,112 @@
-#' Add group-wise cumulative statistics
+#' Add group-wise statistics (class-preserving)
 #'
 #' @description
 #' `r lifecycle::badge("experimental")`
 #'
-#' Adds statistic columns computed **within groups**, typically using
-#' cumulative functions such as [`cumsum()`], [`cumprod()`], [`cummax()`],
-#' or [`cummin()`].
+#' Add one or more statistic columns computed **within groups**. The input can be
+#' a base data.frame, a tibble, or a data.table. Internally this converts to
+#' data.table (via [ensure_dt_env()]) to compute **by reference**, then restores
+#' the original class on return.
 #'
-#' @param dt A data.table (or convert beforehand with `data.table::setDT()`).
-#' @param group_var Columns to group by.
-#' @param value_var Columns to apply the function to.
-#' @param fun A function to apply. Default is `cumsum`
-#' @param prefix A new column's perfix string (if the value_var is "loss",
-#'   the new column is "closs")
+#' @param x A data.frame, tibble, or data.table.
+#' @param group_var Columns to group by (NSE supported: `.(g1, g2)`, `c(g1, g2)`,
+#'   or a character vector).
+#' @param value_var Column(s) that `fun` is applied to (same NSE rules).
+#' @param fun A function (e.g., `sum`, `mean`, `cumsum`) applied to each value
+#'   column, **or** a vector/list of functions the same length as `value_var`
+#'   (elementwise mapping).
+#' @param col_names Optional character vector of output column names. Must have
+#'   the same length as `value_var`. If omitted, names are auto-generated from
+#'   `prefix`, original name, and `suffix`.
+#' @param prefix,suffix Strings to prepend/append when auto-naming. For example,
+#'   if `value_var = "loss"` and `prefix = "c"`, the new column becomes `"closs"`.
+#' @param overwrite Logical; if `FALSE` (default), error when any `col_names`
+#'   already exist in `x`. Set `TRUE` to overwrite.
 #'
-#' @return No return values.
+#' @return An object of the **same class as `x`**, augmented with the new columns.
 #'
 #' @examples
 #' \donttest{
-#' # Cumulative sum within groups
+#' # Works with data.table
 #' dt <- data.table::as.data.table(mtcars)
-#' add_group_stats(dt, group_var = .(cyl), value_var = c(hp, mpg), fun = cumsum)
+#' dt2 <- add_group_stats(dt, group_var = cyl, value_var = c(hp, mpg),
+#'                        fun = cumsum, prefix = "cumsum_")
+#'
+#' # Works with data.frame
+#' df <- mtcars
+#' df2 <- add_group_stats(df, group_var = cyl, value_var = c(hp, mpg),
+#'                        fun = sum, suffix = "_sum")
+#'
+#' # Different function per column (elementwise mapping)
+#' dt3 <- add_group_stats(dt,
+#'                        group_var = cyl,
+#'                        value_var = c(hp, mpg, wt),
+#'                        fun = list(mean, sum, max),
+#'                        col_names = c("hp_mean", "mpg_sum", "wt_max"),
+#'                        overwrite = TRUE)
 #' }
 #'
 #' @export
-add_group_stats <- function(dt, group_var, value_var, fun = cumsum,
-                            prefix = "c") {
+add_group_stats <- function(x,
+                            group_var,
+                            value_var,
+                            fun = sum,
+                            col_names = NULL,
+                            prefix = "",
+                            suffix = "",
+                            overwrite = FALSE) {
   lifecycle::signal_stage("experimental", "add_group_stats()")
-  assert_class(dt, "data.table")
-  # grps <- match_cols(dt, sapply(rlang::enexpr(group_var), rlang::as_name))
-  # vals <- match_cols(dt, sapply(rlang::enexpr(value_var), rlang::as_name))
+
+  # Ensure a data.table backend but preserve original class on return
+  env <- ensure_dt_env(x)
+  dt  <- env$dt
+
+  # Resolve columns (supports NSE or character)
   grps <- capture_names(dt, !!rlang::enquo(group_var))
   vals <- capture_names(dt, !!rlang::enquo(value_var))
-  cols <- sprintf("%s%s", prefix, vals)
-  dt[, `:=`((cols), lapply(.SD, fun)), keyby = grps, .SDcols = vals]
-  dt
+
+  # Validate function
+  funs <- if (rlang::is_function(fun)) {
+    rep(list(fun), length(vals))
+  } else if (is.character(fun)) {
+    lapply(fun, match.fun)
+  } else {
+    fun
+  }
+  if (length(funs) == 1L)
+    funs <- rep(funs, length(vals))
+  if (length(funs) != length(vals))
+    stop("Length of `fun` must be 1 or equal to length of `value_var`.",
+         call. = FALSE)
+
+  # Determine output names
+  out_names <- if (!is.null(col_names)) {
+    if (length(col_names) != length(vals)) {
+      stop("`col_names` must have the same length as `value_var`.",
+           call. = FALSE)
+    }
+    col_names
+  } else {
+    paste0(prefix, vals, suffix)
+  }
+
+  # Overwrite guard
+  dup <- intersect(out_names, names(dt))
+  if (length(dup) > 0 && !overwrite) {
+    stop(
+      "Output column(s) already exist in `x`: ",
+      paste(dup, collapse = ", "),
+      "\nUse `overwrite = TRUE` to replace them.",
+      call. = FALSE
+    )
+  }
+
+  # Compute and assign by reference
+  dt[, `:=`((out_names), Map(function(j, f) f(.SD[[j]]), seq_along(vals), funs)),
+     keyby = grps, .SDcols = vals]
+
+  # Restore original class (if needed) and return
+  env$restore(dt)
 }
 
 #' Summarise group-wise statistics
@@ -42,21 +114,33 @@ add_group_stats <- function(dt, group_var, value_var, fun = cumsum,
 #' @description
 #' `r lifecycle::badge("experimental")`
 #'
-#' Computes summary statistics for selected columns, grouped by one or more
-#' variables. The function `fun` is applied to each value column within each group.
+#' Compute scalar summaries for one or more value columns, grouped by
+#' one or more variables. The function `fun` is applied to each value
+#' column **within each group** and must return a length-1 result.
 #'
 #' @details
-#' - Unlike [add_group_stats()], this function expects aggregation functions
-#'   that return a scalar (e.g., `sum`, `mean`, `max`).
-#' - The result is one row per group, with summary values for each variable.
+#' - Unlike [add_group_stats()], this performs **aggregation**
+#'   (one row per group). `fun` should return a scalar (e.g. `sum`, `mean`,
+#'   `max`, or a custom length-1 function).
+#' - Accepts a single function for all columns, or a vector/list of functions
+#'   mapped elementwise to `value_var`.
+#' - Works with data.table, data.frame, or tibble. Non-data.table inputs are
+#'   converted internally and restored to the original class on return.
 #'
-#' @param dt A data.table. (Convert beforehand with `data.table::setDT()` if needed.)
-#' @param group_var Unquoted column(s) used for grouping (e.g., `.(grp1, grp2)`).
-#' @param value_var Unquoted column(s) to summarise.
-#' @param fun A summary function such as `sum`, `mean`, `max`. Must return a scalar.
+#' @param x A data.table, data.frame, or tibble.
+#' @param group_var Unquoted grouping columns (e.g., `.(grp1, grp2)` or `c(grp1, grp2)`),
+#'   or a character vector. If missing, a single overall summary is returned.
+#' @param value_var Unquoted value column(s) to summarise (same NSE rules as `group_var`),
+#'   or a character vector.
+#' @param fun A summary function (e.g., `sum`, `mean`, `max`) that returns a scalar,
+#'   **or** a vector/list of functions with length equal to `value_var`.
+#' @param col_names Optional character vector of output names. Must have the same length
+#'   as `value_var`. If omitted, names are auto-generated from `prefix`, original name,
+#'   and `suffix`.
+#' @param prefix,suffix Strings to prepend/append when auto-naming output columns.
 #'
-#' @return A grouped summary data.table, with one row per group and one
-#'   column per statistic.
+#' @return A summarised table (same high-level class as the input: data.table /
+#'   data.frame / tibble) with one row per group and one column per summary.
 #'
 #' @examples
 #' \donttest{
@@ -65,53 +149,137 @@ add_group_stats <- function(dt, group_var, value_var, fun = cumsum,
 #' # Group-wise sums
 #' summarise_group_stats(dt, .(cyl, vs), value_var = .(hp, drat), fun = sum)
 #'
-#' # Group-wise means
-#' summarise_group_stats(dt, .(cyl), value_var = .(mpg, wt), fun = mean)
+#' # Group-wise means with custom names
+#' summarise_group_stats(dt, cyl, value_var = .(mpg, wt), fun = mean,
+#'                       col_names = c("mpg_mean", "wt_mean"))
+#'
+#' # Overall summary (no groups)
+#' summarise_group_stats(dt, value_var = .(mpg, hp), fun = max)
+#'
+#' # Different summary per column (elementwise mapping)
+#' summarise_group_stats(dt,
+#'                       group_var = cyl,
+#'                       value_var = .(mpg, hp, wt),
+#'                       fun = list(mean, sum, max),
+#'                       col_names = c("mpg_mean", "hp_sum", "wt_max"))
 #' }
 #'
 #' @export
-summarise_group_stats <- function(dt, group_var, value_var, fun = sum) {
+summarise_group_stats <- function(x,
+                                  group_var,
+                                  value_var,
+                                  fun = sum,
+                                  col_names = NULL,
+                                  prefix = "",
+                                  suffix = "") {
   lifecycle::signal_stage("experimental", "summarise_group_stats()")
-  # grps <- match_cols(dt, sapply(rlang::enexpr(group_var), rlang::as_name))
-  # vals <- match_cols(dt, sapply(rlang::enexpr(value_var), rlang::as_name))
-  grps <- capture_names(dt, !!rlang::enquo(group_var))
+
+  # Ensure data.table backend but do NOT mutate the user's object
+  env <- ensure_dt_env(x)  # returns list(dt, restore, inplace)
+  dt  <- env$dt
+
+  # Resolve columns (supports NSE or character vectors)
   vals <- capture_names(dt, !!rlang::enquo(value_var))
-  dt[, lapply(.SD, fun), keyby = grps, .SDcols = vals]
+  grps <- if (!missing(group_var)) {
+    capture_names(dt, !!rlang::enquo(group_var))
+  } else {
+    character(0)
+  }
+
+  # Validate fun
+  funs <- if (rlang::is_function(fun)) {
+    rep(list(fun), length(vals))
+  } else if (is.character(fun)) {
+    lapply(fun, match.fun)
+  } else {
+    fun
+  }
+  if (length(funs) == 1L)
+    funs <- rep(funs, length(vals))
+  if (length(funs) != length(vals))
+    stop("Length of `fun` must be 1 or equal to length of `value_var`.",
+         call. = FALSE)
+
+  # Determine output names
+  out_names <- if (!is.null(col_names)) {
+    if (length(col_names) != length(vals)) {
+      stop("`col_names` must have the same length as `value_var`.", call. = FALSE)
+    }
+    col_names
+  } else {
+    paste0(prefix, vals, suffix)
+  }
+
+  # Compute summary (by = if groups present, else overall)
+  j_expr <- quote({
+    res <- Map(function(j, f) f(.SD[[j]]), seq_along(vals), funs)
+    as.list(res)
+  })
+
+  if (length(grps)) {
+    res <- dt[, eval(j_expr), by = grps, .SDcols = vals]
+  } else {
+    res <- dt[, eval(j_expr), .SDcols = vals] # no group
+  }
+
+  # Rename summary columns
+  idx_names <- seq(from = length(grps) + 1L, length.out = length(vals))
+  data.table::setnames(res, old = names(res)[idx_names], new = out_names)
+
+  # Restore to original class of `x`
+  env$restore(res)
 }
 
-#' Compute frequency proportions
+#' Frequency and proportion table
 #'
 #' @description
 #' `r lifecycle::badge("experimental")`
 #'
-#' Given a vector, compute the relative frequency of each unique value
-#' and return the result as a data.frame.
+#' For a given vector, compute the absolute frequency (`n`) and relative
+#' proportion (`prop`) of each unique value. Returns the result as a
+#' [data.table][data.table::data.table].
 #'
-#' @param x A vector (numeric, character, or factor).
+#' @param x A vector (numeric, character, factor, or logical).
 #'
-#' @return A data.table with unique values and their proportions.
+#' @return A `data.table` with columns:
+#' \describe{
+#'   \item{value}{Unique values of `x`}
+#'   \item{n}{Absolute frequency (count)}
+#'   \item{prop}{Relative frequency (proportion, sum to 1)}
+#' }
 #'
 #' @examples
 #' \donttest{
-#' # Frequency proportions
-#' x <- sample(1:10, 1000, replace = TRUE)
-#' freq_prop(x)
+#' # Numeric input
+#' x <- sample(1:5, 20, replace = TRUE)
+#' freq_table(x)
+#'
+#' # Character input
+#' y <- sample(letters[1:3], 10, replace = TRUE)
+#' freq_table(y)
+#'
+#' # Factor input
+#' z <- factor(c("low","medium","high","low"))
+#' freq_table(z)
 #' }
 #'
 #' @export
-freq_prop <- function(x) {
-  lifecycle::signal_stage("experimental", "freq_prop()")
+freq_table <- function(x) {
+  lifecycle::signal_stage("experimental", "freq_table()")
   op <- options(scipen = 14L)
-  on.exit(op)
+  on.exit(options(op), add = TRUE)
+
   freq <- table(x)
   prop <- prop.table(freq)
+
   df <- as.data.table(freq)
   dp <- as.data.table(prop)
-  data.table::setnames(df, c("x", "freq"))
-  data.table::setnames(dp, c("x", "prop"))
-  prop <- NULL
-  df[dp, prop := prop, on = .(x)]
-  df[]
+
+  data.table::setnames(df, c("value", "n"))
+  data.table::setnames(dp, c("value", "prop"))
+
+  value <- NULL
+  df[dp, on = .(value)]
 }
 
 

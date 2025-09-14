@@ -2,37 +2,71 @@
 % Please edit documentation in R/group.R
 \name{add_group_stats}
 \alias{add_group_stats}
-\title{Add group-wise cumulative statistics}
+\title{Add group-wise statistics (class-preserving)}
 \usage{
-add_group_stats(dt, group_var, value_var, fun = cumsum, prefix = "c")
+add_group_stats(
+  x,
+  group_var,
+  value_var,
+  fun = sum,
+  col_names = NULL,
+  prefix = "",
+  suffix = "",
+  overwrite = FALSE
+)
 }
 \arguments{
-\item{dt}{A data.table (or convert beforehand with \code{data.table::setDT()}).}
+\item{x}{A data.frame, tibble, or data.table.}
 
-\item{group_var}{Columns to group by.}
+\item{group_var}{Columns to group by (NSE supported: \code{.(g1, g2)}, \code{c(g1, g2)},
+or a character vector).}
 
-\item{value_var}{Columns to apply the function to.}
+\item{value_var}{Column(s) that \code{fun} is applied to (same NSE rules).}
 
-\item{fun}{A function to apply. Default is \code{cumsum}}
+\item{fun}{A function (e.g., \code{sum}, \code{mean}, \code{cumsum}) applied to each value
+column, \strong{or} a vector/list of functions the same length as \code{value_var}
+(elementwise mapping).}
 
-\item{prefix}{A new column's perfix string (if the value_var is "loss",
-the new column is "closs")}
+\item{col_names}{Optional character vector of output column names. Must have
+the same length as \code{value_var}. If omitted, names are auto-generated from
+\code{prefix}, original name, and \code{suffix}.}
+
+\item{prefix, suffix}{Strings to prepend/append when auto-naming. For example,
+if \code{value_var = "loss"} and \code{prefix = "c"}, the new column becomes \code{"closs"}.}
+
+\item{overwrite}{Logical; if \code{FALSE} (default), error when any \code{col_names}
+already exist in \code{x}. Set \code{TRUE} to overwrite.}
 }
 \value{
-No return values.
+An object of the \strong{same class as \code{x}}, augmented with the new columns.
 }
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
 
-Adds statistic columns computed \strong{within groups}, typically using
-cumulative functions such as \code{\link[=cumsum]{cumsum()}}, \code{\link[=cumprod]{cumprod()}}, \code{\link[=cummax]{cummax()}},
-or \code{\link[=cummin]{cummin()}}.
+Add one or more statistic columns computed \strong{within groups}. The input can be
+a base data.frame, a tibble, or a data.table. Internally this converts to
+data.table (via \code{\link[=ensure_dt_env]{ensure_dt_env()}}) to compute \strong{by reference}, then restores
+the original class on return.
 }
 \examples{
 \donttest{
-# Cumulative sum within groups
+# Works with data.table
 dt <- data.table::as.data.table(mtcars)
-add_group_stats(dt, group_var = .(cyl), value_var = c(hp, mpg), fun = cumsum)
+dt2 <- add_group_stats(dt, group_var = cyl, value_var = c(hp, mpg),
+                       fun = cumsum, prefix = "cumsum_")
+
+# Works with data.frame
+df <- mtcars
+df2 <- add_group_stats(df, group_var = cyl, value_var = c(hp, mpg),
+                       fun = sum, suffix = "_sum")
+
+# Different function per column (elementwise mapping)
+dt3 <- add_group_stats(dt,
+                       group_var = cyl,
+                       value_var = c(hp, mpg, wt),
+                       fun = list(mean, sum, max),
+                       col_names = c("hp_mean", "mpg_sum", "wt_max"),
+                       overwrite = TRUE)
 }
 
 }
