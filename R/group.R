@@ -106,7 +106,7 @@ add_group_stats <- function(x,
      keyby = grps, .SDcols = vals]
 
   # Restore original class (if needed) and return
-  env$restore(dt)
+  env$restore(dt[])
 }
 
 #' Summarise group-wise statistics
