@@ -219,8 +219,11 @@ check_col_spec <- function(df, col_spec) {
 
   # full join by column
   merged <- merge(df_act, df_exp, by = "column", all = TRUE)
-  cols_order <- c(cols_exp, setdiff(cols_act, cols_exp))
-  merged <- merged[match(cols_order, merged$column),]
+  cols_ord <- c(cols_exp, setdiff(cols_act, cols_exp))
+  ord <- match(cols_ord, merged$column)
+  ord <- ord[!is.na(ord)]
+  merged <- merged[ord,]
+  rownames(merged) <- NULL
 
   # status
   merged$status <- ifelse(
