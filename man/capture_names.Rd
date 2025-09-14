@@ -7,7 +7,7 @@
 capture_names(data, cols)
 }
 \arguments{
-\item{data}{A data frame (or tibble/data.table) whose column names are
+\item{data}{A data.frame (or tibble/data.table) whose column names are
 used for validation.}
 
 \item{cols}{Column specification. Can be:

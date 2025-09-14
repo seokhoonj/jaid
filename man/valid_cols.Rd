@@ -7,7 +7,7 @@
 valid_cols(df, cols)
 }
 \arguments{
-\item{df}{A data frame.}
+\item{df}{A data.frame.}
 
 \item{cols}{A character vector of column names to validate.}
 }

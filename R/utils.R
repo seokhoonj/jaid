@@ -91,7 +91,7 @@ regex_cols <- function(df, pattern) {
 #'
 #' Return the columns of a data frame that are **not** in a specified list.
 #'
-#' @param df A data frame.
+#' @param df A data.frame.
 #' @param cols A character vector of column names.
 #'
 #' @return A character vector of column names in `df` but not in `cols`.
@@ -108,7 +108,7 @@ diff_cols <- function(df, cols)
 #' Check whether a data frame contains all of the specified columns.
 #' Throws an error if any are missing.
 #'
-#' @param df A data frame.
+#' @param df A data.frame.
 #' @param cols A character vector of column names to validate.
 #'
 #' @return No return value. Called for side effects.
@@ -120,7 +120,9 @@ diff_cols <- function(df, cols)
 valid_cols <- function(df, cols) {
   missing_cols <- setdiff(cols, colnames(df))
   if (length(missing_cols) > 0) {
-    stop("The following columns are missing: ", paste(missing_cols, collapse = ", "))
+    stop("The following columns are missing: ",
+         paste(missing_cols, collapse = ", "),
+         call. = FALSE)
   }
 }
 
@@ -180,7 +182,7 @@ check_col_spec <- function(df, col_spec) {
   exp_cols <- names(col_spec)
   actual <- vapply(df, function(x) class(x)[1L], character(1L))
 
-  # # data.table
+  # data.table
   # act_dt <- data.table::as.data.table(actual, keep.rownames = "column")
   # exp_dt <- data.table::data.table(column = names(col_spec), expected = unlist(col_spec))
   # dt <- data.table::rbindlist(
@@ -254,7 +256,7 @@ check_col_spec <- function(df, col_spec) {
       stat,
       match = paste(sub$column, collapse = ", "),
       mismatch = paste0(
-        sub$column, " (", sub$actual, " → ", sub$expected,
+        sub$column, " (", sub$actual, " \u2192 ", sub$expected,
         ifelse(!is.na(sub$note), paste0(": ", sub$note), ""), ")",
         collapse = ", "
       ),

@@ -134,7 +134,7 @@ trace_arg_expr <- function(x, stop_at, verbose = FALSE, skip_shiny = TRUE,
 
   # if the very first expr is not a language object, fallback immediately
   if (!(is.symbol(expr) || is.call(expr))) {
-    if (verbose) cat(sprintf("initial expr is a literal/value -> fallback '%s'\n", fallback))
+    if (verbose) cat(sprintf("initial expr is a literal/value \u2192 fallback '%s'\n", fallback))
     return(fallback)
   }
 
@@ -175,7 +175,7 @@ trace_arg_expr <- function(x, stop_at, verbose = FALSE, skip_shiny = TRUE,
     if (.is_skip_fn(fn_name) || is.primitive(fn)) {
       if (verbose) {
         cat(sprintf(prefix, i),
-            sprintf("skipped - wrapper/primitive (%s) -> fallback '%s'\n",
+            sprintf("skipped - wrapper/primitive (%s) \u2192 fallback '%s'\n",
                     fn_name, fallback))
       }
       return(fallback)
@@ -207,7 +207,7 @@ trace_arg_expr <- function(x, stop_at, verbose = FALSE, skip_shiny = TRUE,
     # if this is the last frame (i == 1) and not skipped, fallback.
     if (i == 1L && .is_skip_fn(fn_name)) {
       if (verbose)
-        cat(sprintf("expression not traceable at top frame -> fallback '%s'\n",
+        cat(sprintf("expression not traceable at top frame \u2192 fallback '%s'\n",
                     fallback))
       return(fallback)
     }

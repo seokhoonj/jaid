@@ -9,7 +9,7 @@
 #' calls like `c(a, b)` or `.(a, b)`). It ensures that only valid column
 #' names are returned.
 #'
-#' @param data A data frame (or tibble/data.table) whose column names are
+#' @param data A data.frame (or tibble/data.table) whose column names are
 #'   used for validation.
 #' @param cols Column specification. Can be:
 #'   - A character vector of column names (e.g. `c("x", "y")`).
@@ -230,41 +230,5 @@ capture_chr <- function(x) {
     return(x)
 
   stop("`x` must be a symbol or a call like c(a, b) / list(a, b) / .(a, b).",
-       call. = FALSE)
-}
-
-# expr(언어 객체) -> 이름 벡터 (data가 있으면 숫자 인덱스도 허용)
-.expr_to_names <- function(expr, data = NULL) {
-  # 심볼: a -> "a"
-  if (rlang::is_symbol(expr)) {
-    return(rlang::as_name(expr))
-  }
-
-  # 숫자 상수: 1, 2L, c(1,3) 의 개별 원소 처리
-  if (is.numeric(expr)) {
-    if (is.null(data))
-      stop("Numeric indices found but `data` is missing to resolve names.", call. = FALSE)
-    idx <- as.integer(expr)
-    if (any(idx < 1L | idx > ncol(data)))
-      stop("Some indices are out of bounds for `data`.", call. = FALSE)
-    return(names(data)[idx])
-  }
-
-  # 문자 상수: "a" -> "a"
-  if (is.character(expr)) {
-    return(expr)
-  }
-
-  # c()/list()/.(...) : 재귀 처리
-  if (rlang::is_call(expr)) {
-    fn <- tryCatch(rlang::as_string(rlang::call_name(expr)), error = function(...) "")
-    if (fn %in% c("c", "list", ".")) {
-      args <- rlang::call_args(expr)
-      out <- unlist(lapply(args, .expr_to_names, data = data), use.names = FALSE)
-      return(out)
-    }
-  }
-
-  stop("`expr` must be a symbol, numeric/character, or a call like .(a, b) / c(a, b) / list(a, b).",
        call. = FALSE)
 }
