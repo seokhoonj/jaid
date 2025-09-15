@@ -5,7 +5,7 @@
 \title{Search files for lines containing a given pattern}
 \usage{
 find_in_files(
-  path = getwd(),
+  path,
   word,
   recursive = TRUE,
   ignore_case = TRUE,

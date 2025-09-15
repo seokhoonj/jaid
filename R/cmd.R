@@ -57,6 +57,7 @@ mkdir <- function(folder = c("dev", "data", "info", "inst", "output", "R",
 #'   will be empty).
 #'
 #' @param path Character scalar. Path to a folder, file, or glob pattern.
+#'   If missing, defaults to the current working directory (`getwd()`).
 #' @param word Character scalar. Pattern to search for. If `fixed = TRUE`, the
 #'   pattern is matched literally, not as a regular expression.
 #' @param recursive Logical. Whether to search subdirectories when `path` is a folder.
@@ -87,13 +88,15 @@ mkdir <- function(folder = c("dev", "data", "info", "inst", "output", "R",
 #' }
 #'
 #' @export
-find_in_files <- function(path = getwd(),
+find_in_files <- function(path,
                           word,
                           recursive = TRUE,
                           ignore_case = TRUE,
                           show_lines = TRUE,
                           fixed = FALSE,
                           skip_extensions) {
+  if (missing(path))
+    path <- getwd()
 
   if (missing(skip_extensions)) {
     skip_extensions <- list(
@@ -198,6 +201,7 @@ find_in_files <- function(path = getwd(),
 #' with another string. Works on multiple files, supports regex or fixed search.
 #'
 #' @param path Character scalar. Path to a folder, file, or glob pattern.
+#'   If missing, defaults to the current working directory (`getwd()`).
 #' @param word Character scalar. Pattern to search for.
 #' @param replacement Character scalar. Replacement text.
 #' @param recursive Logical. Search subdirectories? Default TRUE.
@@ -210,7 +214,7 @@ find_in_files <- function(path = getwd(),
 #'
 #' @return Invisibly, a list with file names and number of replacements.
 #' @export
-replace_in_files <- function(path = getwd(),
+replace_in_files <- function(path,
                              word,
                              replacement,
                              recursive = TRUE,

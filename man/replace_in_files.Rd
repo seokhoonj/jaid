@@ -5,7 +5,7 @@
 \title{Find and replace text in files}
 \usage{
 replace_in_files(
-  path = getwd(),
+  path,
   word,
   replacement,
   recursive = TRUE,
