@@ -36,7 +36,7 @@
 #'   has_length is_call is_quosure is_symbol quo_is_null
 #' @importFrom scales comma
 #' @importFrom stats IQR median sd
-#' @importFrom stringi stri_enc_toutf32 stri_trans_general
+#' @importFrom stringi stri_detect_regex stri_enc_toutf32 stri_trans_general
 #' @importFrom stringr str_pad
 #' @importFrom tibble as_tibble
 #' @importFrom usethis ui_path ui_yeah
