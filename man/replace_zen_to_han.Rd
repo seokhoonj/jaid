@@ -2,24 +2,40 @@
 % Please edit documentation in R/lang.R
 \name{replace_zen_to_han}
 \alias{replace_zen_to_han}
-\title{Convert full-width to half-width for data.table columns}
+\title{Convert full-width to half-width in data.frame/data.table}
 \usage{
 replace_zen_to_han(df)
 }
 \arguments{
-\item{df}{A data.table. Modified in place.}
+\item{df}{A data.frame, tibble, or data.table.}
 }
 \value{
-The updated data.table.
+The updated object, with the same class as \code{df} (modified in place
+if \code{df} is a data.table).
 }
 \description{
-Renames columns using \code{\link[=zen_to_han]{zen_to_han()}} and also converts the contents of any
-columns that contain Japanese text (as determined by \code{\link[=is_japanese]{is_japanese()}}).
+This function renames columns using \code{\link[=zen_to_han]{zen_to_han()}} and also converts the
+contents of any columns that contain Japanese text (as determined by
+\code{\link[=is_japanese]{is_japanese()}}).
+}
+\details{
+\itemize{
+\item If the input is a \code{data.table}, it will be modified \strong{in place}.
+\item If the input is a \code{data.frame} or tibble, a copy is made internally and
+the original is left unchanged. The result is returned as the same class
+as the input.
+}
 }
 \examples{
 \dontrun{
-df <- data.table::data.table("Ａ" = c("Ａ", "Ｂ"))
+# data.frame input → returns a modified copy
+df <- data.frame("Ａ" = c("Ａ", "Ｂ"))
 replace_zen_to_han(df)
+
+# data.table input → modified in place
+dt <- data.table::data.table("Ａ" = c("Ａ", "Ｂ"))
+replace_zen_to_han(dt)
+dt  # column names and values converted
 }
 
 }
