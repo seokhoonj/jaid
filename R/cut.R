@@ -20,7 +20,7 @@
 #' @param cutoff Logical; if `TRUE`, the upper break is forced to the
 #'   observed maximum + 1, so the top band ends right above the maximum.
 #'   Default `FALSE`.
-#' @param label_type Label style for the band levels; one of:
+#' @param label_style Label style for the band levels; one of:
 #'   - `"close"` (default): `"a-b"` for all bands
 #'   - `"open"`: first band `"-b"`, last band `"a-"`
 #'   - `"open.start"`: first band `"-b"` only
@@ -54,15 +54,15 @@
 #' add_band(df, disp, breaks = c(0, 150, 250, 400, 600))
 #'
 #' # Open-ended labels at both ends
-#' add_band(df, qsec, interval = 2, label_type = "open")
+#' add_band(df, qsec, interval = 2, label_style = "open")
 #' }
 #'
 #' @export
 add_band <- function(df, num_var, breaks, interval = 5, right = FALSE,
                      col_nm, cutoff = FALSE,
-                     label_type = c("close", "open.start", "open", "open.end")) {
+                     label_style = c("close", "open.start", "open", "open.end")) {
   jaid::assert_class(df, "data.frame")
-  label_type <- match.arg(label_type)
+  label_style <- match.arg(label_style)
 
   env <- ensure_dt_env(df)
   dt  <- env$dt
@@ -95,12 +95,12 @@ add_band <- function(df, num_var, breaks, interval = 5, right = FALSE,
   labels <- sprintf("%d-%d", s, e)
 
   # apply open/closed label style
-  if (label_type == "open") {
+  if (label_style == "open") {
     labels[1L] <- jaid::get_pattern("-[0-9]+", labels[1L])
     labels[length(labels)] <- jaid::get_pattern("[0-9]+-", labels[length(labels)])
-  } else if (label_type == "open.start") {
+  } else if (label_style == "open.start") {
     labels[1L] <- jaid::get_pattern("-[0-9]+", labels[1L])
-  } else if (label_type == "open.end") {
+  } else if (label_style == "open.end") {
     labels[length(labels)] <- jaid::get_pattern("[0-9]+-", labels[length(labels)])
   }
   levels(col_band) <- labels

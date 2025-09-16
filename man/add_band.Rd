@@ -12,7 +12,7 @@ add_band(
   right = FALSE,
   col_nm,
   cutoff = FALSE,
-  label_type = c("close", "open.start", "open", "open.end")
+  label_style = c("close", "open.start", "open", "open.end")
 )
 }
 \arguments{
@@ -37,7 +37,7 @@ right-closed \verb{(a, b]}; if \code{FALSE} (default), left-closed \verb{[a, b)}
 observed maximum + 1, so the top band ends right above the maximum.
 Default \code{FALSE}.}
 
-\item{label_type}{Label style for the band levels; one of:
+\item{label_style}{Label style for the band levels; one of:
 \itemize{
 \item \code{"close"} (default): \code{"a-b"} for all bands
 \item \code{"open"}: first band \code{"-b"}, last band \code{"a-"}
@@ -83,7 +83,7 @@ add_band(df, mpg, interval = 10, right = TRUE, col_nm = "mpg_band")
 add_band(df, disp, breaks = c(0, 150, 250, 400, 600))
 
 # Open-ended labels at both ends
-add_band(df, qsec, interval = 2, label_type = "open")
+add_band(df, qsec, interval = 2, label_style = "open")
 }
 
 }
