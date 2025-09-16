@@ -5,7 +5,7 @@
 \title{Search files for lines containing a given pattern}
 \usage{
 find_in_files(
-  path,
+  path = getwd(),
   word,
   recursive = TRUE,
   ignore_case = TRUE,
@@ -15,7 +15,8 @@ find_in_files(
 )
 }
 \arguments{
-\item{path}{Character scalar. Path to a folder, file, or glob pattern.}
+\item{path}{Character scalar. Path to a folder, file, or glob pattern.
+Default is \code{getwd()}.}
 
 \item{word}{Character scalar. Pattern to search for. If \code{fixed = TRUE}, the
 pattern is matched literally, not as a regular expression.}

@@ -5,7 +5,7 @@
 \title{Find and replace text in files}
 \usage{
 replace_in_files(
-  path,
+  path = getwd(),
   word,
   replacement,
   recursive = TRUE,
@@ -16,7 +16,8 @@ replace_in_files(
 )
 }
 \arguments{
-\item{path}{Character scalar. Path to a folder, file, or glob pattern.}
+\item{path}{Character scalar. Path to a folder, file, or glob pattern.
+Default is \code{getwd()}.}
 
 \item{word}{Character scalar. Pattern to search for.}
 
