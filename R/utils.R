@@ -25,6 +25,38 @@ assert_class <- function(x, class) {
   }
 }
 
+#' Prepend a class to an object
+#'
+#' Ensures that the specified class (or classes) are placed at the
+#' beginning of the object's class vector. If the class already exists,
+#' it is moved to the front without duplication.
+#'
+#' @param x An R object.
+#' @param new_class A character vector of class names to prepend.
+#'
+#' @return The input object `x` with its class attribute updated to have
+#'   `new_class` at the front, followed by its original classes (excluding
+#'   any duplicates).
+#'
+#' @examples
+#' \donttest{
+#' df <- data.frame(a = 1)
+#'
+#' # Prepend a single class
+#' prepend_class(df, "new_class")
+#'
+#' # Prepend multiple classes
+#' prepend_class(df, c("new_class1", "new_class2"))
+#' }
+#'
+#' @export
+prepend_class <- function(x, new_class) {
+  class(x) <- c(new_class, setdiff(class(x), new_class))
+  x
+}
+
+
+
 #' Get column indices
 #'
 #' Return the column numbers corresponding to given column names.
