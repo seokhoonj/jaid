@@ -4,25 +4,39 @@
 \name{jaid-package}
 \alias{jaid}
 \alias{jaid-package}
-\title{jaid: Joo's Functional Aid Toolkit}
+\title{jaid: High-Performance Utilities for Data Analysis and Programming}
 \description{
-Joo's functional aid toolkit for efficient programming.
+J's Aid ("jaid") is a lightweight, performance-oriented toolkit for data
+analysis and programming. It emphasizes memory-efficient operations on large
+vectors/matrices and \strong{\code{data.table}} workflows.
 }
 \details{
+Key features include:
 \itemize{
-\item High-performance vector/matrix utilities backed by C routines
-\item data.table-friendly helpers for in-place, memory-aware transformations
-\item String tools for Japanese text detection and Zenkaku→Hankaku conversion
-\item Convenient I/O wrappers: \code{read_rds()}, \code{read_xl()}, \code{read_wb()}
-\item Date utilities: \code{add_mon()}, \code{add_year()}, \code{bmonth()}/\code{emonth()}, \code{yearmon()}, \code{mondiff()}
-\item Misc: timing (\code{timeit()}), row/column replication
+\item \strong{High-performance vector/matrix utilities (C-backed)}
+Row/column reducers: \code{row_sum()}, \code{row_max()}, \code{row_min()},
+\code{col_sum()}, \code{col_max()}, \code{col_min()}.
+Group-by-name reducers: \code{sum_by_rownames()}, \code{max_by_rownames()},
+\code{min_by_rownames()}, \code{sum_by_colnames()}, \code{max_by_colnames()},
+\code{min_by_colnames()}, and two-way grouping: \code{sum_by_dimnames()}.
+\item \strong{\code{data.table}-friendly helpers}
+In-place, memory-aware transformations designed to avoid unnecessary copies.
+\item \strong{Metaprogramming utilities}
+Argument/name capture and call tracing (e.g., \code{capture_names()},
+\code{trace_arg_expr()}), for building declarative APIs.
+\item \strong{Insurance inpatient (stay) utilities}
+Fast preprocessing of admission/discharge spans:
+\code{collapse_date_ranges()}, \code{count_stay()}, \code{limit_stay()}.
+\item \strong{I/O conveniences}
+Thin wrappers for pragmatic data loading: \code{read_rds()}, \code{read_xl()}, \code{read_wb()}.
+\item \strong{String utilities (Japanese text support)}
+Detection and \strong{Zenkaku → Hankaku} conversion, plus simple regex pattern builders.
 }
 
-Many helpers return new objects; functions that take a data.table typically
-modify in place. See individual function documentation for details.
+Functions that operate on a \strong{\code{data.table}} typically \strong{modify in place};
+most others return new objects. See individual topics for details and examples.
 }
 \author{
 \strong{Maintainer}: Seokhoon Joo \email{seokhoonj@gmail.com}
 
 }
-\keyword{internal}

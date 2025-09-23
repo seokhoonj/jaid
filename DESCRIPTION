@@ -1,13 +1,18 @@
 Package: jaid
-Title: Joo's Functional Aid Toolkit
+Title: High-Performance Utilities for Data Analysis and Programming
 Version: 0.0.0.9002
 Authors@R: 
     person(given = "Seokhoon", family = "Joo", role = c("aut", "cre"),
            email = "seokhoonj@gmail.com")
-Description: High-performance utilities for efficient and productive programming, 
-    including vector and matrix helpers, data.table-friendly in-place transformations, 
-    string tools for Japanese text (e.g., Zenkaku to Hankaku), convenient I/O wrappers, 
-    and date/time helpers. Selected routines are implemented in C for speed.
+Description: 'jaid' (J's Aid) is a functional toolkit designed for efficient 
+    and reproducible programming. It provides high-performance utilities including 
+    vector and matrix helpers, in-place transformations for 'data.table', and 
+    advanced meta-programming tools such as argument capture and call tracing 
+    (e.g., 'capture_names', 'trace_arg_expr'). Core helpers for insurance stay 
+    data handling and preprocessing are also included, serving as a foundation 
+    for more specialized analytical packages. Additional features include string 
+    utilities for Japanese text (e.g., Zenkaku to Hankaku) and convenient I/O 
+    wrappers. Selected routines are implemented in C for speed.
 License: MIT + file LICENSE
 Encoding: UTF-8
 Depends: R (>= 4.1.0)
