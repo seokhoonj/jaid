@@ -2,50 +2,27 @@
 % Please edit documentation in R/names.R
 \name{set_dimnames}
 \alias{set_dimnames}
-\alias{set_rownames}
-\alias{set_colnames}
-\title{Set dimension, row, or column names for a matrix}
+\title{Set the full \code{dimnames} of a matrix.}
 \usage{
 set_dimnames(x, dimnames)
-
-set_rownames(x, rownames)
-
-set_colnames(x, colnames)
 }
 \arguments{
 \item{x}{A matrix.}
 
 \item{dimnames}{A list of length 2: the first element is a character vector
 of row names, the second element is a character vector of column names.}
-
-\item{rownames}{A character vector of row names.}
-
-\item{colnames}{A character vector of column names.}
 }
 \value{
 No return value, called for side effects.
 }
 \description{
-These functions set names on a matrix:
-\itemize{
-\item \code{set_dimnames()} sets both row and column names.
-\item \code{set_rownames()} sets only row names.
-\item \code{set_colnames()} sets only column names.
-}
+This function replaces both row and column names at once
+by assigning the provided \code{dimnames} list directly to the matrix.
 }
 \examples{
 \donttest{
-# Set both row and column names
 x <- matrix(1:9, ncol = 3)
 set_dimnames(x, list(c("r1", "r2", "r3"), c("c1", "c2", "c3")))
-
-# Set only row names
-x <- matrix(1:9, ncol = 3)
-set_rownames(x, c("r1", "r2", "r3"))
-
-# Set only column names
-x <- matrix(1:9, ncol = 3)
-set_colnames(x, c("c1", "c2", "c3"))
 }
 
 }

@@ -61,7 +61,7 @@
 add_band <- function(df, num_var, breaks, interval = 5, right = FALSE,
                      col_nm, cutoff = FALSE,
                      label_style = c("close", "open.start", "open", "open.end")) {
-  jaid::assert_class(df, "data.frame")
+  assert_class(df, "data.frame")
   label_style <- match.arg(label_style)
 
   env <- ensure_dt_env(df)

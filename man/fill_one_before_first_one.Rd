@@ -30,7 +30,7 @@ entries remain unchanged.
 x <- matrix(c(0, 1, 0,
               0, 0, 1,
               1, 0, 1), nrow = 3, byrow = TRUE)
-set_rownames(x, c(1, 1, 2))
+rownames(x) <- c(1, 1, 2)
 
 # Return a modified copy
 fill_one_before_first_one(x)

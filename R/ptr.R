@@ -54,7 +54,7 @@ set_ptr <- function(df, skip_shiny = TRUE) {
     df_name <- trace_arg_expr(df)
     old_class <- class(df)
     data.table::setalloccol(df)
-    set_attr(df, "class", old_class)
+    data.table::setattr(df, "class", old_class)
     assign(df_name, df, envir = parent.frame(n))
   }
 }

@@ -1,177 +1,197 @@
 #include "jaid.h"
 
-// Refer to 'kit'
+// length(unique(x))
 SEXP Unilen(SEXP x) {
   if (isFactor(x)) {
-    const int len = LENGTH(PROTECT(getAttrib(x, R_LevelsSymbol)));
+    const int nlvl = LENGTH(PROTECT(getAttrib(x, R_LevelsSymbol)));
     UNPROTECT(1);
-    bool *count = (bool*)calloc(len+1, sizeof(bool));
+    bool *cnt = (bool*)calloc((size_t)nlvl + 1U, sizeof(bool));
     const int *px = INTEGER(x);
-    const int xlen = LENGTH(x);
-    int j = 0;
-    for (int i = 0; i < xlen; ++i) {
-      if (!count[px[i]]) {
-        j++;
-        if (j == len)
-          break;
-        count[px[i]] = true;
+    const int n = LENGTH(x);
+    int uniq = 0;
+    for (int i = 0; i < n; ++i) {
+      int lvl = px[i];
+      if (!cnt[lvl]) {
+        if (++uniq == nlvl) break;
+        cnt[lvl] = true;
       }
     }
-    free(count);
-    return ScalarInteger(j);
+    free(cnt);
+    return ScalarInteger(uniq);
   }
   if (isLogical(x)) {
-    bool *count = (bool*)calloc(3, sizeof(bool));
+    bool *cnt = (bool*)calloc(3, sizeof(bool));
     const int *px = LOGICAL(x);
-    const int xlen = LENGTH(x);
-    int j = 0;
-    for (int i = 0; i < xlen; ++i) {
-      const int cs = px[i] == NA_LOGICAL ? 2 : px[i];
-      if (!count[cs]) {
-        j++;
-        if (j == 3)
-          break;
-        count[cs] = true;
+    const int n = LENGTH(x);
+    int uniq = 0;
+    for (int i = 0; i < n; ++i) {
+      const int state = (px[i] == NA_LOGICAL) ? 2 : px[i];
+      if (!cnt[state]) {
+        if (++uniq == 3) break;
+        cnt[state] = true;
       }
     }
-    free(count);
-    return ScalarInteger(j);
+    free(cnt);
+    return ScalarInteger(uniq);
   }
+
+  // size
   const R_xlen_t n = xlength(x);
-  const SEXPTYPE tx = UTYPEOF(x);
-  int K;
-  size_t M;
-  if (tx == INTSXP || tx == REALSXP || tx == STRSXP) {
-    const size_t n2 = 2U * (size_t) n;
-    M = 256;
-    K = 8;
-    while (M < n2) {
-      M *= 2;
-      K++;
-    }
-  } else if (tx == LGLSXP) {
-    M = 4;
-    K = 2;
-  } else {
-    error("Type %s is not supported", type2char(tx));
-  }
-  R_xlen_t count = 0;
+  uint32_t K; size_t M;
+  choose_table_size(n, &K, &M);
+  const uint32_t mask = (uint32_t)M - 1U;
+
+  // 0 = empty, otherwise index + 1
   int* h = (int*)calloc(M, sizeof(int));
-  switch(tx) {
+  R_xlen_t uniq = 0;
+
+  switch(TYPEOF(x)) {
   case INTSXP:{
     const int* px = INTEGER(x);
-    size_t id = 0;
+    uint32_t key = 0;
+    uint32_t id = 0;
     for (int i = 0; i < n; ++i) {
-      id = (px[i] == NA_INTEGER) ? 0 : HASH(px[i], K);
+      key = (px[i] == NA_INTEGER) ? 0U : (uint32_t)px[i];
+      id  = hash_index(key, (uint32_t) K, mask);
+      bool found = false;
       while (h[id]) {
         if (px[h[id]-1] == px[i]) {
-          goto ibl;
+          found = true; break;
         }
-        id++; id %= M;
+        id = probe_next(id, mask);
       }
-      h[id] = (int) i + 1;
-      count++;
-      ibl:;
+      if (!found) {
+        h[id] = (int)i + 1;
+        uniq++;
+      }
     }
   } break;
   case REALSXP:{
     const double* px = REAL(x);
-    size_t id = 0;
-    union uno tpv;
-    for (int i = 0; i < n; i++) {
-      tpv.d = R_IsNA(px[i]) ? NA_REAL : (R_IsNaN(px[i]) ? R_NaN : px[i]);
-      id = HASH(tpv.u[0] + tpv.u[1], K);
+    uint32_t key = 0;
+    uint32_t id = 0;
+    for (int i = 0; i < n; ++i) {
+      key = key_from_double(px[i]);
+      id  = hash_index(key, (uint32_t)K, mask);
+      bool found = false;
       while (h[id]) {
-        if (REQUAL(px[h[id]-1], px[i])) {
-          goto rbl;
+        if (safe_equal_dbl(px[h[id]-1], px[i])) {
+          found = true; break;
         }
-        id++; id %= M;
+        id = probe_next(id, mask);
       }
-      h[id] = (int) i + 1;
-      count++;
-      rbl:;
+      if (!found) {
+        h[id] = (int)i + 1;
+        uniq++;
+      }
+    }
+  } break;
+  case CPLXSXP: {
+    const Rcomplex *px = COMPLEX(x);
+    for (R_xlen_t i = 0; i < n; ++i) {
+      uint32_t key = key_from_complex(px[i]);
+      uint32_t id  = hash_index(key, (uint32_t)K, mask);
+      bool found = false;
+      while (h[id]) {
+        if (safe_equal_cplx(px[h[id] - 1], px[i])) {
+          found = true; break;
+        }
+        id = probe_next(id, mask);
+      }
+      if (!found) {
+        h[id] = (int)i + 1;
+        uniq++;
+      }
     }
   } break;
   case STRSXP:{
-    const SEXP *px = STRING_PTR_RO(x); // Not STRING_PTR
-    size_t id = 0;
+    const SEXP *px = STRING_PTR_RO(x);
+    uint32_t key = 0;
+    uint32_t id = 0;
     for (int i = 0; i < n; ++i) {
-      id = HASH(((intptr_t) px[i] & 0xffffffff), K);
+      key = key_from_ptr((const void*)px[i]);
+      id  = hash_index(key, (uint32_t)K, mask);
+      bool found = false;
       while (h[id]) {
-        if (px[h[id] - 1]==px[i]) {
-          goto sbl;
+        if (px[h[id] - 1] == px[i]) {
+          found = true; break;
         }
-        id++; id %=M;
+        id = probe_next(id, mask);
       }
-      h[id] = (int) i + 1;
-      count++;
-      sbl:;
+      if (!found) {
+        h[id] = (int)i + 1;
+        uniq++;
+      }
     }
   } break;
   default:
-    error(_("invalid input"));
+    error("invalid input");
   }
   free(h);
-  return ScalarInteger(count);
+  return ScalarInteger(uniq);
 }
 
 SEXP Reverse(SEXP x) {
-  R_xlen_t i, size;
+  R_xlen_t i, n = XLENGTH(x);
 
-  size = XLENGTH(x);
+  // in-place
   PROTECT(x);
 
-  switch(TYPEOF(x)) {
-  case LGLSXP:{
-    int *ix = LOGICAL(x);
-    int tmp;
-    for (i = 0; i < size/2; ++i) {
-      tmp = ix[i];
-      ix[i] = ix[size-1-i];
-      ix[size-1-i] = tmp;
+  switch (TYPEOF(x)) {
+  case LGLSXP: {
+    int *px = LOGICAL(x);
+    for (i = 0; i < n / 2; ++i) {
+      int tmp = px[i];
+      px[i] = px[n - 1 - i];
+      px[n - 1 - i] = tmp;
     }
   } break;
-  case INTSXP:{
-    int *ix = INTEGER(x);
-    int tmp;
-    for (i = 0; i < size/2; ++i) {
-      tmp = ix[i];
-      ix[i] = ix[size-1-i];
-      ix[size-1-i] = tmp;
+
+  case INTSXP: {
+    int *px = INTEGER(x);
+    for (i = 0; i < n / 2; ++i) {
+      int tmp = px[i];
+      px[i] = px[n - 1 - i];
+      px[n - 1 - i] = tmp;
     }
   } break;
-  case REALSXP:{
-    double *ix = REAL(x);
-    double tmp;
-    for (i = 0; i < size/2; ++i) {
-      tmp = ix[i];
-      ix[i] = ix[size-1-i];
-      ix[size-1-i] = tmp;
+
+  case REALSXP: {
+    double *px = REAL(x);
+    for (i = 0; i < n / 2; ++i) {
+      double tmp = px[i];
+      px[i] = px[n - 1 - i];
+      px[n - 1 - i] = tmp;
     }
   } break;
-  case STRSXP:{
-    /* Previous implementation using STRING_PTR (non-API call to R):
-     SEXP *ptr = STRING_PTR(x);
-     SEXP tmp;
-     for (i = 0; i < size/2; ++i) {
-     tmp = ptr[i];
-     ptr[i] = ptr[size-1-i];
-     ptr[size-1-i] = tmp;
-     }
-     */
-    SEXP tmp;
-    for (i = 0; i < size/2; ++i) {
-      tmp = STRING_ELT(x, i);
-      SET_STRING_ELT(x, i, STRING_ELT(x, size-1-i));
-      SET_STRING_ELT(x, size-1-i, tmp);
+
+  case CPLXSXP: {
+    Rcomplex *px = COMPLEX(x);
+    for (i = 0; i < n / 2; ++i) {
+      Rcomplex tmp = px[i];
+      px[i] = px[n - 1 - i];
+      px[n - 1 - i] = tmp;
     }
   } break;
-  default:
-    error(_("invalid input"));
+
+  case STRSXP: {
+    for (i = 0; i < n / 2; ++i) {
+      SEXP tmp = STRING_ELT(x, i);
+      SET_STRING_ELT(x, i, STRING_ELT(x, n - 1 - i));
+      SET_STRING_ELT(x, n - 1 - i, tmp);
+    }
+  } break;
+
+  default: {
+    UNPROTECT(1);
+    error("invalid input");
   }
+  }
+
   UNPROTECT(1);
   return x;
 }
+
 
 SEXP Interleave(SEXP x, SEXP y) {
   if (TYPEOF(x) != TYPEOF(y))
@@ -187,7 +207,7 @@ SEXP Interleave(SEXP x, SEXP y) {
     int *ys = LOGICAL(y), *ye = ys + XLENGTH(y);
     int *zs = LOGICAL(z);
     int *xi = xs, *yi = ys, *zi = zs;
-    // Traverse both array
+    // Interleave both array
     while (xi < xe && yi < ye) {
       *zi = *xi;
       ++zi, ++xi;
@@ -211,7 +231,7 @@ SEXP Interleave(SEXP x, SEXP y) {
     int *ys = INTEGER(y), *ye = ys + XLENGTH(y);
     int *zs = INTEGER(z);
     int *xi = xs, *yi = ys, *zi = zs;
-    // Traverse both array
+    // Interleave both array
     while (xi < xe && yi < ye) {
       *zi = *xi;
       ++zi, ++xi;
@@ -236,7 +256,7 @@ SEXP Interleave(SEXP x, SEXP y) {
     double *ys = REAL(y), *ye = ys + yn;
     double *zs = REAL(z);
     double *xi = xs, *yi = ys, *zi = zs;
-    // Traverse both array
+    // Interleave both array
     while (xi < xe && yi < ye) {
       *zi = *xi;
       ++zi, ++xi;
@@ -258,7 +278,7 @@ SEXP Interleave(SEXP x, SEXP y) {
     xn = XLENGTH(x), yn = XLENGTH(y);
     PROTECT(z = allocVector(STRSXP, xn+yn));
     i = 0, j = 0, k = 0;
-    // Traverse both array
+    // Interleave both array
     while (j < xn && k < yn) {
       SET_STRING_ELT(z, i++, STRING_ELT(x, j++));
       SET_STRING_ELT(z, i++, STRING_ELT(y, k++));

@@ -27,9 +27,9 @@ current graphics device via \code{grid}.
 }
 \examples{
 \dontrun{
-plot_png(system.file("img", "Rlogo.png", package = "png"),
-         width = grid::unit(0.1, "npc"),
-         height = grid::unit(0.1, "npc"))
+plot_image(system.file("img", "Rlogo.png", package = "png"),
+           width = grid::unit(0.1, "npc"),
+           height = grid::unit(0.1, "npc"))
 }
 
 }

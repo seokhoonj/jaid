@@ -11,7 +11,7 @@ find_in_files(
   ignore_case = TRUE,
   show_lines = TRUE,
   fixed = FALSE,
-  skip_extensions
+  skip_extensions = NULL
 )
 }
 \arguments{
@@ -36,7 +36,7 @@ a regular expression. Default is \code{FALSE}.}
 (e.g., binary files, images, compressed archives, PDFs). Default includes
 common non-text formats such as \code{bin}, \code{dll}, \code{o}, \code{so}, \code{rda}, \code{rds},
 images (\code{jpg}, \code{png}, etc.), compressed files (\code{zip}, \code{tar}, \code{gz}, etc.),
-and \code{pdf}.}
+and \code{pdf}. Default is \code{NULL}.}
 }
 \value{
 A named list. Each element corresponds to one file, and is a data frame

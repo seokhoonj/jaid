@@ -20,9 +20,11 @@ Combine two vectors by interleaving their elements. That is, take one element
 from \code{x}, then one from \code{y}, alternating until both vectors are exhausted.
 }
 \examples{
+\donttest{
 # Interleave two numeric vectors
-\donttest{x <- c(1, 3, 5, 7)
+x <- c(1, 3, 5, 7)
 y <- c(2, 4, 6, 8)
-interleave(x, y)}
+interleave(x, y)
+}
 
 }

@@ -2,23 +2,26 @@
 
 SEXP FillZeroNotFirstPos(SEXP x, SEXP id, SEXP ot) {
   R_xlen_t i, j, k, p, m, n, s, t, col, flag;
-  SEXP pos, ans;
+  SEXP pos, ans, cot;
 
   i = 1, p = 0;
   m = nrows(x), n = ncols(x);
   s = xlength(id), t = xlength(ot);
 
   if (m != s || n != t)
-    error(_("different length"));
+    error("different length");
 
   switch(TYPEOF(x)) {
   case INTSXP:{
-    PROTECT(ans = allocMatrix(INTSXP, m, n));
-    pos = BeforeChangeIndex(id); p = xlength(pos);
-    int* iot = INTEGER(coerceVector(ot, INTSXP)); // one time
+    ans = PROTECT(allocMatrix(INTSXP, m, n));
+    pos = FindGroupBreaks(id); p = xlength(pos);
+    cot = PROTECT(coerceVector(ot, INTSXP));
+    int* iot = INTEGER(cot); // one time
+
     int* ipos = INTEGER(pos);
     int* ix = INTEGER(x);
     int* ians = INTEGER(ans);
+
     for (i = 0; i < n; ++i) {
       if (iot[i] == 1) {
         col = i * m;
@@ -42,9 +45,10 @@ SEXP FillZeroNotFirstPos(SEXP x, SEXP id, SEXP ot) {
     }
   } break;
   case REALSXP:{
-    PROTECT(ans = allocMatrix(REALSXP, m, n));
-    pos = BeforeChangeIndex(id); p = xlength(pos);
-    int* iot = INTEGER(coerceVector(ot, INTSXP)); // one time
+    ans = PROTECT(allocMatrix(REALSXP, m, n));
+    pos = PROTECT(FindGroupBreaks(id)); p = xlength(pos);
+    cot = PROTECT(coerceVector(ot, INTSXP));
+    int* iot = INTEGER(cot); // one time
     int* ipos = INTEGER(pos);
     double* ix = REAL(x);
     double* ians = REAL(ans);
@@ -71,16 +75,16 @@ SEXP FillZeroNotFirstPos(SEXP x, SEXP id, SEXP ot) {
     }
   } break;
   default:
-    error(_("invalid input"));
+    error("invalid input");
   }
-  CopyDimNames(x, ans);
-  UNPROTECT(1);
+  copy_dimnames(x, ans);
+  UNPROTECT(3);
   return ans;
 }
 
 SEXP SetZeroNotFirstPos(SEXP x, SEXP id, SEXP ot) {
   R_xlen_t i, j, k, p, m, n, s, t, col, flag;
-  SEXP pos;
+  SEXP pos, cot;
 
   i = 1, p = 0;
   m = nrows(x), n = ncols(x), s = xlength(id), t = xlength(ot);
@@ -90,10 +94,13 @@ SEXP SetZeroNotFirstPos(SEXP x, SEXP id, SEXP ot) {
 
   switch(TYPEOF(x)) {
   case INTSXP:{
-    pos = BeforeChangeIndex(id); p = xlength(pos);
+    pos = PROTECT(FindGroupBreaks(id)); p = xlength(pos);
+    cot = coerceVector(ot, INTSXP);
+    int* iot = INTEGER(cot);
+
     int* ix = INTEGER(x);
-    int* iot = INTEGER(coerceVector(ot, INTSXP));
     int* ipos = INTEGER(pos);
+
     for (i = 0; i < n; ++i) {
       if (iot[i] == 1) {
         col = i * m;
@@ -112,9 +119,11 @@ SEXP SetZeroNotFirstPos(SEXP x, SEXP id, SEXP ot) {
     }
   } break;
   case REALSXP:{
-    pos = BeforeChangeIndex(id); p = xlength(pos);
+    pos = PROTECT(FindGroupBreaks(id)); p = xlength(pos);
+    cot = coerceVector(ot, INTSXP);
+    int* iot = INTEGER(cot); // one time
+
     double* ix = REAL(x);
-    int* iot = INTEGER(coerceVector(ot, INTSXP)); // one time
     int* ipos = INTEGER(pos);
     for (i = 0; i < n; ++i) {
       if (iot[i] == 1) {
@@ -134,8 +143,10 @@ SEXP SetZeroNotFirstPos(SEXP x, SEXP id, SEXP ot) {
     }
   } break;
   default:
-    error(_("invalid input"));
+    error("invalid input");
   }
+  UNPROTECT(2);
+
   return x;
 }
 
@@ -146,7 +157,7 @@ SEXP FillOneBeforeFirstOne(SEXP x, SEXP id) {
   m = nrows(x), n = ncols(x), p = XLENGTH(id);
 
   if (m != p)
-    error(_("different length"));
+    error("different length");
 
   if (TYPEOF(id) != STRSXP)
     id = coerceVector(id, STRSXP);
@@ -195,9 +206,9 @@ SEXP FillOneBeforeFirstOne(SEXP x, SEXP id) {
     }
   } break;
   default:
-    error(_("invalid input"));
+    error("invalid input");
   }
-  CopyDimNames(x, ans);
+  copy_dimnames(x, ans);
   UNPROTECT(1);
   return ans;
 }
@@ -253,7 +264,7 @@ SEXP SetOneBeforeFirstOne(SEXP x, SEXP id) {
     }
   } break;
   default:
-    error(_("invalid input"));
+    error("invalid input");
   }
   UNPROTECT(1);
   return x;

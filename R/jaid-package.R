@@ -13,7 +13,6 @@
 #' modify in place. See individual function documentation for details.
 #'
 #' @useDynLib jaid, .registration = TRUE
-#' @importFrom Rcpp sourceCpp
 #' @importFrom cli cat_bullet cat_line cat_rule cli_alert col_cyan col_green
 #' cli_h2 col_red cli_text col_yellow rule style_bold style_hyperlink
 #' @importFrom data.table `:=` `.SD` `%chin%` address as.data.table copy
@@ -27,7 +26,6 @@
 #' @importFrom openxlsx addStyle addWorksheet createStyle createWorkbook
 #' getSheetNames insertImage insertPlot readWorkbook saveWorkbook setColWidths
 #' writeData
-#' @importFrom png readPNG
 #' @importFrom readxl excel_sheets read_excel readxl_progress
 #' @importFrom reticulate conda_create conda_list install_miniconda
 #' install_python py_config py_install use_condaenv use_virtualenv

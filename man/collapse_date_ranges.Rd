@@ -2,69 +2,92 @@
 % Please edit documentation in R/date.R
 \name{collapse_date_ranges}
 \alias{collapse_date_ranges}
-\title{Collapse overlapping (or near-adjacent) date ranges by ID}
+\title{Collapse overlapping (or near-adjacent) date ranges by (id, group)}
 \usage{
 collapse_date_ranges(
   df,
   id_var,
+  group_var,
   merge_var,
   from_var,
   to_var,
-  interval = 0,
+  interval = 0L,
   collapse = "|"
 )
 }
 \arguments{
-\item{df}{A \code{data.table} containing date ranges.}
+\item{df}{A data.frame or data.table containing date ranges.}
 
 \item{id_var}{One or more ID columns (bare names). Ranges are merged within each unique ID.}
 
+\item{group_var}{Optional additional grouping columns (bare names).}
+
 \item{merge_var}{Optional columns (bare names) whose values will be collapsed
-over the merged range (see \code{collapse}).}
+over the merged range; duplicates and \code{NA} are removed before collapsing.}
 
 \item{from_var}{Start-date column (bare name). Must be \code{Date} (days).}
 
 \item{to_var}{End-date column (bare name). Must be \code{Date} (days, inclusive).}
 
-\item{interval}{Non-negative number of \strong{days} allowed between the previous
-end date and the next start date to still be merged. For example,
-\code{interval = 0} merges touching ranges (end + 1 day == next start).}
+\item{interval}{Integer gap (in days) allowed between consecutive ranges to still merge.
+Use \code{0} to merge touching ranges, positive values to allow gaps, and \strong{\code{-1} to require
+actual overlap} (touching ranges are \emph{not} merged).}
 
-\item{collapse}{Character delimiter used to combine \code{merge_var} values.
-Defaults to \code{"|"}. Duplicates and \code{NA} are removed before collapsing.}
+\item{collapse}{Character delimiter used to combine \code{merge_var} values (default \code{"|"}).}
 }
 \value{
-A \code{data.table} with merged, non-overlapping date ranges. The output
-contains the ID columns, any \code{merge_var} columns (collapsed), the original
-date columns (\code{from_var}, \code{to_var}), and a \code{stay} column giving the number
-of inclusive days in each merged range.
+A data.table with merged, non-overlapping date ranges. The output contains:
+\itemize{
+\item the grouping keys (\code{id_var}, \code{group_var}),
+\item the merged date columns (\code{from_var}, \code{to_var}),
+\item the \code{stay} column = number of inclusive days in each merged range,
+\item and the collapsed \code{merge_var} columns if provided.
+}
 }
 \description{
 Merges multiple date ranges that either overlap or are within a user-defined
-gap (\code{interval} days) \strong{within each ID group}. Optionally collapses one or
-more columns (\code{merge_var}) by concatenating unique values.
+gap (\code{interval} days) \emph{within each (id, group) block}. Optionally collapses
+one or more columns (\code{merge_var}) by concatenating unique values.
 }
 \details{
 \itemize{
-\item Input is internally sorted by \code{id_var}, \code{from_var}, \code{to_var}.
+\item Input is internally sorted by \code{id_var}, \code{group_var}, \code{from_var}, \code{to_var}.
 \item Dates are treated as \strong{inclusive}; adjacency is tested against \code{to + 1}.
-\item \code{interval} must be \verb{>= 0} and is interpreted in whole days.
-\item Requires \code{data.table}. The merging index is computed in C for speed.
+\item \code{interval} is a single integer and must be \verb{>= -1}.
+\item Using \code{data.table} is recommended for performance; base data.frame also works.
+\item The merging index is computed in C (via \code{.Call(IndexOverlappingDateRanges, ...)}) for speed.
 }
 }
 \examples{
 \donttest{
-id <- c("A","A","B")
-work <- c("cleansing","analysis","cleansing")
-sdate <- as.Date(c("2022-03-01","2022-03-05","2022-03-08"))
-edate <- as.Date(c("2022-03-06","2022-03-09","2022-03-10"))
-dt <- data.table::data.table(id = id, work = work, sdate = sdate, edate = edate)
+id <- c("A","A","B","B")
+group <- c("x","x","y","y")
+work  <- c("cleansing", "analysis", "cleansing", "QA")
+from <- as.Date(c("2022-03-01","2022-03-05","2022-03-08","2022-03-12"))
+to <- as.Date(c("2022-03-06","2022-03-09","2022-03-10","2022-03-15"))
+dt <- data.table::data.table(id = id, group = group, work = work,
+                             from = from, to = to)
 
-# Merge overlapping or touching ranges (interval = 0)
-collapse_date_ranges(dt, id, work, sdate, edate, interval = 0)
+# Merge touching ranges (interval = 0)
+collapse_date_ranges(
+  dt, id_var = id, group_var = group, merge_var = work,
+  from_var = from, to_var = to,
+  interval = 0
+)
 
-# Allow gaps up to 2 days to merge, and use comma to collapse labels
-collapse_date_ranges(dt, id, work, sdate, edate, interval = 2, collapse = ", ")
+# Require actual overlap (touching ranges NOT merged): interval = -1
+collapse_date_ranges(
+  dt, id_var = id, group_var = group, merge_var = work,
+  from_var = from, to_var = to,
+  interval = -1
+)
+
+# Allow up to 2-day gaps
+collapse_date_ranges(
+  dt, id_var = id, group_var = group, merge_var = work,
+  from_var = from, to_var = to,
+  interval = 2, collapse = ", "
+)
 }
 
 }

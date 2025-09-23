@@ -155,85 +155,190 @@ mondiff <- function(sdate, edate, day_limit = c(0:31)) {
     de <- ifelse(data.table::mday(edate) <  day_limit[1L], 1, 0)
   }
   z <- (ye - ys) * 12 + (me - ms) + 1 - ds - de
-  as.numeric(z)
+
+  z
 }
 
-#' Collapse overlapping (or near-adjacent) date ranges by ID
+#' Generate sequences of Dates for each (from, to) range
 #'
-#' Merges multiple date ranges that either overlap or are within a user-defined
-#' gap (`interval` days) **within each ID group**. Optionally collapses one or
-#' more columns (`merge_var`) by concatenating unique values.
+#' Expands paired start (`from`) and end (`to`) dates into full
+#' daily sequences. Each element of the output corresponds to
+#' one row of input, and contains a sequence of `Date` values
+#' from `from[i]` to `to[i]` (inclusive).
 #'
-#' @param df A `data.table` containing date ranges.
-#' @param id_var One or more ID columns (bare names). Ranges are merged within each unique ID.
-#' @param merge_var Optional columns (bare names) whose values will be collapsed
-#'   over the merged range (see `collapse`).
-#' @param from_var Start-date column (bare name). Must be `Date` (days).
-#' @param to_var End-date column (bare name). Must be `Date` (days, inclusive).
-#' @param interval Non-negative number of **days** allowed between the previous
-#'   end date and the next start date to still be merged. For example,
-#'   `interval = 0` merges touching ranges (end + 1 day == next start).
-#' @param collapse Character delimiter used to combine `merge_var` values.
-#'   Defaults to `"|"`. Duplicates and `NA` are removed before collapsing.
+#' Optionally, a `label` vector can be provided to tag each
+#' sequence in the output.
 #'
-#' @return A `data.table` with merged, non-overlapping date ranges. The output
-#'   contains the ID columns, any `merge_var` columns (collapsed), the original
-#'   date columns (`from_var`, `to_var`), and a `stay` column giving the number
-#'   of inclusive days in each merged range.
+#' @param from A Date vector of start dates.
+#' @param to A Date vector of end dates. Must be the same
+#'   length as `from`.
+#' @param label Optional vector of labels (same length as `from`).
+#'
+#' @return A list of `Date` vectors, each element representing
+#'   a full daily sequence between corresponding `from` and `to`.
 #'
 #' @details
-#' - Input is internally sorted by `id_var`, `from_var`, `to_var`.
-#' - Dates are treated as **inclusive**; adjacency is tested against `to + 1`.
-#' - `interval` must be `>= 0` and is interpreted in whole days.
-#' - Requires `data.table`. The merging index is computed in C for speed.
+#' - Both `from` and `to` must be of class `Date`.
+#' - Sequences are inclusive of both endpoints.
+#' - If `label` is supplied, it is attached to the resulting list
+#'   as element names.
+#'
+#' @examples
+#' from <- as.Date(c("2024-01-01", "2024-02-01"))
+#' to   <- as.Date(c("2024-01-03", "2024-02-02"))
+#'
+#' # Expand to daily sequences
+#' seq_date_list(from, to)
+#'
+#' # With labels
+#' seq_date_list(from, to, label = c("A", "B"))
+#'
+#' @export
+seq_date_list <- function(from, to, label = NULL) {
+  stopifnot(inherits(from, "Date"), inherits(to, "Date"))
+  .Call(SeqDateList, from, to, label)
+}
+
+#' Collapse overlapping (or near-adjacent) date ranges by (id, group)
+#'
+#' Merges multiple date ranges that either overlap or are within a user-defined
+#' gap (`interval` days) *within each (id, group) block*. Optionally collapses
+#' one or more columns (`merge_var`) by concatenating unique values.
+#'
+#' @param df A data.frame or data.table containing date ranges.
+#' @param id_var One or more ID columns (bare names). Ranges are merged within each unique ID.
+#' @param group_var Optional additional grouping columns (bare names).
+#' @param merge_var Optional columns (bare names) whose values will be collapsed
+#'   over the merged range; duplicates and `NA` are removed before collapsing.
+#' @param from_var Start-date column (bare name). Must be `Date` (days).
+#' @param to_var End-date column (bare name). Must be `Date` (days, inclusive).
+#' @param interval Integer gap (in days) allowed between consecutive ranges to still merge.
+#'   Use `0` to merge touching ranges, positive values to allow gaps, and **`-1` to require
+#'   actual overlap** (touching ranges are *not* merged).
+#' @param collapse Character delimiter used to combine `merge_var` values (default `"|"`).
+#'
+#' @return A data.table with merged, non-overlapping date ranges. The output contains:
+#' * the grouping keys (`id_var`, `group_var`),
+#' * the merged date columns (`from_var`, `to_var`),
+#' * the `stay` column = number of inclusive days in each merged range,
+#' * and the collapsed `merge_var` columns if provided.
+#'
+#' @details
+#' * Input is internally sorted by `id_var`, `group_var`, `from_var`, `to_var`.
+#' * Dates are treated as **inclusive**; adjacency is tested against `to + 1`.
+#' * `interval` is a single integer and must be `>= -1`.
+#' * Using `data.table` is recommended for performance; base data.frame also works.
+#' * The merging index is computed in C (via `.Call(IndexOverlappingDateRanges, ...)`) for speed.
 #'
 #' @examples
 #' \donttest{
-#' id <- c("A","A","B")
-#' work <- c("cleansing","analysis","cleansing")
-#' sdate <- as.Date(c("2022-03-01","2022-03-05","2022-03-08"))
-#' edate <- as.Date(c("2022-03-06","2022-03-09","2022-03-10"))
-#' dt <- data.table::data.table(id = id, work = work, sdate = sdate, edate = edate)
+#' id <- c("A","A","B","B")
+#' group <- c("x","x","y","y")
+#' work  <- c("cleansing", "analysis", "cleansing", "QA")
+#' from <- as.Date(c("2022-03-01","2022-03-05","2022-03-08","2022-03-12"))
+#' to <- as.Date(c("2022-03-06","2022-03-09","2022-03-10","2022-03-15"))
+#' dt <- data.table::data.table(id = id, group = group, work = work,
+#'                              from = from, to = to)
 #'
-#' # Merge overlapping or touching ranges (interval = 0)
-#' collapse_date_ranges(dt, id, work, sdate, edate, interval = 0)
+#' # Merge touching ranges (interval = 0)
+#' collapse_date_ranges(
+#'   dt, id_var = id, group_var = group, merge_var = work,
+#'   from_var = from, to_var = to,
+#'   interval = 0
+#' )
 #'
-#' # Allow gaps up to 2 days to merge, and use comma to collapse labels
-#' collapse_date_ranges(dt, id, work, sdate, edate, interval = 2, collapse = ", ")
+#' # Require actual overlap (touching ranges NOT merged): interval = -1
+#' collapse_date_ranges(
+#'   dt, id_var = id, group_var = group, merge_var = work,
+#'   from_var = from, to_var = to,
+#'   interval = -1
+#' )
+#'
+#' # Allow up to 2-day gaps
+#' collapse_date_ranges(
+#'   dt, id_var = id, group_var = group, merge_var = work,
+#'   from_var = from, to_var = to,
+#'   interval = 2, collapse = ", "
+#' )
 #' }
 #'
 #' @export
-collapse_date_ranges <- function(df, id_var, merge_var, from_var, to_var,
-                                 interval = 0, collapse = "|") {
-  # id_var    <- match_cols(df, sapply(rlang::enexpr(id_var), rlang::as_name))
-  # merge_var <- match_cols(df, sapply(rlang::enexpr(merge_var), rlang::as_name))
-  # from_var  <- rlang::as_name(rlang::enquo(from_var))
-  # to_var    <- rlang::as_name(rlang::enquo(to_var))
-  id_var    <- capture_names(df, !!rlang::enquo(id_var))
-  merge_var <- capture_names(df, !!rlang::enquo(merge_var))
-  from_var  <- capture_names(df, !!rlang::enquo(from_var))
-  to_var    <- capture_names(df, !!rlang::enquo(to_var))
-  all_var   <- c(id_var, merge_var, from_var, to_var)
-  dt <- df[, .SD, .SDcols = all_var]
-  data.table::setnames(dt, c(id_var, merge_var, "from", "to"))
-  data.table::setorderv(dt, c(id_var, "from", "to"))
+collapse_date_ranges <- function(df, id_var, group_var, merge_var,
+                                 from_var, to_var, interval = 0L,
+                                 collapse = "|") {
+  assert_class(df, "data.frame")
+  env <- ensure_dt_env(df)
+  dt  <- env$dt
+
+  id_var    <- capture_names(dt, !!rlang::enquo(id_var))
+  group_var <- capture_names(dt, !!rlang::enquo(group_var))
+  merge_var <- capture_names(dt, !!rlang::enquo(merge_var))
+  from_var  <- capture_names(dt, !!rlang::enquo(from_var))
+  to_var    <- capture_names(dt, !!rlang::enquo(to_var))
+
+  # ensure Date type
+  stopifnot(inherits(dt[[from_var]], "Date"), inherits(dt[[to_var]], "Date"))
+
+  # basic sanity: from <= to
+  if (any(dt[[to_var]] - dt[[from_var]] < 0, na.rm = TRUE))
+    stop("Some ranges have `from_var` > `to_var`.", call. = FALSE)
+
+  # interval: allow -1 (require overlap), 0 (touching ok), >0 (allow gaps)
+  interval <- as.integer(interval)
+  if (length(interval) != 1L || is.na(interval) || interval < -1L)
+    stop("`interval` must be a single integer >= -1.", call. = FALSE)
+
+  # materialize working table (only needed columns), rename date cols
+  id_group_var <- c(id_var, group_var)
+  all_var <- c(id_var, group_var, merge_var, from_var, to_var)
+  dt <- dt[, .SD, .SDcols = all_var]
+  data.table::setnames(dt, c(id_var, group_var, merge_var, "from", "to"))
+  data.table::setorderv(dt, c(id_var, group_var, "from", "to"))
+
+  # bookkeeping column for later adjustments (kept numeric)
   data.table::set(dt, j = "sub_stay", value = 0)
-  index <- .Call(IndexOverlappingDateRange, dt[, .SD, .SDcols = id_var],
-                 dt$from, dt$to, interval = interval)
-  data.table::set(dt, j = "loc", value = index$loc) # group index to combine
-  data.table::set(dt, j = "sub", value = index$sub) # days to subtract, if the interval is longer than 0
-  group_var <- c(id_var, "loc")
-  m <- dt[, lapply(.SD, function(x) paste(unique(x[!is.na(x)]), collapse = collapse)),
-          keyby = group_var, .SDcols = merge_var]
+
+  # compute merging index in C
+  index <- .Call(IndexOverlappingDateRanges,
+                 dt[, .SD, .SDcols = id_group_var],
+                 dt$from, dt$to, interval)
+
+  data.table::set(dt, j = "loc", value = index$loc)  # group index (within id/group)
+  data.table::set(dt, j = "sub", value = index$sub)  # subtract days when gaps allowed
+
+  id_group_loc_var <- c(id_group_var, "loc")
+
+  # collapse merge_var (if present) or just keep keys
+  if (length(merge_var)) {
+    m <- dt[
+      ,
+      lapply(.SD, function(x) paste(unique(x[!is.na(x)]), collapse = collapse)),
+      keyby = id_group_loc_var, .SDcols = merge_var
+    ]
+  } else {
+    m <- unique(dt[, .SD, .SDcols = id_group_loc_var])
+    data.table::setkeyv(m, id_group_loc_var)
+  }
+
+  # compute merged bounds and stay
   from <- to <- sub_stay <- sub <- NULL
-  s <- dt[, list(from = min(from), to = max(to), sub_stay = sum(sub_stay) + sum(sub)),
-          keyby = group_var]
-  z <- m[s, on = group_var]
+  s <- dt[
+    ,
+    list(from = min(from),
+         to   = max(to),
+         sub_stay = sum(sub_stay) + sum(sub)),
+    keyby = id_group_loc_var
+  ]
+
+  z <- m[s, on = id_group_loc_var]
   data.table::set(z, j = "loc", value = NULL)
   data.table::set(z, j = "stay", value = as.numeric(z$to - z$from + 1 - z$sub_stay))
   data.table::set(z, j = "sub_stay", value = NULL)
-  data.table::setnames(z, c(all_var, "stay"))
-  return(z)
+
+  # restore original column names order
+  data.table::setnames(z, c(id_var, group_var, merge_var, from_var, to_var, "stay"))
+
+  env$restore(z)
 }
 
 #' Deprecated: combine_overlapping_date_range

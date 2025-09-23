@@ -44,18 +44,23 @@ colvec <- function(x) array(x, dim = c(length(x), 1L), dimnames = list(names(x),
 #' @export
 unilen <- function(x) .Call(Unilen, x)
 
-#' Reverse the order of elements in a vector
+#' Reverse the order of elements in a vector (in place)
 #'
-#' Returns the input vector with its elements in reverse order.
+#' Reverses the order of elements directly in the input vector,
+#' modifying it **in place** rather than creating a copy.
+#' This is memory-efficient for large vectors, but note that
+#' the original object is altered.
 #'
 #' @param x A vector.
-#' @return A vector of the same type as `x`, with elements in reverse order.
+#' @return The same vector `x`, modified in place, with its elements
+#'   in reverse order.
 #'
 #' @examples
 #' \donttest{
-#' # Reverse a numeric vector
-#' x <- c(1:10)
+#' # Reverse a numeric vector in place
+#' x <- c(1:5)
 #' reverse(x)
+#' x  # now c(5, 4, 3, 2, 1)
 #' }
 #'
 #' @export
@@ -72,39 +77,15 @@ reverse <- function(x) invisible(.Call(Reverse, x))
 #'   The type will follow the usual R coercion rules when combining vectors.
 #'
 #' @examples
+#' \donttest{
 #' # Interleave two numeric vectors
-#' \donttest{x <- c(1, 3, 5, 7)
+#' x <- c(1, 3, 5, 7)
 #' y <- c(2, 4, 6, 8)
-#' interleave(x, y)}
+#' interleave(x, y)
+#' }
 #'
 #' @export
 interleave <- function(x, y) .Call(Interleave, x, y)
-
-#' Most frequent value (mode, modal value)
-#'
-#' Returns the most frequently occurring value (the statistical mode) in a vector.
-#'
-#' @param x A vector.
-#' @param na.rm Logical. Should missing values (`NA`) be removed? Defaults to FALSE.
-#'
-#' @return The most frequent value vector and its frequency
-#'
-#' @examples
-#' # Get the most frequent values
-#' x <- c(1, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 5)
-#' mostfreq(x)
-#'
-#' @export
-mostfreq <- function(x, na.rm = FALSE) {
-  if (na.rm)
-    x <- x[!is.na(x)]
-  if (inherits(x, "character"))
-    x <- x[x != ""]
-  if (inherits(x, "Date"))
-    x <- as.character(x)
-  uniqx <- unique(x)
-  uniqx[which.max(tabulate(match(x, uniqx)))]
-}
 
 #' Generate a list of sequential vectors
 #'
@@ -133,11 +114,4 @@ seq_list <- function(from, to, by = 1L) {
     stop("`from` and `to` must have the same length.")
   # lapply(seq_along(from), function(x) seq(from[x], to[x], by))
   mapply(seq, from, to, MoreArgs = list(by = by), SIMPLIFY = FALSE)
-}
-
-# To be updated -----------------------------------------------------------
-
-before_change_index <- function(x) {
-  lifecycle::signal_stage("experimental", "before_change_index()")
-  .Call(BeforeChangeIndex, x)
 }

@@ -71,7 +71,7 @@ mkdir <- function(folder = c("dev", "data", "info", "inst", "output", "R",
 #'   (e.g., binary files, images, compressed archives, PDFs). Default includes
 #'   common non-text formats such as `bin`, `dll`, `o`, `so`, `rda`, `rds`,
 #'   images (`jpg`, `png`, etc.), compressed files (`zip`, `tar`, `gz`, etc.),
-#'   and `pdf`.
+#'   and `pdf`. Default is `NULL`.
 #'
 #' @return
 #' A named list. Each element corresponds to one file, and is a data frame
@@ -94,21 +94,21 @@ find_in_files <- function(path = getwd(),
                           ignore_case = TRUE,
                           show_lines = TRUE,
                           fixed = FALSE,
-                          skip_extensions) {
+                          skip_extensions = NULL) {
 
-  if (missing(skip_extensions)) {
+  if (is.null(skip_extensions)) {
     skip_extensions <- list(
+      archive      = c("7z","gz","tar","xz","zip","bz2"),
+      binary_build = c("bin","dll","o","so", "exe"),
+      data_format  = c("RData","rda","rds","pkl","msgpack","feather",
+                       "parquet","avro","orc","h5","hdf5",
+                       "sas7bdat","sav","por","dta","mat","csv"),
+      database     = c("db","sqlite","sqlite3","mdb","accdb"),
       image_raster = c("bmp","gif","jpeg","jpg","png","tif","tiff","webp",
                        "apng","avif","heif","heic","ico"),
       image_vector = c("svg","ai","psd","xcf","icns","pdf","raw"),
-      archive      = c("7z","gz","tar","xz","zip","bz2"),
-      binary_build = c("bin","dll","o","so"),
-      database     = c("db","sqlite","sqlite3","mdb","accdb"),
       office       = c("xls","xlsb","xlsm","xlsx","ods","numbers",
-                       "doc","docx","ppt","pptx","pdf"),
-      data_format  = c("RData","rda","rds","pkl","msgpack","feather",
-                       "parquet","avro","orc","h5","hdf5",
-                       "sas7bdat","sav","por","dta","mat","csv")
+                       "doc","docx","ppt","pptx","pdf")
       )
     skip_extensions <- unlist(skip_extensions, use.names = FALSE)
   }

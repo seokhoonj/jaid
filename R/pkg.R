@@ -80,7 +80,12 @@
   cat("X-PackageLicense:", paste0("\n  ", lines))
 }
 
-.package_license <- function(packages = c("data.table", "ggplot2")) {
+.package_license <- function(packages = c("Rcpp", "cli", "data.table",
+                                          "grDevices", "grid", "kableExtra",
+                                          "lifecycle", "openssl", "openxlsx",
+                                          "readxl", "reticulate", "rlang",
+                                          "scales", "stringi", "stringr",
+                                          "tibble", "usethis", "utils")) {
   license <- sapply(packages, function(x) utils::packageDescription(x)["License"])
   names(license) <- packages
   license

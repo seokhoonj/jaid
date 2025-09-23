@@ -4,7 +4,7 @@
 \alias{max_by_rownames}
 \alias{min_by_rownames}
 \alias{sum_by_rownames}
-\title{Aggregate by row names (max, min, sum)}
+\title{Aggregate by row names (sum, max, min)}
 \usage{
 max_by_rownames(x, na.rm = TRUE)
 

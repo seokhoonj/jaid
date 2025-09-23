@@ -1,100 +1,4 @@
-#' Row-wise maximum, minimum, and sum
-#'
-#' Compute the maximum, minimum, or sum of values in each row of a numeric
-#' matrix. These functions are implemented in C for performance.
-#'
-#' @param x A numeric matrix.
-#'
-#' @return A numeric vector of length equal to the number of rows in `x`:
-#' * `row_max()` returns the maximum of each row.
-#' * `row_min()` returns the minimum of each row.
-#' * `row_sum()` returns the sum of each row.
-#'
-#' @examples
-#' \donttest{
-#' x <- matrix(1:9, nrow = 3)
-#'
-#' # Row-wise maximum
-#' row_max(x)
-#'
-#' # Row-wise minimum
-#' row_min(x)
-#'
-#' # Row-wise sum
-#' row_sum(x)
-#' }
-#'
-#' @export
-row_max <- function(x) .Call(RowMax, x)
-
-#' @rdname row_max
-#' @export
-row_min <- function(x) .Call(RowMin, x)
-
-#' @rdname row_max
-#' @export
-row_sum <- function(x) .Call(RowSum, x)
-
-
-#' Column-wise maximum, minimum, and sum
-#'
-#' Compute the maximum, minimum, or sum of values in each column of a numeric
-#' matrix. These functions are implemented in C for performance.
-#'
-#' @param x A numeric matrix.
-#'
-#' @return A numeric vector of length equal to the number of columns in `x`:
-#' * `col_max()` returns the maximum of each column.
-#' * `col_min()` returns the minimum of each column.
-#' * `col_sum()` returns the sum of each column.
-#'
-#' @examples
-#' \donttest{
-#' x <- matrix(1:9, ncol = 3)
-#'
-#' # Column-wise maximum
-#' col_max(x)
-#'
-#' # Column-wise minimum
-#' col_min(x)
-#'
-#' # Column-wise sum
-#' col_sum(x)
-#' }
-#'
-#' @export
-col_max <- function(x) .Call(ColMax, x)
-
-#' @rdname col_max
-#' @export
-col_min <- function(x) .Call(ColMin, x)
-
-#' @rdname col_max
-#' @export
-col_sum <- function(x) .Call(ColSum, x)
-
-
-#' Column-wise differences
-#'
-#' Compute successive differences down each column of a numeric matrix,
-#' similar to [base::diff()] but applied column by column.
-#'
-#' @param x A numeric matrix.
-#'
-#' @return A numeric matrix with one fewer row than `x`, containing the
-#'   differences between successive elements within each column.
-#'
-#' @examples
-#' \donttest{
-#' x <- matrix(1:9, nrow = 3)
-#' col_diff(x)
-#' }
-#'
-#' @export
-col_diff <- function(x) .Call(ColDiff, x)
-
-
-#' Aggregate by row names (max, min, sum)
+#' Aggregate by row names (sum, max, min)
 #'
 #' Compute the maximum, minimum, or sum of values in a numeric matrix,
 #' grouped by identical row names. These functions are implemented in C
@@ -129,24 +33,20 @@ col_diff <- function(x) .Call(ColDiff, x)
 #'
 #' @export
 max_by_rownames <- function(x, na.rm = TRUE) {
-  g <- rownames(x); uniqueg <- unique(g); minval <- min(x)
-  .Call(MaxByRowNames, x, g, uniqueg, na.rm, minval)
+  .Call(MaxByRowNames, x, na.rm)
 }
 
 #' @rdname max_by_rownames
 #' @export
 min_by_rownames <- function(x, na.rm = TRUE) {
-  g <- rownames(x); uniqueg <- unique(g); maxval <- max(x)
-  .Call(MinByRowNames, x, g, uniqueg, na.rm, maxval)
+  .Call(MinByRowNames, x, na.rm)
 }
 
 #' @rdname max_by_rownames
 #' @export
 sum_by_rownames <- function(x, na.rm = TRUE) {
-  g <- rownames(x); uniqueg <- unique(g)
-  .Call(SumByRowNames, x, g, uniqueg, na.rm)
+  .Call(SumByRowNames, x, na.rm)
 }
-
 
 #' Aggregate by column names (max, min, sum)
 #'
@@ -183,31 +83,27 @@ sum_by_rownames <- function(x, na.rm = TRUE) {
 #'
 #' @export
 max_by_colnames <- function(x, na.rm = TRUE) {
-  g <- colnames(x); uniqueg <- unique(g); minval <- min(x)
-  .Call(MaxByColNames, x, g, uniqueg, na.rm, minval)
+  .Call(MaxByColNames, x, na.rm)
 }
 
 #' @rdname max_by_colnames
 #' @export
 min_by_colnames <- function(x, na.rm = TRUE) {
-  g <- colnames(x); uniqueg <- unique(g); maxval <- max(x)
-  .Call(MinByColNames, x, g, uniqueg, na.rm, maxval)
+  .Call(MinByColNames, x, na.rm)
 }
 
 #' @rdname max_by_colnames
 #' @export
 sum_by_colnames <- function(x, na.rm = TRUE) {
-  g <- colnames(x); uniqueg <- unique(g)
-  .Call(SumByColNames, x, g, uniqueg, na.rm)
+  .Call(SumByColNames, x, na.rm)
 }
 
-
-#' Aggregate by both row and column names (max, min, sum)
+#' Aggregate by both row and column names (sum, max, min)
 #'
 #' Compute element-wise aggregates of a numeric matrix after grouping
-#' simultaneously by identical **row names** and **column names**. That is,
-#' rows with the same name are reduced to one row, and columns with the same
-#' name are reduced to one column, using the chosen summary (max/min/sum).
+#' simultaneously by identical **row names** and **column names**. Rows with
+#' the same name are collapsed into one row, and columns with the same name are
+#' collapsed into one column, using the chosen summary (sum/max/min).
 #'
 #' @param x A numeric matrix with non-`NULL` row and column names.
 #' @param na.rm Logical; if `TRUE`, missing values are removed before
@@ -215,44 +111,152 @@ sum_by_colnames <- function(x, na.rm = TRUE) {
 #'
 #' @return A numeric matrix with one row per unique row name and one column
 #'   per unique column name of `x`:
-#' * `max_by_dimnames()` returns element-wise maxima within each (row-name, col-name) group.
+#' * `sum_by_dimnames()` returns element-wise sums within each (row-name, col-name) group.
+#' * `max_by_dimnames()` returns element-wise maxima within each group.
 #' * `min_by_dimnames()` returns element-wise minima within each group.
-#' * `sum_by_dimnames()` returns element-wise sums within each group.
 #'
 #' @examples
 #' \donttest{
-#' # Maximum values grouped by row names and column names
-#' x <- matrix(c(1:9), ncol = 3)
-#' set_dimnames(x, list(c("a", "a", "b"), c("a", "b", "b")))
-#' max_by_dimnames(x)
+#' x <- matrix(1:9, ncol = 3)
+#' set_dimnames(x, list(c("a","a","b"), c("a","b","b")))
 #'
-#' # Minimum values grouped by row names and column names
-#' x <- matrix(c(1:9), ncol = 3)
-#' set_dimnames(x, list(c("a", "a", "b"), c("a", "b", "b")))
-#' min_by_dimnames(x)
-#'
-#' # Sum of values grouped by row names and column names
-#' x <- matrix(c(1:9), ncol = 3)
-#' set_dimnames(x, list(c("a", "a", "b"), c("a", "b", "b")))
 #' sum_by_dimnames(x)
+#' max_by_dimnames(x)
+#' min_by_dimnames(x)
 #' }
 #'
 #' @export
-max_by_dimnames <- function(x, na.rm = TRUE) {
-  max_by_rownames(max_by_colnames(x, na.rm = na.rm), na.rm = na.rm)
+sum_by_dimnames <- function(x, na.rm = TRUE) {
+  .Call(SumByDimNames, x, na.rm)
 }
 
-#' @rdname max_by_dimnames
+#' @rdname sum_by_dimnames
+#' @export
+max_by_dimnames <- function(x, na.rm = TRUE) {
+  .Call(MaxByDimNames, x, na.rm)
+}
+
+#' @rdname sum_by_dimnames
 #' @export
 min_by_dimnames <- function(x, na.rm = TRUE) {
-  min_by_rownames(min_by_colnames(x, na.rm = na.rm), na.rm = na.rm)
+  .Call(MinByDimNames, x, na.rm)
 }
 
-#' @rdname max_by_dimnames
+#' Row-wise sum, maximum, and minimum
+#'
+#' Compute the sum, maximum, or minimum of values in each row of a numeric
+#' matrix. These functions are implemented in C for performance.
+#'
+#' @param x A numeric matrix.
+#' @param na.rm Logical. Should missing values (`NA`) be removed?
+#'   If `TRUE` (default), they are ignored; if `FALSE`, any `NA` in a row
+#'   makes the result `NA`.
+#'
+#' @return A numeric vector of length equal to the number of rows in `x`:
+#' * `row_sum()` returns the sum of each row.
+#' * `row_max()` returns the maximum of each row.
+#' * `row_min()` returns the minimum of each row.
+#'
+#' @examples
+#' \donttest{
+#' x <- matrix(c(1, 2, NA, 4, 5, 6), nrow = 2)
+#'
+#' # Row-wise sum
+#' row_sum(x)
+#'
+#' # Row-wise maximum
+#' row_max(x)
+#'
+#' # Row-wise minimum (preserve NA)
+#' row_min(x, na.rm = FALSE)
+#' }
+#'
 #' @export
-sum_by_dimnames <- function(x, na.rm = TRUE) {
-  sum_by_rownames(sum_by_colnames(x, na.rm = na.rm), na.rm = na.rm)
-}
+row_sum <- function(x, na.rm = TRUE) .Call(RowSum, x, na.rm)
+
+#' @rdname row_sum
+#' @export
+row_max <- function(x, na.rm = TRUE) .Call(RowMax, x, na.rm)
+
+#' @rdname row_sum
+#' @export
+row_min <- function(x, na.rm = TRUE) .Call(RowMin, x, na.rm)
+
+
+#' Column-wise sum, maximum, and minimum
+#'
+#' Compute the sum, maximum, or minimum of values in each column of a numeric
+#' matrix. These functions are implemented in C for performance.
+#'
+#' @param x A numeric matrix.
+#' @param na.rm Logical. Should missing values (`NA`) be removed?
+#'   If `TRUE` (default), they are ignored; if `FALSE`, any `NA` in a column
+#'   makes the result `NA`.
+#'
+#' @return A numeric vector of length equal to the number of columns in `x`:
+#' * `col_sum()` returns the sum of each column.
+#' * `col_max()` returns the maximum of each column.
+#' * `col_min()` returns the minimum of each column.
+#'
+#' @examples
+#' \donttest{
+#' x <- matrix(c(1, 2, NA, 4, 5, 6), ncol = 3)
+#'
+#' # Column-wise sum
+#' col_sum(x)
+#'
+#' # Column-wise maximum
+#' col_max(x)
+#'
+#' # Column-wise minimum (preserve NA)
+#' col_min(x, na.rm = FALSE)
+#' }
+#'
+#' @export
+col_sum <- function(x, na.rm = TRUE) .Call(ColSum, x, na.rm)
+
+#' @rdname col_sum
+#' @export
+col_max <- function(x, na.rm = TRUE) .Call(ColMax, x, na.rm)
+
+#' @rdname col_sum
+#' @export
+col_min <- function(x, na.rm = TRUE) .Call(ColMin, x, na.rm)
+
+#' Row- and column-wise differences
+#'
+#' Compute successive differences within a numeric matrix, similar to
+#' [base::diff()] but applied along rows or columns:
+#'
+#' * `row_diff()` computes differences between successive rows, column by column.
+#' * `col_diff()` computes differences between successive columns, row by row.
+#'
+#' @param x A numeric matrix.
+#' @param na.rm Logical; if `TRUE`, missing values (`NA`/`NaN`) are not removed
+#'   in pairwise differences. Both elements of a pair must be non-missing to
+#'   yield a non-missing difference.
+#'
+#' @return A numeric matrix with one fewer row (`row_diff()`) or one fewer column
+#'   (`col_diff()`) than `x`, containing the differences between successive
+#'   elements along the specified dimension.
+#'
+#' @examples
+#' \donttest{
+#' x <- matrix(1:9, nrow = 3)
+#'
+#' # Differences between successive rows
+#' row_diff(x)
+#'
+#' # Differences between successive columns
+#' col_diff(x)
+#' }
+#'
+#' @export
+row_diff <- function(x, na.rm = TRUE) .Call(RowDiff, x, na.rm)
+
+#' @rdname row_diff
+#' @export
+col_diff <- function(x, na.rm = TRUE) .Call(ColDiff, x, na.rm)
 
 #' Rotate a matrix by 90, 180, or 270 degrees
 #'
@@ -284,23 +288,7 @@ sum_by_dimnames <- function(x, na.rm = TRUE) {
 #'
 #' @export
 rotate <- function(x, angle = c(90, 180, 270)) {
-  z <- .Call(Rotate, x, angle)
-  if (angle[1L] %% 360 == 90) {
-    dn <- dimnames(x)
-    dn <- rev(dn)
-    dn[[2L]] <- rev(dn[[2L]])
-    set_dimnames(z, dn)
-  } else if (angle[1L] %% 360 == 180) {
-    dn <- dimnames(x)
-    dn <- lapply(dn, rev)
-    set_dimnames(z, dn)
-  } else if (angle[1L] %% 360 == 270) {
-    dn <- dimnames(x)
-    dn[[2L]] <- rev(dn[[2L]])
-    dn <- rev(dn)
-    set_dimnames(z, dn)
-  }
-  return(z)
+  .Call(Rotate, x, angle)
 }
 
 #' In-place, memory-efficient matrix multiplications
@@ -399,7 +387,7 @@ matXnum <- function(mat, num) {
 #'
 #' @export
 replace_vec_in_mat <- function(mat, col, vec) {
-  if (is.character(col)) col <- icol(mat, col)
+  if (is.character(col)) col <- index_cols(mat, col)
   invisible(.Call(ReplaceVecInMat, mat, col, vec))
 }
 

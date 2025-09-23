@@ -1,30 +1,3 @@
-#' Assert object class
-#'
-#' Check that an object inherits from the expected class.
-#' Throws an error if the assertion fails.
-#'
-#' @param x An R object.
-#' @param class A character vector of class names to check against.
-#'
-#' @return No return value. Called for side effects.
-#'
-#' @examples
-#' \donttest{assert_class(cars, "data.frame")}
-#'
-#' @export
-assert_class <- function(x, class) {
-  x_name <- if (is.character(x) && length(x) == 1L) {
-    sprintf('"%s"', x) # if literal
-  } else {
-    trace_arg_expr(x, verbose = FALSE, skip_shiny = TRUE)
-  }
-  if (!inherits(x, class)) {
-    stop("'", x_name, "' is not an object of class: '",
-         paste(class, collapse = "', '"), "'",
-         call. = FALSE)
-  }
-}
-
 #' Prepend a class to an object
 #'
 #' Ensures that the specified class (or classes) are placed at the
@@ -55,27 +28,103 @@ prepend_class <- function(x, new_class) {
   x
 }
 
-
-
-#' Get column indices
+#' Index columns by name
 #'
-#' Return the column numbers corresponding to given column names.
+#' Return column indices for the given column names from a data.frame or matrix.
 #'
-#' @param x A data.frame.
-#' @param cols A character vector of column names.
+#' @param x A data.frame or matrix.
+#' @param cols A character vector of column names (in desired order).
+#' @param all_matches Logical; if `TRUE`, return indices of *all* columns whose
+#'   names match each `cols` entry (duplicates allowed). If `FALSE` (default),
+#'   return only the first match for each name.
+#' @param error_on_missing Logical; if `TRUE` (default), error when any of
+#'   `cols` are not present in `colnames(x)`. If `FALSE`, drop missing names.
 #'
-#' @return An integer vector of column indices.
+#' @return
+#' Integer vector of column indices. Names of the vector correspond to the
+#' requested `cols` that were successfully matched.
 #'
 #' @examples
-#' \donttest{
-#' # Column numbers for selected names
-#' icol(mtcars, c("disp", "drat", "qsec", "am", "carb"))
-#' }
+#' # data.frame
+#' index_cols(mtcars, c("disp", "drat", "qsec"))
+#'
+#' # drop missing columns silently
+#' index_cols(mtcars, c("disp", "drat", "nope"), error_on_missing = FALSE)
+#'
+#' # matrix
+#' mat <- as.matrix(mtcars)
+#' index_cols(mat, c("disp", "hp"))
+#'
+#' # duplicated column names (all matches)
+#' df <- data.frame(a = 1, a = 2, b = 3, check.names = FALSE)
+#' index_cols(df, "a", all_matches = TRUE)
 #'
 #' @export
-icol <- function(x, cols) {
-  sapply(unique(cols), function(s) which(colnames(x) == s))
+index_cols <- function(x, cols, all_matches = FALSE, error_on_missing = TRUE) {
+  jaid::assert_class(x, c("data.frame", "matrix"))
+
+  if (!is.character(cols) || length(cols) < 1L || anyNA(cols)) {
+    rlang::abort(
+      message = "`cols` must be a non-empty character vector without NA.",
+      class   = c("jaid_error_invalid_argument", "jaid_error", "error"),
+      arg     = "cols"
+    )
+  }
+
+  nms <- colnames(x)
+  if (is.null(nms)) {
+    rlang::abort(
+      message = "`x` has no column names.",
+      class   = c("jaid_error_no_colnames", "jaid_error", "error")
+    )
+  }
+
+  if (!all_matches) {
+    idx0    <- match(cols, nms)
+    na_mask <- is.na(idx0)
+
+    if (any(na_mask) && error_on_missing) {
+      rlang::abort(
+        message = sprintf("Missing column(s): %s",
+                          paste(cols[na_mask], collapse = ", ")),
+        class   = c("jaid_error_missing_columns", "jaid_error", "error"),
+        missing = cols[na_mask],
+        columns = nms
+      )
+    }
+
+    idx  <- idx0[!na_mask]
+    kept <- cols[!na_mask]
+    names(idx) <- kept
+    return(idx)
+  }
+
+  # all_matches = TRUE — collect all hits for each requested name
+  out_idx  <- integer(0)
+  out_name <- character(0)
+
+  for (nm in cols) {
+    hits <- which(nms == nm)
+    if (length(hits) == 0L) {
+      if (error_on_missing) {
+        rlang::abort(
+          message = sprintf("Missing column: %s", nm),
+          class   = c("jaid_error_missing_columns", "jaid_error", "error"),
+          missing = nm,
+          columns = nms
+        )
+      } else {
+        next
+      }
+    }
+    out_idx  <- c(out_idx, hits)
+    out_name <- c(out_name, rep.int(nm, length(hits)))
+  }
+
+  names(out_idx) <- out_name
+  out_idx
 }
+
 
 #' Match columns
 #'
@@ -95,7 +144,8 @@ icol <- function(x, cols) {
 #' @export
 match_cols <- function(df, cols) {
   assert_class(df, "data.frame")
-  colnames(df)[match(cols, colnames(df), 0L)]
+  nms <- names(df)
+  nms[match(cols, nms, 0L)]
 }
 
 #' Find columns by regular expression
@@ -116,7 +166,8 @@ match_cols <- function(df, cols) {
 #' @export
 regex_cols <- function(df, pattern) {
   assert_class(df, "data.frame")
-  colnames(df)[grepl(pattern, names(df), perl = TRUE)]
+  nms <- names(df)
+  nms[grepl(pattern, nms, perl = TRUE)]
 }
 
 #' Columns not in a set
@@ -129,293 +180,52 @@ regex_cols <- function(df, pattern) {
 #' @return A character vector of column names in `df` but not in `cols`.
 #'
 #' @examples
-#' \donttest{diff_cols(mtcars, c("mpg", "cyl", "disp", "hp", "drat"))}
+#' \donttest{anti_cols(mtcars, c("mpg", "cyl", "disp", "hp", "drat"))}
 #'
 #' @export
-diff_cols <- function(df, cols)
-  setdiff(colnames(df), cols)
-
-#' Validate that columns exist
-#'
-#' Check whether a data frame contains all of the specified columns.
-#' Throws an error if any are missing.
-#'
-#' @param df A data.frame.
-#' @param cols A character vector of column names to validate.
-#'
-#' @return No return value. Called for side effects.
-#'
-#' @examples
-#' \dontrun{valid_cols(mtcars, c("mpg", "cyl", "disp", "hp", "drat"))}
-#'
-#' @export
-valid_cols <- function(df, cols) {
-  missing_cols <- setdiff(cols, colnames(df))
-  if (length(missing_cols) > 0) {
-    stop("The following columns are missing: ",
-         paste(missing_cols, collapse = ", "),
-         call. = FALSE)
-  }
+anti_cols <- function(df, cols) {
+  assert_class(df, "data.frame")
+  setdiff(names(df), cols)
 }
 
-#' Check Column Specification Against a Data Frame
+#' Find matching attributes
 #'
-#' Validates whether the columns in a given data frame match an expected
-#' column specification. The specification includes expected column names
-#' and their corresponding classes. The function returns a data.table
-#' with the actual and expected classes, along with a status indicating
-#' whether each column matches, is missing, or is extra.
+#' Returns the names of attributes in `x` that match the specified names.
 #'
-#' @param df A data.frame or data.table containing the data to be checked.
-#' @param col_spec A named list defining the expected specification.
-#'   Each name corresponds to a column, and each value is the expected class.
+#' @param x Any R object (e.g., `list`, `data.frame`, `data.table`).
+#' @param name Character vector of attribute names to match.
 #'
-#' @return A data.table with the following columns:
-#'   \itemize{
-#'     \item `column`: Column name
-#'     \item `actual`: Actual class of the column (NA if missing)
-#'     \item `expected`: Expected class of the column (NA if not specified)
-#'     \item `status`: Comparison result: "match", "mismatch", "missing", or "extra"
-#'     \item `sample`: Example value from the first row of the column
-#'       (NA if column is missing)
-#'   }
+#' @return A character vector of matching attribute names.
 #'
 #' @examples
 #' \donttest{
-#' df <- data.frame(
-#'   id = 1:3,
-#'   name = c("Alice", "Bob", "Charlie"),
-#'   age = c(25, 30, 28),
-#'   paid = c(TRUE, FALSE, TRUE)
-#' )
-#'
-#' col_spec <- list(
-#'   id = "character",
-#'   name = "character",
-#'   age = "integer",
-#'   premium = "numeric"
-#' )
-#'
-#' check_col_spec(df, col_spec)
+#' # Find attributes by name
+#' match_attr(iris, c("class", "names"))
 #' }
 #'
 #' @export
-check_col_spec <- function(df, col_spec) {
+match_attr <- function(x, name)
+  names(attributes(x))[match(name, names(attributes(x)), 0L)]
 
-  assert_class(df, "data.frame")
-
-  if (!is.list(col_spec) || is.null(names(col_spec)) || any(names(col_spec) == ""))
-    stop("col_spec must be a named list.")
-  if (!all(sapply(col_spec, is.character)))
-    stop("All elements of col_spec must be character strings (expected classes).")
-
-  cols_act <- names(df)
-  cols_exp <- names(col_spec)
-  actual <- vapply(df, function(x) class(x)[1L], character(1L))
-
-  # data.table
-  # column <- status <- expected <- note <- NULL
-  # act_dt <- data.table::as.data.table(actual, keep.rownames = "column")
-  # exp_dt <- data.table::data.table(column = names(col_spec), expected = unlist(col_spec))
-  # dt <- data.table::rbindlist(
-  #   list(
-  #     act_dt[ exp_dt, on = .(column)],
-  #     act_dt[!exp_dt, on = .(column)]
-  #   ),
-  #   fill = TRUE
-  # )
-  # dt[, status := data.table::fifelse(actual == expected, "match", "mismatch")]
-  # dt[is.na(actual), status := "missing"]
-  # dt[is.na(expected), status := "extra"]
-  # dt[, note := data.table::fifelse(
-  #   status == "mismatch" & (
-  #     (actual == "integer" & expected == "numeric") |
-  #     (actual == "numeric" & expected == "integer")
-  #   ), "compatible", NA_character_
-  # )]
-  # ds <- data.table::data.table(t(head(df, 1)), keep.rownames = "column")
-  # dt[ds, on = .(column), `:=`(first, V1)]
-  # data.table::setindex(dt, NULL)
-
-  # actual classes
-  df_act <- data.frame(
-    column = names(actual), actual = actual,
-    stringsAsFactors = FALSE
-  )
-
-  # expected classes
-  df_exp <- data.frame(
-    column = cols_exp, expected = unlist(col_spec, use.names = FALSE),
-    stringsAsFactors = FALSE
-  )
-
-  # full join by column
-  merged <- merge(df_act, df_exp, by = "column", all = TRUE)
-  cols_ord <- c(cols_exp, setdiff(cols_act, cols_exp))
-  ord <- match(cols_ord, merged$column)
-  ord <- ord[!is.na(ord)]
-  merged <- merged[ord,]
-  rownames(merged) <- NULL
-
-  # status
-  merged$status <- ifelse(
-    is.na(merged$actual), "missing",
-    ifelse(is.na(merged$expected), "extra",
-           ifelse(merged$actual == merged$expected, "match", "mismatch"))
-  )
-
-  # compatibility note
-  merged$note <- ifelse(
-    merged$status == "mismatch" & (
-      (merged$actual == "integer" & merged$expected == "numeric") |
-        (merged$actual == "numeric" & merged$expected == "integer")
-    ),
-    "compatible", NA_character_
-  )
-
-  # add first-row sample values
-  first_row <- df[1, , drop = FALSE]
-  merged$sample <- vapply(merged$column, function(col) {
-    if (col %in% names(first_row)) {
-      as.character(first_row[[col]])  # simpler: take first-row value as string
-    } else {
-      NA_character_
-    }
-  }, character(1L))
-
-  # Console summary
-  cat(cli::col_cyan(cli::rule("Column check summary", line = 2)), "\n")
-  for (stat in c("match", "mismatch", "missing", "extra")) {
-    sub <- merged[merged$status == stat, ]
-    if (nrow(sub) == 0) next
-    msg_str <- switch(
-      stat,
-      match = paste(sub$column, collapse = ", "),
-      mismatch = paste0(
-        sub$column, " (", sub$actual, " \u2192 ", sub$expected,
-        ifelse(!is.na(sub$note), paste0(": ", sub$note), ""), ")",
-        collapse = ", "
-      ),
-      missing = paste(sub$column, collapse = ", "),
-      extra   = paste(sub$column, collapse = ", ")
-    )
-    color_msg <- switch(
-      stat,
-      match    = cli::col_green(msg_str),
-      mismatch = cli::col_red(msg_str),
-      missing  = cli::col_yellow(msg_str),
-      extra    = cli::col_cyan(msg_str)
-    )
-    icon <- switch(stat, match = "o", mismatch = "x", missing = "-", extra = "+")
-    cli::cli_alert("{.strong {icon} {stat}:} {color_msg}")
-  }
-  cli::cli_text("")
-
-  merged
-}
-
-#' Check if a data frame has rows
+#' Find attributes by regular expression
 #'
-#' Test whether a data frame has at least one row. Can return a logical value
-#' or raise an error if `error_raise = TRUE`.
+#' Return the names of attributes in `x` whose names match a regular expression pattern.
 #'
-#' @param df A data.frame.
-#' @param error_raise Logical; if `TRUE`, raise an error if the data frame has no rows.
+#' @param x Any R object (e.g., `list`, `data.frame`, `data.table`).
+#' @param name A character string containing a regular expression pattern
+#'   to match against attribute names.
 #'
-#' @return A logical scalar (`TRUE` if the data frame has rows, otherwise `FALSE`).
+#' @return A character vector of matching attribute names.
 #'
 #' @examples
-#' \dontrun{
-#' df <- data.frame()
-#'
-#' # Has columns
-#' has_rows(df) # FALSE
-#'
-#' # Raises an error
-#' has_rows(df, error_raise = TRUE)
+#' \donttest{
+#' # Find attributes by regex
+#' regex_attr(iris, "class|names")
 #' }
 #'
 #' @export
-has_rows <- function(df, error_raise = FALSE) {
-  assert_class(df, "data.frame")
-  df_name <- trace_arg_expr(df)
-  nrows <- nrow(df)
-  rt <- nrows != 0
-  if (!error_raise)
-    return(rt)
-  if (!rt) {
-    stop("'", df_name, "' doesn't have any rows: ", call. = FALSE)
-  }
-  rt
-}
-
-#' Check if a data frame has specific columns
-#'
-#' Test whether a data frame contains all of the specified columns.
-#' Can return a logical value or raise an error if `error_raise = TRUE`.
-#'
-#' @param df A `data.frame`.
-#' @param cols A character vector of column names to check.
-#' @param error_raise Logical; if `TRUE`, raise an error when columns are missing.
-#'
-#' @return A logical scalar (`TRUE` if all specified columns exist, otherwise `FALSE`).
-#'
-#' @examples
-#' \dontrun{
-#' # Has columns
-#' has_cols(mtcars, c("cyl", "disp"))
-#'
-#' # Raise an error
-#' has_cols(mtcars, c("cyl", "iris"), error_raise = TRUE)
-#' }
-#'
-#' @export
-has_cols <- function(df, cols, error_raise = FALSE) {
-  assert_class(df, "data.frame")
-  df_name <- trace_arg_expr(df)
-  diff_cols <- setdiff(cols, colnames(df))
-  rt <- length(diff_cols) == 0
-  if (!error_raise)
-    return(rt)
-  if (!rt) {
-    stop("'", df_name, "' doesn't have column(s): ",
-         paste0(diff_cols, collapse = ", "), ".",
-         call. = FALSE)
-  }
-  rt
-}
-
-#' Check if an object has nonzero length
-#'
-#' Test whether an object has nonzero length. Can return a logical value
-#' or raise an error if `error_raise = TRUE`.
-#'
-#' @param x An object of class `character`, `integer`, `numeric`, `Date`, or `POSIXt`.
-#' @param error_raise Logical; if `TRUE`, raise an error if the object has zero length.
-#'
-#' @return A logical scalar (`TRUE` if `x` has nonzero length, otherwise `FALSE`).
-#'
-#' @examples
-#' \dontrun{
-#' # Has a length
-#' has_len(c(numeric(), character()))
-#'
-#' # Raise an error
-#' has_len(c(numeric(), character()), error_raise = TRUE)
-#' }
-#'
-#' @seealso [rlang::has_length()]
-#'
-#' @export
-has_len <- function(x, error_raise = FALSE) {
-  assert_class(x, c("character", "integer", "numeric", "Date", "POSIXt"))
-  x_name <- trace_arg_expr(x)
-  rt <- rlang::has_length(x)
-  if (!error_raise)
-    return(rt)
-  if (!rt)
-      stop("'", x_name, "' doesn't have a length.", call. = FALSE)
-  rt
+regex_attr <- function(x, name) {
+  names(attributes(x))[grepl(name, names(attributes(x)))]
 }
 
 #' Convert column names to lower or upper case
@@ -476,9 +286,6 @@ set_col_upper <- function(df)
 #'
 #' @export
 set_col_order <- function(df, neworder, before = NULL, after = NULL) {
-  # neworder <- match_cols(df, sapply(rlang::enexpr(neworder), rlang::as_name))
-  # before <- match_cols(df, sapply(rlang::enexpr(before), rlang::as_name))
-  # after  <- match_cols(df, sapply(rlang::enexpr(after), rlang::as_name))
   neworder <- capture_names(df, !!rlang::enquo(neworder))
   before   <- capture_names(df, !!rlang::enquo(before))
   after    <- capture_names(df, !!rlang::enquo(after))
@@ -619,85 +426,6 @@ set_tibble <- function(df) {
   }
 }
 
-#' Check equality of columns between two data frames
-#'
-#' Validates that two data frames have the same shape (same columns and row count),
-#' then compares each column to determine whether all values match. The result is
-#' a named logical vector, one element per column.
-#'
-#' If the number of rows, number of columns, or column names differ, an error is raised.
-#' For value comparison, pairs of missing values (`NA` vs `NA`) are treated as equal.
-#'
-#' @param x,y Two data.frame objects.
-#'
-#' @return A named logical vector of length `ncol(x)`, where each element indicates
-#'   whether all values in the corresponding column are equal across the two data frames.
-#'
-#' @examples
-#' \donttest{
-#' # All columns equal
-#' check_col_equal(mtcars, mtcars)
-#'
-#' # One column differs
-#' df1 <- head(mtcars)
-#' df2 <- df1; df2$cyl[1] <- df2$cyl[1] + 1
-#' check_col_equal(df1, df2)
-#'
-#' # NA handling: NA vs NA is considered equal
-#' a <- data.frame(x = c(1, NA, 3))
-#' b <- data.frame(x = c(1, NA, 3))
-#' check_col_equal(a, b)  # TRUE for column x
-#' }
-#'
-#' @export
-check_col_equal <- function(x, y) {
-  assert_class(x, "data.frame")
-  assert_class(y, "data.frame")
-
-  x_name <- trace_arg_expr(x)
-  y_name <- trace_arg_expr(y)
-
-  x_cols <- colnames(x); x_nrow <- nrow(x); x_ncol <- ncol(x)
-  y_cols <- colnames(y); y_nrow <- nrow(y); y_ncol <- ncol(y)
-
-  if (length(x_cols) != length(y_cols)) {
-    stop(sprintf("Different number of cols. (%s: %s, %s: %s)",
-                 x_name, x_ncol, y_name, y_ncol), call. = FALSE)
-  } else {
-    if (!identical(sort(x_cols), sort(y_cols))) {
-      stop(sprintf("Different column names.\n%s: %s\n%s: %s",
-                   x_name, paste(x_cols, collapse = ", "),
-                   y_name, paste(y_cols, collapse = ", ")), call. = FALSE)
-    }
-  }
-
-  if (x_nrow != y_nrow)
-    stop(sprintf("Different number of rows. (%s: %s, %s: %s).",
-                 x_name, x_nrow, y_name, y_nrow))
-
-  # column-wise comparison
-  col_equal <- function(a, b) {
-    if (length(a) != length(b))
-      return(FALSE)
-    if (is.list(a) || is.list(b)) {
-      all(mapply(function(u, v) {
-        (isTRUE(is.na(u)) && isTRUE(is.na(v))) || identical(u, v)
-      }, a, b))
-    } else {
-      eq <- a == b
-      same_na <- is.na(a) & is.na(b)
-      eq[same_na] <- TRUE
-      eq[is.na(eq)] <- FALSE
-      all(eq)
-    }
-  }
-
-  rt <- vapply(x_cols, function(s) col_equal(x[[s]], y[[s]]), logical(1L))
-  names(rt) <- x_cols
-  rt
-}
-
-
 #' Format numbers with commas
 #'
 #' Convert a numeric or integer vector into a character vector
@@ -795,10 +523,6 @@ set_i64_to_num <- function(df) {
 }
 
 # To be updated -----------------------------------------------------------
-
-sort_group_by <- function(x) {
-  .Call(SortGroupBy, x)
-}
 
 join <- function(..., by, all = FALSE, all.x = all, all.y = all, sort = TRUE) {
   Reduce(function(...) merge(..., by = by, all = all, all.x = all.x,

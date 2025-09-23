@@ -40,7 +40,6 @@
 #'   instead of traversing the altered Shiny call stack.
 #'   This provides a safe fallback for reactive/promise environments where
 #'   the original symbol name cannot be reliably recovered.
-#' @param fallback A character string returned when tracing fails. Default is `"x"`.
 #' @param max_depth Maximum number of frames to inspect.
 #'   Optional; defaults to the current stack depth.
 #'
@@ -109,28 +108,29 @@
 #' f4 <- function(d, stop_at, verbose) f3(d, stop_at, verbose)
 #' f5 <- function(e, stop_at, verbose) f4(e, stop_at, verbose)
 #'
-#' trace_arg_expr("x") # "x"
+#' trace_arg_expr("x") # "\"x\""
 #' do.call("trace_arg_expr", list(x = iris)) # "x"
 #' do.call(trace_arg_expr, list(x = iris)) # "x"
-#' do.call("f5", list(e = iris, stop_at = "f5", verbose = FALSE)) # "e" - bad
-#' do.call(f5, list(e = iris, stop_at = "f5", verbose = FALSE)) # "x"
-#' rlang::exec("trace_arg_expr", x = iris) # "x"
-#' rlang::exec(trace_arg_expr, x = iris) # "x"
-#' rlang::exec("f5", e = iris, stop_at = "f5", verbose = FALSE) # "e" - bad
-#' rlang::exec(f5, e = iris, stop_at = "f5", verbose = FALSE) # "x"
+#' do.call("f5", list(e = iris, stop_at = "f5", verbose = FALSE)) # "e"
+#' do.call(f5, list(e = iris, stop_at = "f5", verbose = FALSE)) # "a"
+#' rlang::exec("trace_arg_expr", x = iris) # structure(list(Sepal.Length = c(...
+#' rlang::exec(trace_arg_expr, x = iris) # structure(list(Sepal.Length = c(...
+#' rlang::exec("f5", e = iris, stop_at = "f5", verbose = FALSE) # "e"
+#' rlang::exec(f5, e = iris, stop_at = "f5", verbose = FALSE) # "a"
 #' }
 #'
 #' @export
 trace_arg_expr <- function(x, stop_at, verbose = FALSE, skip_shiny = TRUE,
-                           fallback = "x", max_depth) {
+                           max_depth) {
   lifecycle::signal_stage("experimental", "trace_arg_expr()")
+
+  # starting expression (argument as seen in the current frame)
+  expr <- substitute(x)
+  fallback <- .safe_deparse(expr)
 
   # return fallback immediately in Shiny contexts
   if (skip_shiny && .is_shiny_running())
     return(fallback)
-
-  # starting expression (argument as seen in the current frame)
-  expr <- substitute(x)
 
   # if the very first expr is not a language object, fallback immediately
   if (!(is.symbol(expr) || is.call(expr))) {
@@ -216,7 +216,8 @@ trace_arg_expr <- function(x, stop_at, verbose = FALSE, skip_shiny = TRUE,
   .safe_deparse(expr)
 }
 
-# Helper functions --------------------------------------------------------
+
+# Internal helper functions -----------------------------------------------
 
 .norm_fn_name <- function(head, fn = NULL) {
   if (is.symbol(head)) {
@@ -318,6 +319,36 @@ trace_arg_expr <- function(x, stop_at, verbose = FALSE, skip_shiny = TRUE,
   if (nchar(out) > max_chars)
     out <- paste0(substr(out, 1L, max_chars), "...")
   return(out)
+}
+
+#' Check if a Shiny session is running
+#'
+#' This utility inspects whether Shiny is currently running.
+#'
+#' - If the `shiny` namespace is already loaded, it looks up and safely
+#'   calls `shiny::isRunning()`.
+#' - If `shiny` is not loaded, it simply returns `FALSE`.
+#' - Any errors from `shiny::isRunning()` are caught and treated as `FALSE`.
+#'
+#' @return A logical scalar: `TRUE` if `shiny` is running, `FALSE` otherwise.
+#'
+#' @examples
+#' \dontrun{
+#' # Returns FALSE in non-Shiny environments
+#' # In a Shiny app, will return TRUE once the session is active
+#' .is_shiny_running()
+#' }
+#'
+#' @keywords internal
+.is_shiny_running <- function() {
+  if ("shiny" %in% loadedNamespaces()) {
+    fun <- tryCatch(get("isRunning", envir = asNamespace("shiny"), inherits = FALSE),
+                    error = function(e) NULL)
+    if (is.function(fun)) {
+      return(isTRUE(tryCatch(fun(), error = function(e) FALSE)))
+    }
+  }
+  FALSE
 }
 
 # Deprecated functions ----------------------------------------------------

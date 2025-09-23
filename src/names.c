@@ -1,41 +1,45 @@
 #include "jaid.h"
 
-// Set matrix dimnames
-SEXP SetDimNames(SEXP x, SEXP dimnames) {
-  setAttrib(x, R_DimNamesSymbol, dimnames);
-  return x;
-}
-
-// Set matrix rownames
+// Set rownames, preserve colnames
 SEXP SetRowNames(SEXP x, SEXP rownames) {
-  SEXP colnames, dimnames, dimsymbols;
-  PROTECT(dimnames = allocVector(VECSXP, 2));
-  dimsymbols = getAttrib(x, R_DimNamesSymbol);
-  if (!isNull(dimsymbols)) {
-    colnames = VECTOR_ELT(dimsymbols, 1);
-    if (!isNull(colnames)) {
+  SEXP dimnames = PROTECT(allocVector(VECSXP, 2));
+  SEXP current = getAttrib(x, R_DimNamesSymbol);
+
+  // keep existing colnames if any
+  if (current != R_NilValue) {
+    SEXP colnames = VECTOR_ELT(current, 1);
+    if (colnames != R_NilValue) {
       SET_VECTOR_ELT(dimnames, 1, colnames);
     }
   }
+
   SET_VECTOR_ELT(dimnames, 0, rownames);
   setAttrib(x, R_DimNamesSymbol, dimnames);
   UNPROTECT(1);
   return x;
 }
 
-// Set matrix colnames
+// Set colnames, preserve rownames
 SEXP SetColNames(SEXP x, SEXP colnames) {
-  SEXP dimnames, dimsymbols, rownames;
-  PROTECT(dimnames = allocVector(VECSXP, 2));
-  dimsymbols = getAttrib(x, R_DimNamesSymbol);
-  if (!isNull(dimsymbols)) {
-    rownames = VECTOR_ELT(dimsymbols, 0);
-    if (!isNull(rownames)) {
+  SEXP dimnames = PROTECT(allocVector(VECSXP, 2));
+  SEXP current = getAttrib(x, R_DimNamesSymbol);
+
+  // keep existing rownames if any
+  if (current != R_NilValue) {
+    SEXP rownames = VECTOR_ELT(current, 0);
+    if (rownames != R_NilValue) {
       SET_VECTOR_ELT(dimnames, 0, rownames);
     }
   }
+
   SET_VECTOR_ELT(dimnames, 1, colnames);
   setAttrib(x, R_DimNamesSymbol, dimnames);
   UNPROTECT(1);
   return x;
+}
+
+// Set full dimnames
+SEXP SetDimNames(SEXP x, SEXP dimnames) {
+  setAttrib(x, R_DimNamesSymbol, dimnames);
+  return x; // no need to PROTECT if not allocating new objects here
 }

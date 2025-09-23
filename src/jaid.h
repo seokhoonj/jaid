@@ -3,81 +3,126 @@
 
 #include <R.h>
 #include <Rinternals.h>
-#include <stdlib.h> // qsort in group.c
+
+#include <limits.h>   // INT_MIN, INT_MAX
+#include <math.h>     // isinf, isnan
+#include <stdlib.h>   // qsort in group.c
 #include <stdint.h>
 #include <stdbool.h>
+#include <string.h>   // memcpy, strcmp
 
-#define USE_RINTERNALS 1
-
-#ifdef WIN32
-# include <windows.h>
-#else
-# include <sys/mman.h>
-# include <sys/stat.h>
-# include <sys/types.h>
-# include <fcntl.h>
-# include <unistd.h>
-# include <errno.h>
-#endif
-
-// For a message translation - simplified to avoid libintl dependency
-#define _(String) (String)
+#define EMPTY (-1)
 
 // Structure
-union uno {
+union dbl_bits {
   double d;
-  unsigned int u[2];
+  uint64_t u64;
+  uint32_t u32[2];
 };
 
-// functions
-#define UTYPEOF(x) ((unsigned)TYPEOF(x))
-#define DATAPTR_RO(x) ((const void *)DATAPTR(x))
-#define SEXPPTR_RO(x) ((const SEXP *)DATAPTR_RO(x)) // to avoid overhead of looped STRING_ELT ans VECTOR_ELT
-#define IS_BOOL(x) (LENGTH(x)==1 && TYPEOF(x)==LGLSXP && LOGICAL(x)[0]!=NA_LOGICAL)
-#define N_ISNAN(x, y) (!ISNAN(x) && !ISNAN(y))
-#define B_IsNA(x, y) (R_IsNA(x) && R_IsNA(y)) // both
-#define B_IsNaN(x, y) (R_IsNaN(x) && R_IsNaN(y)) // both
-#define REQUAL(x, y) (N_ISNAN(x, y) ? (x == y) : (B_IsNA(x, y) || B_IsNaN(x, y)))
-#define HASH(key, K) (3141592653U * (unsigned int)(key) >> (32 - (K)))
-#define HASH32(key, K) ((uint32_t)(2654435761U * (uint32_t)(key)) >> (32 - (K)))
-#define HASH64(key, K) ((uint64_t)(0x9E3779B97F4A7C15ULL * (uint64_t)(key)) >> (64 - (K)))
+// 32-bit Knuth multiplicative hash: floor(2^32 / phi)
+#define HASH_KNUTH 0x9E3779B1U
 
-// Error messages
-#define R_ERR_MSG_NA	_("NaNs produced")
+// hash index
+static inline uint32_t hash_index(uint32_t key, uint32_t K, uint32_t mask) {
+  // initial index in [0, 2^K)
+  return (uint32_t)((HASH_KNUTH * key) >> (32U - K)) & mask;
+}
+
+static inline uint32_t fold64_to_u32(uint64_t u) {
+  return (uint32_t)(u ^ (u >> 32));
+}
+
+static inline double canonicalize_double(double x) {
+  if (R_IsNA(x)) return NA_REAL;
+  if (R_IsNaN(x)) return R_NaN;
+  if (x == 0.0) return 0.0;      // +0.0 / -0.0 for complex numbers
+  return x;
+}
+
+// linear probing for power-of-two table
+static inline uint32_t probe_next(uint32_t id, uint32_t mask) {
+  return (id + 1U) & mask;
+}
+
+// safe double equal
+static inline int safe_equal_int(int a, int b) {
+  const int na_a = (a == NA_INTEGER), na_b = (b == NA_INTEGER);
+  if (na_a || na_b) return na_a && na_b;
+  return a == b;
+}
+
+// safe double equal
+static inline int safe_equal_dbl(double a, double b) {
+  if (!ISNAN(a) && !ISNAN(b)) return a == b;
+  if (R_IsNA(a) && R_IsNA(b)) return 1;
+  if (R_IsNaN(a) && R_IsNaN(b)) return 1;
+  return 0;
+}
+
+// safe complex equal
+static inline int safe_equal_cplx(Rcomplex a, Rcomplex b) {
+  return safe_equal_dbl(a.r, b.r) && safe_equal_dbl(a.i, b.i);
+}
+
+// double
+static inline uint32_t key_from_double(double x) {
+  x = canonicalize_double(x);
+  uint64_t u64;
+  memcpy(&u64, &x, sizeof(double));
+  return fold64_to_u32(u64);
+}
+
+// complex (XOR)
+static inline uint32_t key_from_complex(Rcomplex z) {
+  z.r = canonicalize_double(z.r);
+  z.i = canonicalize_double(z.i);
+  uint64_t ur, ui;
+  memcpy(&ur, &z.r, sizeof(double));
+  memcpy(&ui, &z.i, sizeof(double));
+  return fold64_to_u32(ur) ^ fold64_to_u32(ui);
+}
+
+// pointer
+static inline uint32_t key_from_ptr(const void *p) {
+  uintptr_t u = (uintptr_t)p;
+  return (uint32_t) (u ^ (u >> 32));
+}
+
+// choose table size: M = 2^K >= 2n (load factor <= 0.5)
+static inline void choose_table_size(R_xlen_t n, uint32_t *K, size_t *M) {
+  size_t need = 2U * (size_t)n;
+  size_t m = 256U;
+  uint32_t k = 8U;
+  while (m < need) { m <<= 1; k++; }
+  *K = k; *M = m;
+}
+
+// copy dimnames
+static inline void copy_dimnames(SEXP from, SEXP to) {
+  setAttrib(to, R_DimNamesSymbol, getAttrib(from, R_DimNamesSymbol));
+}
+
 
 // C
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-  // as
-  SEXP AsLogical(SEXP x);
-  SEXP AsInteger(SEXP x);
-  SEXP AsDouble(SEXP x);
-  SEXP AsNumeric(SEXP x);
-  SEXP AsCharacter(SEXP x);
+  // Date
+  SEXP SeqDateList(SEXP from, SEXP to, SEXP label);
+  SEXP IndexOverlappingDateRanges(SEXP id, SEXP from, SEXP to, SEXP interval);
 
-  // Utils
-  SEXP BeforeChangeIndex(SEXP x);
-  void CopyDimNames(SEXP from, SEXP to);
-  void FillCBool(SEXP x, bool value);
-  void FillCInt(SEXP x, int value);
-  void FillCDouble(SEXP x, double value);
-  void FillCString(SEXP x, const char *value);
-  void FillValue(SEXP x, SEXP value);
-  void PrintArray(int arr[], int len);
-  SEXP PrintVector(SEXP x);
+  // Stay
+  SEXP CountStay(SEXP id, SEXP from, SEXP to);
+  SEXP LimitStay(SEXP x, SEXP gsize, SEXP limit, SEXP waiting);
 
   // ExternalPtr
   SEXP IsNullExternalPtr(SEXP pointer);
 
   // Group
-  SEXP IndexOverlappingDateRange(SEXP id, SEXP from, SEXP to, SEXP interval);
-  SEXP SortGroupBy(SEXP id);
-
-  // Mode
-  SEXP _jaid_fastMode(SEXP, SEXP);
-  SEXP _jaid_fastModeX(SEXP, SEXP);
+  SEXP FindGroupBreaks(SEXP x);
+  SEXP FindGroupSizes(SEXP x);
 
   // Vector
   SEXP Unilen(SEXP x);
@@ -86,28 +131,32 @@ extern "C" {
 
   // Matrix
   SEXP Rotate(SEXP x, SEXP angle);
-  SEXP SetDimNames(SEXP x, SEXP dimnames);
-  SEXP SetColNames(SEXP x, SEXP colnames);
   SEXP SetRowNames(SEXP x, SEXP rownames);
+  SEXP SetColNames(SEXP x, SEXP colnames);
+  SEXP SetDimNames(SEXP x, SEXP dimnames);
 
-  SEXP MaxByColNames(SEXP x, SEXP g, SEXP uniqueg, SEXP snarm, SEXP minval);
-  SEXP MaxByRowNames(SEXP x, SEXP g, SEXP uniqueg, SEXP snarm, SEXP minval);
+  SEXP SumByRowNames(SEXP x, SEXP snarm);
+  SEXP MaxByRowNames(SEXP x, SEXP snarm);
+  SEXP MinByRowNames(SEXP x, SEXP snarm);
 
-  SEXP MinByColNames(SEXP x, SEXP g, SEXP uniqueg, SEXP snarm, SEXP maxval);
-  SEXP MinByRowNames(SEXP x, SEXP g, SEXP uniqueg, SEXP snarm, SEXP maxval);
+  SEXP SumByColNames(SEXP x, SEXP snarm);
+  SEXP MaxByColNames(SEXP x, SEXP snarm);
+  SEXP MinByColNames(SEXP x, SEXP snarm);
 
-  SEXP RowMax(SEXP x);
-  SEXP RowMin(SEXP x);
-  SEXP RowSum(SEXP x);
+  SEXP SumByDimNames(SEXP x, SEXP snarm);
+  SEXP MaxByDimNames(SEXP x, SEXP snarm);
+  SEXP MinByDimNames(SEXP x, SEXP snarm);
 
-  SEXP ColMax(SEXP x);
-  SEXP ColMin(SEXP x);
-  SEXP ColSum(SEXP x);
+  SEXP RowSum(SEXP x, SEXP snarm);
+  SEXP RowMax(SEXP x, SEXP snarm);
+  SEXP RowMin(SEXP x, SEXP snarm);
 
-  SEXP ColDiff(SEXP x);
+  SEXP ColSum(SEXP x, SEXP snarm);
+  SEXP ColMax(SEXP x, SEXP snarm);
+  SEXP ColMin(SEXP x, SEXP snarm);
 
-  SEXP SumByColNames(SEXP x, SEXP g, SEXP uniqueg, SEXP snarm);
-  SEXP SumByRowNames(SEXP x, SEXP g, SEXP uniqueg, SEXP snarm);
+  SEXP RowDiff(SEXP x, SEXP snarm);
+  SEXP ColDiff(SEXP x, SEXP snarm);
 
   // Replace
   SEXP ReplaceVecInMat(SEXP mat, SEXP col, SEXP vec);
@@ -134,45 +183,67 @@ extern "C" {
 
 #endif // JAID_JAID_H
 
+/* ===========================================
+ * NO	SEXPTYPE   DESCRIPTION
+ *  0	NILSXP     NULL
+ *  1	SYMSXP     symbols
+ *  2	LISTSXP    pairlists
+ *  3	CLOSXP     closures
+ *  4	ENVSXP     environments
+ *  5	PROMSXP	   promises
+ *  6	LANGSXP	   language objects
+ *  7	SPECIALSXP special functions
+ *  8	BUILTINSXP builtin functions
+ *  9	CHARSXP    internal character strings
+ * 10	LGLSXP     logical vectors
+ * 13	INTSXP     integer vectors
+ * 14	REALSXP    numeric vectors
+ * 15	CPLXSXP    complex vectors
+ * 16	STRSXP     character vectors
+ * 17	DOTSXP     dot-dot-dot object
+ * 18	ANYSXP     make “any” args work
+ * 19	VECSXP     list (generic vector)
+ * 20	EXPRSXP    expression vector
+ * 21	BCODESXP   byte code
+ * 22	EXTPTRSXP  external pointer
+ * 23	WEAKREFSXP weak reference
+ * 24	RAWSXP     raw vector
+ * 25	S4SXP      S4 classes not of simple type
+ * =========================================== */
 
-// no	SEXPTYPE   Description
-//  0	NILSXP     NULL
-//  1	SYMSXP     symbols
-//  2	LISTSXP    pairlists
-//  3	CLOSXP     closures
-//  4	ENVSXP     environments
-//  5	PROMSXP	   promises
-//  6	LANGSXP	   language objects
-//  7	SPECIALSXP special functions
-//  8	BUILTINSXP builtin functions
-//  9	CHARSXP    internal character strings
-// 10	LGLSXP     logical vectors
-// 13	INTSXP     integer vectors
-// 14	REALSXP    numeric vectors
-// 15	CPLXSXP    complex vectors
-// 16	STRSXP     character vectors
-// 17	DOTSXP     dot-dot-dot object
-// 18	ANYSXP     make “any” args work
-// 19	VECSXP     list (generic vector)
-// 20	EXPRSXP    expression vector
-// 21	BCODESXP   byte code
-// 22	EXTPTRSXP  external pointer
-// 23	WEAKREFSXP weak reference
-// 24	RAWSXP     raw vector
-// 25	S4SXP      S4 classes not of simple type
+/* ===========================================
+ * int               :  4 byte
+ * unsigned int      :  4 byte
+ * long int          :  8 byte
+ * unsigned long int :  8 byte
+ * long long int     :  8 byte
+ * float             :  4 byte
+ * double            :  8 byte
+ * long double       : 16 byte
+ * (void *)          :  8 byte
+ * =========================================== */
 
-// 64 bit
-// int               :  4 byte
-// unsigned int      :  4 byte
-// long int          :  8 byte
-// unsigned long int :  8 byte
-// long long int     :  8 byte
-// float             :  4 byte
-// double            :  8 byte
-// long double       : 16 byte
-// (void *)          :  8 byte
+/* ===========================================
+ * INT_MAX = 2147483647
+ * UINT_MAX = 4294967295d
+ * LONG_MAX = 9223372036854775807
+ * ULONG_MAX = 18446744073709551615d
+ * =========================================== */
 
-// INT_MAX = 2147483647
-// UINT_MAX = 4294967295d
-// LONG_MAX = 9223372036854775807
-// ULONG_MAX = 18446744073709551615d
+/* ===========================================
+ * Coercing scalars
+ * There are a few helper functions that turn
+ * length one R vectors into C scalars:
+ *
+ * asLogical(x): LGLSXP -> int
+ * asInteger(x): INTSXP -> int
+ * asReal(x): REALSXP -> double
+ * CHAR(asChar(x)): STRSXP -> const char*
+ *
+ * And helpers to go in the opposite direction:
+ *
+ * ScalarLogical(x): int -> LGLSXP
+ * ScalarInteger(x): int -> INTSXP
+ * ScalarReal(x): double -> REALSXP
+ * mkString(x): const char* -> STRSXP
+ * =========================================== */

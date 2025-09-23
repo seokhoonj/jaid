@@ -158,9 +158,9 @@ save_table_image <- function(table, caption = "Table.1", footnote = NULL,
 #'
 #' @examples
 #' \dontrun{
-#' plot_png(system.file("img", "Rlogo.png", package = "png"),
-#'          width = grid::unit(0.1, "npc"),
-#'          height = grid::unit(0.1, "npc"))
+#' plot_image(system.file("img", "Rlogo.png", package = "png"),
+#'            width = grid::unit(0.1, "npc"),
+#'            height = grid::unit(0.1, "npc"))
 #' }
 #'
 #' @export

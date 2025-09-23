@@ -2,7 +2,7 @@
 % Please edit documentation in R/vector.R
 \name{reverse}
 \alias{reverse}
-\title{Reverse the order of elements in a vector}
+\title{Reverse the order of elements in a vector (in place)}
 \usage{
 reverse(x)
 }
@@ -10,16 +10,21 @@ reverse(x)
 \item{x}{A vector.}
 }
 \value{
-A vector of the same type as \code{x}, with elements in reverse order.
+The same vector \code{x}, modified in place, with its elements
+in reverse order.
 }
 \description{
-Returns the input vector with its elements in reverse order.
+Reverses the order of elements directly in the input vector,
+modifying it \strong{in place} rather than creating a copy.
+This is memory-efficient for large vectors, but note that
+the original object is altered.
 }
 \examples{
 \donttest{
-# Reverse a numeric vector
-x <- c(1:10)
+# Reverse a numeric vector in place
+x <- c(1:5)
 reverse(x)
+x  # now c(5, 4, 3, 2, 1)
 }
 
 }

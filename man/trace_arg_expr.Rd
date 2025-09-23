@@ -4,14 +4,7 @@
 \alias{trace_arg_expr}
 \title{Retrieve the Original Expression Passed to an Argument}
 \usage{
-trace_arg_expr(
-  x,
-  stop_at,
-  verbose = FALSE,
-  skip_shiny = TRUE,
-  fallback = "x",
-  max_depth
-)
+trace_arg_expr(x, stop_at, verbose = FALSE, skip_shiny = TRUE, max_depth)
 }
 \arguments{
 \item{x}{An expression or object to inspect.
@@ -31,8 +24,6 @@ This is useful for limiting the search to a known entry point
 instead of traversing the altered Shiny call stack.
 This provides a safe fallback for reactive/promise environments where
 the original symbol name cannot be reliably recovered.}
-
-\item{fallback}{A character string returned when tracing fails. Default is \code{"x"}.}
 
 \item{max_depth}{Maximum number of frames to inspect.
 Optional; defaults to the current stack depth.}
@@ -128,15 +119,15 @@ f3 <- function(c, stop_at, verbose) f2(c, stop_at, verbose)
 f4 <- function(d, stop_at, verbose) f3(d, stop_at, verbose)
 f5 <- function(e, stop_at, verbose) f4(e, stop_at, verbose)
 
-trace_arg_expr("x") # "x"
+trace_arg_expr("x") # "\"x\""
 do.call("trace_arg_expr", list(x = iris)) # "x"
 do.call(trace_arg_expr, list(x = iris)) # "x"
-do.call("f5", list(e = iris, stop_at = "f5", verbose = FALSE)) # "e" - bad
-do.call(f5, list(e = iris, stop_at = "f5", verbose = FALSE)) # "x"
-rlang::exec("trace_arg_expr", x = iris) # "x"
-rlang::exec(trace_arg_expr, x = iris) # "x"
-rlang::exec("f5", e = iris, stop_at = "f5", verbose = FALSE) # "e" - bad
-rlang::exec(f5, e = iris, stop_at = "f5", verbose = FALSE) # "x"
+do.call("f5", list(e = iris, stop_at = "f5", verbose = FALSE)) # "e"
+do.call(f5, list(e = iris, stop_at = "f5", verbose = FALSE)) # "a"
+rlang::exec("trace_arg_expr", x = iris) # structure(list(Sepal.Length = c(...
+rlang::exec(trace_arg_expr, x = iris) # structure(list(Sepal.Length = c(...
+rlang::exec("f5", e = iris, stop_at = "f5", verbose = FALSE) # "e"
+rlang::exec(f5, e = iris, stop_at = "f5", verbose = FALSE) # "a"
 }
 
 }
